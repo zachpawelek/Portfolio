@@ -33,3 +33,7 @@ logs
 # Misc
 *.swp
 *.swo
+
+# VS Code
+.vscode/
+portfolio/.vscode/
