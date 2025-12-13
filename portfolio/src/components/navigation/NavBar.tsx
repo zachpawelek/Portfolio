@@ -1,40 +1,49 @@
-
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import LinkIcon from "@/icons/Link.svg";
 
-function NavItem({
-  href,
-  Icon,
-  label,
-}: {
-  href: string;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  label: string;
-}) {
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+export default function NavBar({ variant = "dark" }: { variant?: "dark" | "light" }) {
   const pathname = usePathname();
-  const active = pathname === href;
+
+  const shell =
+    variant === "dark"
+      ? "bg-white/10 ring-1 ring-white/15 backdrop-blur-md"
+      : "bg-white/60 ring-1 ring-black/10 backdrop-blur-md";
+
+  const linkBase =
+    variant === "dark"
+      ? "text-white/80 hover:text-white"
+      : "text-neutral-600 hover:text-neutral-900";
+
+  const linkActive =
+    variant === "dark" ? "text-white font-semibold" : "text-neutral-900 font-semibold";
 
   return (
-    <Link
-      href={href}
-      className={[
-        "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
-        active ? "text-red-900" : "text-red-600 hover:text-zinc-900",
-      ].join(" ")}
-    >
-      <Icon className="h-5 w-5" aria-hidden="true" />
-      <span>{label}</span>
-    </Link>
-  );
-}
-
-export default function NavBar() {
-  return (
-    <nav className="flex items-center gap-2">
-      <NavItem href="/projects" Icon={LinkIcon} label="Projects" />
+    <nav aria-label="Main" className={`rounded-full ${shell}`}>
+      <ul className="flex items-center gap-5 px-4 py-2">
+        {links.map((l) => {
+          const active = pathname === l.href;
+          return (
+            <li key={l.href}>
+              <Link
+                href={l.href}
+                className={`text-sm transition-colors ${active ? linkActive : linkBase}`}
+                aria-current={active ? "page" : undefined}
+              >
+                {l.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 }

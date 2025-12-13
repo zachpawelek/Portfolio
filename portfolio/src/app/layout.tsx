@@ -1,12 +1,13 @@
-import type { ReactNode } from "react"
-import "./globals.css";
-import { cinzel, cormorantSC, manrope, inter} from "@/lib/fonts";
+import "./globals.css"
+import Header from "@/components/navigation/Header";
 
-export default function RootLayout({ children }: {children: ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${cinzel.variable} ${cormorantSC.variable} ${manrope.variable} ${inter.variable}`}>
-      <body>{children}</body>
+    <html lang="en">
+      <body className="min-h-dvh antialiased">
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
- 
