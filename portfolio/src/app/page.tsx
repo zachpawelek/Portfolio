@@ -114,8 +114,6 @@ export default function Home() {
           />
         </div>
 
-
-
         <div className="absolute inset-0 z-10 bg-black/45" />
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
@@ -147,7 +145,57 @@ export default function Home() {
         </div>
       </section>
 
-      <section ref={nextRef} className="relative h-[140vh] overflow-hidden" />
-    </main>
+      <section ref={nextRef} className="relative min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white"
+      >
+      <div className="mx-auto max-w-6xl">
+    <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
+      About Me
+    </h2>
+
+    <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+      {/* Headshot */}
+      <div className="flex justify-center md:justify-start">
+        <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
+          <Image
+            src="/images/me.jpg"
+            alt="Headshot of Zach Pawelek"
+            fill
+            sizes="(min-width: 768px) 384px, 288px"
+            className="object-cover"
+            priority={false}
+          />
+        </div>
+      </div>
+
+      {/* Text */}
+      <div>
+        <p className={`${inter.className} text-base leading-relaxed text-white/75 md:text-lg`}>
+          Hello. This is my Bio. I have no idea what I'm going to put here yet but I'm sure it'll
+          be great.
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a
+            href="/projects"
+            className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black hover:bg-white/90"
+          >
+            View Projects
+          </a>
+          <a
+            href="/contact"
+            className="rounded-full bg-white/10 px-5 py-2.5 text-sm font-medium text-white ring-1 ring-white/20 backdrop-blur hover:bg-white/15"
+          >
+            Contact
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+      
+</main>
   );
 }
+
