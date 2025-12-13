@@ -114,7 +114,11 @@ export default function Home() {
           />
         </div>
 
+
+
         <div className="absolute inset-0 z-10 bg-black/45" />
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
 
         <div className="relative z-20 flex min-h-screen items-start px-8 pt-36 text-white">
           <div ref={titleWrapRef} style={{ opacity: titleOpacity }} className="max-w-3xl will-change-[opacity]">
