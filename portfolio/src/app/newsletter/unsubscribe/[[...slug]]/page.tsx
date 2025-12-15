@@ -59,17 +59,17 @@ export default function UnsubscribePage() {
               ? data.error
               : data?.error?.message
                 ? String(data.error.message)
-                : "Unsubscribe failed.";
+                : "Request failed.";
 
           if (cancelled) return;
 
           const lower = errText.toLowerCase();
           if (lower.includes("expired")) {
             setState("expired");
-            setMsg("This unsubscribe link expired.");
+            setMsg("This link expired.");
           } else if (lower.includes("invalid")) {
             setState("invalid");
-            setMsg("This unsubscribe link is invalid.");
+            setMsg("This link is invalid.");
           } else {
             setState("error");
             setMsg(errText);
@@ -79,12 +79,19 @@ export default function UnsubscribePage() {
 
         if (cancelled) return;
 
-        if (data.status === "already_unsubscribed") {
-          setState("already");
-          setMsg("You’re already unsubscribed. ✅");
-        } else {
+        // ✅ New statuses from the API:
+        // - canceled: pending request canceled
+        // - unsubscribed: active subscriber unsubscribed
+        // - already_done: token already used
+        if (data.status === "canceled") {
+          setState("unsubscribed");
+          setMsg("Your subscription request was canceled. ✅");
+        } else if (data.status === "unsubscribed") {
           setState("unsubscribed");
           setMsg("You’ve been unsubscribed. ✅");
+        } else {
+          setState("already");
+          setMsg("This link was already used. You’re all set. ✅");
         }
       } catch {
         if (cancelled) return;
@@ -110,16 +117,16 @@ export default function UnsubscribePage() {
 
         <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>
           {state === "loading"
-            ? "Unsubscribing…"
+            ? "Processing…"
             : state === "unsubscribed"
-              ? "Unsubscribed ✅"
+              ? "Done ✅"
               : state === "already"
-                ? "Already unsubscribed ✅"
+                ? "Already done ✅"
                 : state === "expired"
                   ? "Link expired"
                   : state === "invalid"
                     ? "Invalid link"
-                    : "Unsubscribe"}
+                    : "Request"}
         </h1>
 
         <p className={`${inter.className} mt-4 text-white/70`}>{msg}</p>

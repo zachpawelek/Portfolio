@@ -147,8 +147,8 @@ export async function POST(req: Request) {
             <span>${confirmUrl}</span>
           </p>
           <p style="color:#666;font-size:12px;margin-top:18px;">
-            Don’t want these emails?
-            <a href="${unsubscribeUrl}">Unsubscribe</a>
+            Changed your mind?
+            <a href="${unsubscribeUrl}">Cancel Subscription Request</a>
           </p>
         </div>
       `,
