@@ -2,12 +2,12 @@ import localFont from "next/font/local";
 
 export const cinzel = localFont({
   src: [
-    { path: "../../public/fonts/Cinzel-regular.ttf", weight: "400", style: "normal" },
-    { path: "../../public/fonts/Cinzel-medium.ttf", weight: "500", style: "normal" },
-    { path: "../../public/fonts/Cinzel-semibold.ttf", weight: "600", style: "normal" },
-    { path: "../../public/fonts/Cinzel-bold.ttf", weight: "700", style: "normal" },
-    { path: "../../public/fonts/Cinzel-extrabold.ttf", weight: "800", style: "normal" },
-    { path: "../../public/fonts/Cinzel-black.ttf", weight: "900", style: "normal" },
+    { path: "../../public/fonts/Cinzel-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Cinzel-Medium.ttf", weight: "500", style: "normal" },
+    { path: "../../public/fonts/Cinzel-Semibold.ttf", weight: "600", style: "normal" },
+    { path: "../../public/fonts/Cinzel-Bold.ttf", weight: "700", style: "normal" },
+    { path: "../../public/fonts/Cinzel-Extrabold.ttf", weight: "800", style: "normal" },
+    { path: "../../public/fonts/Cinzel-Black.ttf", weight: "900", style: "normal" },
   ],
   variable: "--font-cinzel",
   display: "swap",
