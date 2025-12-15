@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { cinzel, inter } from "@/lib/fonts";
+import ConfirmDebugClient from "../ConfirmDebugClient";
+
 
 function sha256Hex(input: string) {
   return crypto.createHash("sha256").update(input).digest("hex");
@@ -41,6 +43,8 @@ export default async function ConfirmNewsletterPage({
           <pre className="mt-6 rounded-2xl bg-black/40 p-4 text-xs text-white/60 ring-1 ring-white/10">
             {JSON.stringify({ slug: params?.slug, token: searchParams?.token }, null, 2)}
           </pre>
+
+          <ConfirmDebugClient />
         </div>
       </main>
     );
