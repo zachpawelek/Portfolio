@@ -85,33 +85,40 @@ export async function POST(req: Request) {
     }
 
     // 4) Email the confirmation link
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-    if (!baseUrl) {
-      return NextResponse.json(
-        { ok: false, error: "Missing NEXT_PUBLIC_SITE_URL env var." },
-        { status: 500 }
-      );
-    }
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "");
+if (!baseUrl) {
+  return NextResponse.json(
+    { ok: false, error: "Missing NEXT_PUBLIC_SITE_URL env var." },
+    { status: 500 }
+  );
+}
 
-    const confirmUrl = `${baseUrl}/newsletter/confirm?token=${rawToken}`;
+// Put the token in the PATH (more robust than query strings in email clients)
+const confirmUrl = `${baseUrl}/newsletter/confirm/${encodeURIComponent(rawToken)}`;
 
-    const { error: emailErr } = await resend.emails.send({
-      from: "Zach <onboarding@resend.dev>",
-      to: [email],
-      subject: "Confirm your subscription",
-      html: `
-        <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.6;">
-          <h2>Confirm your subscription</h2>
-          <p>Click the button below to confirm your email address.</p>
-          <p>
-            <a href="${confirmUrl}" style="display:inline-block;background:#7c0902;color:#fff;padding:12px 18px;border-radius:999px;text-decoration:none;">
-              Confirm subscription
-            </a>
-          </p>
-          <p style="color:#666;font-size:12px;">If you didn’t request this, you can ignore this email.</p>
-        </div>
-      `,
-    });
+
+const { error: emailErr } = await resend.emails.send({
+    from: "Zach <onboarding@resend.dev>",
+    to: [email],
+    subject: "Confirm your subscription",
+    html: `
+      <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.6;">
+        <h2>Confirm your subscription</h2>
+        <p>Click the button below to confirm your email address.</p>
+        <p>
+          <a href="${confirmUrl}" style="display:inline-block;background:#7c0902;color:#fff;padding:12px 18px;border-radius:999px;text-decoration:none;">
+            Confirm subscription
+          </a>
+        </p>
+        <p style="color:#666;font-size:12px;margin-top:18px;">
+          Or copy/paste this link:<br />
+          <span>${confirmUrl}</span>
+        </p>
+      </div>
+    `,
+  });
+  
+
 
     if (emailErr) {
       return NextResponse.json({ ok: false, error: emailErr }, { status: 500 });
