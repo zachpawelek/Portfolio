@@ -116,10 +116,6 @@ export default function ConfirmNewsletterPage() {
 
         <p className={`${inter.className} mt-4 text-white/70`}>{msg}</p>
 
-        {/* (Optional) tiny debug so you can verify token detection; delete later */}
-        <pre className="mt-6 rounded-2xl bg-black/40 p-4 text-xs text-white/50 ring-1 ring-white/10">
-          {JSON.stringify({ tokenDetected: token, pathname }, null, 2)}
-        </pre>
 
         <a
           href="/"

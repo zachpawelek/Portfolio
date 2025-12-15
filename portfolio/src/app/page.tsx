@@ -302,7 +302,7 @@ export default function Home() {
       }
       
       setSubStatus("ok");
-      setSubMsg("Success! You’re on the list (email confirmation comes next).");
+      setSubMsg("Success! Check your email to confirm your subscription.");
       setSubEmail("");
     } catch {
       setSubStatus("error");
