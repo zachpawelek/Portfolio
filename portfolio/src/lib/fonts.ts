@@ -4,9 +4,9 @@ export const cinzel = localFont({
   src: [
     { path: "../../public/fonts/Cinzel-Regular.ttf", weight: "400", style: "normal" },
     { path: "../../public/fonts/Cinzel-Medium.ttf", weight: "500", style: "normal" },
-    { path: "../../public/fonts/Cinzel-Semibold.ttf", weight: "600", style: "normal" },
+    { path: "../../public/fonts/Cinzel-SemiBold.ttf", weight: "600", style: "normal" },
     { path: "../../public/fonts/Cinzel-Bold.ttf", weight: "700", style: "normal" },
-    { path: "../../public/fonts/Cinzel-Extrabold.ttf", weight: "800", style: "normal" },
+    { path: "../../public/fonts/Cinzel-ExtraBold.ttf", weight: "800", style: "normal" },
     { path: "../../public/fonts/Cinzel-Black.ttf", weight: "900", style: "normal" },
   ],
   variable: "--font-cinzel",
