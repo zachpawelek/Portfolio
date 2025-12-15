@@ -1,15 +1,14 @@
 "use client"; // Next.js App Router directive: this file runs on the client (uses hooks like useState/useEffect)
 
-import Image from "next/image"; // Optimized image component 
-import { useCallback, useEffect, useRef, useState } from "react"; // React hooks
-import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects 
+import Image from "next/image"; // Optimized image component
+import React, { useCallback, useEffect, useRef, useState } from "react"; // React hooks
+import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects
 
 /**
  * clamp01:
  * Utility to clamp any number into the 0..1 range.
  * This is used for opacity math (opacity must stay between 0 and 1).
  */
-
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
 
@@ -254,6 +253,55 @@ export default function Home() {
 
   // Controls hero title opacity
   const [titleOpacity, setTitleOpacity] = useState(1);
+
+  // Newsletter form state (drives input, loading state, and success/error messaging)
+  const [subEmail, setSubEmail] = useState(""); // User's email input
+  const [subStatus, setSubStatus] = useState<"idle" | "loading" | "ok" | "error">("idle"); // UI status
+  const [subMsg, setSubMsg] = useState(""); // User-visible message under the form
+
+  /**
+   * onSubscribe
+   * -----------------------------------------------------------------------------
+   * PURPOSE:
+   * Connects the newsletter form to your server API route: POST /api/subscribe
+   *
+   * WHAT IT DOES:
+   * - Prevents the browser's default form submit (page reload)
+   * - Sends the email as JSON to /api/subscribe
+   * - Shows success or error text based on the response
+   *
+   * NOTE:
+   * This step only writes to your database as "pending".
+   * The email confirmation flow comes next.
+   */
+  async function onSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    setSubStatus("loading");
+    setSubMsg("");
+
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: subEmail }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data?.ok) {
+        setSubStatus("error");
+        setSubMsg(data?.error ?? "Something went wrong.");
+        return;
+      }
+
+      setSubStatus("ok");
+      setSubMsg("Success! You’re on the list (email confirmation comes next).");
+      setSubEmail("");
+    } catch {
+      setSubStatus("error");
+      setSubMsg("Network error. Please try again.");
+    }
+  }
 
   /**
    * MAIN SCROLL/RESIZE LOOP
@@ -536,7 +584,6 @@ export default function Home() {
         {/* Dark overlay for legibility */}
         <div className="absolute inset-0 z-10 bg-black/35" />
 
-
         {/* Top fade into base background */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-44 bg-linear-to-b from-[rgb(10,10,10)] to-transparent" />
 
@@ -563,9 +610,14 @@ export default function Home() {
               style={{ opacity: cliffsFooterFade.opacity }}
               className="pointer-events-none absolute bottom-6 right-0 text-right will-change-[opacity]"
             >
-              <div className={`${inter.className} text-xs uppercase tracking-[0.35em] text-#7c0902`}>
+              {/* Accent color: set via style because Tailwind can't do text-#HEX directly */}
+              <div
+                className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
+                style={{ color: "#7c0902" }}
+              >
                 Footer Label
               </div>
+
               <div className={`${cinzel.className} mt-2 text-2xl font-medium md:text-3xl`}>
                 Bottom Right Text
               </div>
@@ -575,114 +627,138 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* BOTTOM SECTION (template filler) — fades IN only (no fade-out)       */}
+      {/* BOTTOM SECTION (newsletter) — fades IN only (no fade-out)            */}
       {/* ------------------------------------------------------------------ */}
       <section className="relative bg-[rgb(10,10,10)] px-8 py-20 pb-32 text-white">
         {/* Subtle top fade so it transitions nicely from above */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
 
-
-
-{/* Entire content wrapper fades IN only via bottomFade (fadeOut: false) */}
-<div
-  ref={bottomFade.ref}
-  style={{ opacity: bottomFade.opacity }}
-  className="relative z-20 mx-auto max-w-6xl will-change-[opacity]"
->
-  <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
-    Stay in the loop
-  </h2>
-
-  <p className={`${inter.className} mt-3 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg`}>
-    Occasional updates on new projects, experiments, and what I’m building. No spam.
-  </p>
-
-  {/* Two-column layout on desktop */}
-  <div className="mt-10 grid gap-6 md:grid-cols-2">
-    {/* Left card: newsletter signup */}
-    <div className="relative overflow-hidden rounded-3xl bg-white/5 ring-1 ring-white/15 backdrop-blur">
-      <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-
-      <div className="relative p-8">
+        {/* Entire content wrapper fades IN only via bottomFade (fadeOut: false) */}
         <div
-          className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
-          style={{ color: "#7c0902" }}
+          ref={bottomFade.ref}
+          style={{ opacity: bottomFade.opacity }}
+          className="relative z-20 mx-auto max-w-6xl will-change-[opacity]"
         >
-          Newsletter
-        </div>
+          <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
+            Stay in the loop
+          </h2>
 
-        <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
-          Subscribe for updates
-        </h3>
+          <p
+            className={`${inter.className} mt-3 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg`}
+          >
+            Occasional updates on new projects, experiments, and what I’m building. No spam.
+          </p>
 
-        <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
-          Get a short email when something new ships. Unsubscribe anytime.
-        </p>
+          {/* Two-column layout on desktop */}
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {/* Left card: newsletter signup */}
+            <div className="relative overflow-hidden rounded-3xl bg-white/5 ring-1 ring-white/15 backdrop-blur">
+              <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
 
-        {/* Form (UI only for now) */}
-        <form className="mt-6 space-y-3">
-          <label className="block">
-            <span className={`${inter.className} text-sm text-white/60`}>Email</span>
-            <input
-              type="email"
-              placeholder="you@domain.com"
-              className="mt-2 w-full rounded-2xl bg-black/30 px-4 py-3 text-white placeholder:text-white/30 ring-1 ring-white/10 outline-none focus:ring-white/25"
-            />
-          </label>
+              <div className="relative p-8">
+                <div
+                  className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
+                  style={{ color: "#7c0902" }}
+                >
+                  Newsletter
+                </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <button
-              type="button"
-              className="rounded-full px-5 py-2.5 text-sm font-medium text-black hover:opacity-90"
-              style={{ backgroundColor: "#7c0902" }}
-            >
-              Subscribe
-            </button>
+                <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
+                  Subscribe for updates
+                </h3>
 
-            <div className={`${inter.className} text-xs text-white/50`}>
-              By subscribing, you agree to receive emails from me.
+                <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
+                  Get a short email when something new ships. Unsubscribe anytime.
+                </p>
+
+                {/* Form (now wired to POST /api/subscribe) */}
+                <form className="mt-6 space-y-3" onSubmit={onSubscribe}>
+                  <label className="block">
+                    <span className={`${inter.className} text-sm text-white/60`}>Email</span>
+                    <input
+                      type="email"
+                      required
+                      value={subEmail}
+                      onChange={(e) => setSubEmail(e.target.value)}
+                      placeholder="you@domain.com"
+                      className="mt-2 w-full rounded-2xl bg-black/30 px-4 py-3 text-white placeholder:text-white/30 ring-1 ring-white/10 outline-none focus:ring-white/25"
+                    />
+                  </label>
+
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <button
+                      type="submit"
+                      disabled={subStatus === "loading"}
+                      className="rounded-full px-5 py-2.5 text-sm font-medium text-black hover:opacity-90 disabled:opacity-60"
+                      style={{ backgroundColor: "#7c0902" }}
+                    >
+                      {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
+                    </button>
+
+                    <div className={`${inter.className} text-xs text-white/50`}>
+                      By subscribing, you agree to receive emails from me.
+                    </div>
+                  </div>
+
+                  {/* Success/Error message */}
+                  {subMsg ? (
+                    <div
+                      className={`${inter.className} text-sm ${
+                        subStatus === "error" ? "text-red-300" : "text-white/70"
+                      }`}
+                    >
+                      {subMsg}
+                    </div>
+                  ) : null}
+                </form>
+              </div>
+            </div>
+
+            {/* Right card: what to expect */}
+            <div className="rounded-3xl bg-white/5 p-8 ring-1 ring-white/15">
+              <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
+
+              <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-1 h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: "#7c0902" }}
+                  />
+                  New projects + case studies
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-1 h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: "#7c0902" }}
+                  />
+                  Dev notes &amp; small experiments
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-1 h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: "#7c0902" }}
+                  />
+                  Occasional links + tools I’m liking
+                </li>
+              </ul>
+
+              <div className="mt-8 rounded-2xl bg-black/30 p-5 ring-1 ring-white/10">
+                <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
+                <div className={`${inter.className} mt-1 text-sm text-white/50`}>
+                  Usually 1–2 emails per month.
+                </div>
+              </div>
             </div>
           </div>
-        </form>
-      </div>
-    </div>
 
-    {/* Right card: what to expect */}
-    <div className="rounded-3xl bg-white/5 p-8 ring-1 ring-white/15">
-      <h4 className={`${cinzel.className} text-xl font-medium`}>
-        What you’ll get
-      </h4>
-
-      <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
-        <li className="flex items-start gap-3">
-          <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-          New projects + case studies
-        </li>
-        <li className="flex items-start gap-3">
-          <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-          Dev notes &amp; small experiments
-        </li>
-        <li className="flex items-start gap-3">
-          <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-          Occasional links + tools I’m liking
-        </li>
-      </ul>
-
-      <div className="mt-8 rounded-2xl bg-black/30 p-5 ring-1 ring-white/10">
-        <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
-        <div className={`${inter.className} mt-1 text-sm text-white/50`}>
-          Usually 1–2 emails per month.
+          {/* Tiny footer marker */}
+          <div
+            className={`${inter.className} mt-16 text-center text-xs tracking-[0.35em] text-white/35`}
+          >
+            END
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  {/* Tiny footer marker */}
-  <div className={`${inter.className} mt-16 text-center text-xs tracking-[0.35em] text-white/35`}>
-    END
-  </div>
-</div>
-</section>
-</main>
-);
+      </section>
+    </main>
+  );
 }
