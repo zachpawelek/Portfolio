@@ -302,9 +302,21 @@ export default function Home() {
       }
       
       setSubStatus("ok");
-      setSubMsg("Success! Check your email to confirm your subscription.");
+
+
+if (data?.status === "resent") {
+  setSubMsg("We sent you a fresh confirmation link. Please check your email.");
+} else if (data?.status === "active") {
+  setSubMsg("You're already subscribed.");
+} else {
+  // "pending" (brand new subscriber)
+  setSubMsg("Success! Check your email to confirm your subscription.");
+}
+
       setSubEmail("");
-    } catch {
+
+    } 
+    catch {
       setSubStatus("error");
       setSubMsg("Network error. Please try again.");
     }

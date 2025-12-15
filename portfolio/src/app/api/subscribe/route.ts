@@ -30,8 +30,15 @@ export async function POST(req: Request) {
       .eq("email", email)
       .maybeSingle();
 
+      const isResend = existing?.status === "pending";
+
     if (existingErr) {
+
+
       return NextResponse.json({ ok: false, error: existingErr.message }, { status: 500 });
+
+
+
     }
 
     // Safety: don’t resubscribe unsubscribed users automatically.
@@ -124,8 +131,19 @@ const { error: emailErr } = await resend.emails.send({
       return NextResponse.json({ ok: false, error: emailErr }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true, status: "pending" }, { status: 200 });
-  } catch (err: any) {
+
+
+    return NextResponse.json(
+      { ok: true, status: isResend ? "resent" : "pending"}, 
+      { status: 200 });
+
+
+
+  } 
+  
+  catch (err: any) {
+
+
     return NextResponse.json(
       { ok: false, error: err?.message ?? "Unknown server error." },
       { status: 500 }
