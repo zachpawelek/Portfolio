@@ -30,23 +30,25 @@ export async function POST(req: Request) {
       .eq("email", email)
       .maybeSingle();
 
-      const isResend = existing?.status === "pending";
-
     if (existingErr) {
-
-
       return NextResponse.json({ ok: false, error: existingErr.message }, { status: 500 });
-
-
-
     }
 
-    // Safety: don’t resubscribe unsubscribed users automatically.
-    if (existing?.status === "unsubscribed") {
-      return NextResponse.json(
-        { ok: false, error: "That email is unsubscribed." },
-        { status: 400 }
-      );
+    const wasUnsubscribed = existing?.status === "unsubscribed";
+
+    // Allow explicit re-subscribe via the form: restart confirmation flow.
+    if (wasUnsubscribed && existing?.id) {
+      const { error: upErr } = await supabaseAdmin
+        .from("newsletter_subscribers")
+        .update({
+          status: "pending",
+          subscribed_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id);
+
+      if (upErr) {
+        return NextResponse.json({ ok: false, error: upErr.message }, { status: 500 });
+      }
     }
 
     let subscriberId = existing?.id as string | undefined;
@@ -75,6 +77,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, status: "active" }, { status: 200 });
     }
 
+    // Decide status BEFORE emailing
+    const responseStatus =
+      wasUnsubscribed ? "resubscribed" : existing?.status === "pending" ? "resent" : "pending";
+
     // 3) Create confirmation token (store HASH only)
     const rawToken = crypto.randomBytes(32).toString("hex");
     const tokenHash = sha256Hex(rawToken);
@@ -93,57 +99,67 @@ export async function POST(req: Request) {
 
     // 4) Email the confirmation link
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "");
-if (!baseUrl) {
-  return NextResponse.json(
-    { ok: false, error: "Missing NEXT_PUBLIC_SITE_URL env var." },
-    { status: 500 }
-  );
-}
-
-// Put the token in the PATH (more robust than query strings in email clients)
-const confirmUrl = `${baseUrl}/newsletter/confirm/${encodeURIComponent(rawToken)}`;
-
-
-const { error: emailErr } = await resend.emails.send({
-    from: "Zach <onboarding@resend.dev>",
-    to: [email],
-    subject: "Confirm your subscription",
-    html: `
-      <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.6;">
-        <h2>Confirm your subscription</h2>
-        <p>Click the button below to confirm your email address.</p>
-        <p>
-          <a href="${confirmUrl}" style="display:inline-block;background:#7c0902;color:#fff;padding:12px 18px;border-radius:999px;text-decoration:none;">
-            Confirm subscription
-          </a>
-        </p>
-        <p style="color:#666;font-size:12px;margin-top:18px;">
-          Or copy/paste this link:<br />
-          <span>${confirmUrl}</span>
-        </p>
-      </div>
-    `,
-  });
-  
-
-
-    if (emailErr) {
-      return NextResponse.json({ ok: false, error: emailErr }, { status: 500 });
+    if (!baseUrl) {
+      return NextResponse.json(
+        { ok: false, error: "Missing NEXT_PUBLIC_SITE_URL env var." },
+        { status: 500 }
+      );
     }
 
+    // Put the token in the PATH (more robust than query strings in email clients)
+    const confirmUrl = `${baseUrl}/newsletter/confirm/${encodeURIComponent(rawToken)}`;
 
+    // Create an UNSUBSCRIBE token (store HASH only)
+    const rawUnsubToken = crypto.randomBytes(32).toString("hex");
+    const unsubHash = sha256Hex(rawUnsubToken);
 
-    return NextResponse.json(
-      { ok: true, status: isResend ? "resent" : "pending"}, 
-      { status: 200 });
+    // Make unsubscribe links long-lived (e.g. 365 days)
+    const unsubExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365);
 
+    const { error: unsubErr } = await supabaseAdmin.from("newsletter_tokens").insert({
+      subscriber_id: subscriberId,
+      type: "unsubscribe",
+      token_hash: unsubHash,
+      expires_at: unsubExpiresAt.toISOString(),
+    });
 
+    if (unsubErr) {
+      return NextResponse.json({ ok: false, error: unsubErr.message }, { status: 500 });
+    }
 
-  } 
-  
-  catch (err: any) {
+    const unsubscribeUrl = `${baseUrl}/newsletter/unsubscribe/${encodeURIComponent(rawUnsubToken)}`;
 
+    const { error: emailErr } = await resend.emails.send({
+      from: "Zach <onboarding@resend.dev>",
+      to: [email],
+      subject: "Confirm your subscription",
+      html: `
+        <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.6;">
+          <h2>Confirm your subscription</h2>
+          <p>Click the button below to confirm your email address.</p>
+          <p>
+            <a href="${confirmUrl}" style="display:inline-block;background:#7c0902;color:#fff;padding:12px 18px;border-radius:999px;text-decoration:none;">
+              Confirm subscription
+            </a>
+          </p>
+          <p style="color:#666;font-size:12px;margin-top:18px;">
+            Or copy/paste this link:<br />
+            <span>${confirmUrl}</span>
+          </p>
+          <p style="color:#666;font-size:12px;margin-top:18px;">
+            Don’t want these emails?
+            <a href="${unsubscribeUrl}">Unsubscribe</a>
+          </p>
+        </div>
+      `,
+    });
 
+    if (emailErr) {
+      return NextResponse.json({ ok: false, error: "Email failed to send." }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, status: responseStatus }, { status: 200 });
+  } catch (err: any) {
     return NextResponse.json(
       { ok: false, error: err?.message ?? "Unknown server error." },
       { status: 500 }

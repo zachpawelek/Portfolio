@@ -295,28 +295,26 @@ export default function Home() {
             : data?.error?.message
               ? String(data.error.message)
               : JSON.stringify(data?.error ?? "Something went wrong.");
-      
+
         setSubStatus("error");
         setSubMsg(errText);
         return;
       }
-      
+
       setSubStatus("ok");
 
-
-if (data?.status === "resent") {
-  setSubMsg("We sent you a fresh confirmation link. Please check your email.");
-} else if (data?.status === "active") {
-  setSubMsg("You're already subscribed.");
-} else {
-  // "pending" (brand new subscriber)
-  setSubMsg("Success! Check your email to confirm your subscription.");
-}
+      if (data?.status === "resubscribed") {
+        setSubMsg("Welcome back! Check your email to confirm your subscription.");
+      } else if (data?.status === "resent") {
+        setSubMsg("We sent you a fresh confirmation link. Please check your email.");
+      } else if (data?.status === "active") {
+        setSubMsg("You're already subscribed.");
+      } else {
+        setSubMsg("Success! Check your email to confirm your subscription.");
+      }
 
       setSubEmail("");
-
-    } 
-    catch {
+    } catch {
       setSubStatus("error");
       setSubMsg("Network error. Please try again.");
     }
