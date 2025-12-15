@@ -289,11 +289,18 @@ export default function Home() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data?.ok) {
+        const errText =
+          typeof data?.error === "string"
+            ? data.error
+            : data?.error?.message
+              ? String(data.error.message)
+              : JSON.stringify(data?.error ?? "Something went wrong.");
+      
         setSubStatus("error");
-        setSubMsg(data?.error ?? "Something went wrong.");
+        setSubMsg(errText);
         return;
       }
-
+      
       setSubStatus("ok");
       setSubMsg("Success! You’re on the list (email confirmation comes next).");
       setSubEmail("");
