@@ -28,16 +28,24 @@ export default async function ConfirmNewsletterPage({
       <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
         <div className="mx-auto max-w-2xl">
           <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+  
           <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>
             Missing token
           </h1>
+  
           <p className={`${inter.className} mt-4 text-white/70`}>
             This confirmation link is missing the token. Try opening the link from your email again.
           </p>
+  
+          {/* TEMP DEBUG: remove once working */}
+          <pre className="mt-6 rounded-2xl bg-black/40 p-4 text-xs text-white/60 ring-1 ring-white/10">
+            {JSON.stringify({ slug: params?.slug, token: searchParams?.token }, null, 2)}
+          </pre>
         </div>
       </main>
     );
   }
+  
 
   const tokenHash = sha256Hex(token);
   const nowIso = new Date().toISOString();
