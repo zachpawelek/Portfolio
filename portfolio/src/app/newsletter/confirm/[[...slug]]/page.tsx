@@ -6,18 +6,31 @@ function sha256Hex(input: string) {
   return crypto.createHash("sha256").update(input).digest("hex");
 }
 
-export default async function ConfirmNewsletterTokenPage({
+export default async function ConfirmNewsletterPage({
   params,
+  searchParams,
 }: {
-  params: { token: string };
+  params: { slug?: string[] };
+  searchParams: { token?: string };
 }) {
-  const token = decodeURIComponent((params?.token ?? "").trim());
+  // Accept token from EITHER:
+  // - /newsletter/confirm/<token>   => params.slug[0]
+  // - /newsletter/confirm?token=... => searchParams.token
+  const tokenFromPath = decodeURIComponent((params?.slug?.[0] ?? "").trim());
+  const tokenFromQuery = String(searchParams?.token ?? "").trim();
+  const token = tokenFromPath || tokenFromQuery;
+
+  // Add a version marker so you can visually confirm you're on the NEW route file
+  const ROUTE_MARKER = "CONFIRM_ROUTE_V2";
 
   if (!token) {
     return (
       <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
         <div className="mx-auto max-w-2xl">
-          <h1 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Missing token</h1>
+          <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+          <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>
+            Missing token
+          </h1>
           <p className={`${inter.className} mt-4 text-white/70`}>
             This confirmation link is missing the token. Try opening the link from your email again.
           </p>
@@ -31,7 +44,7 @@ export default async function ConfirmNewsletterTokenPage({
 
   const { data: tokenRow, error: tokenErr } = await supabaseAdmin
     .from("newsletter_tokens")
-    .select("id, subscriber_id, expires_at, used_at, type")
+    .select("id, subscriber_id, expires_at, used_at")
     .eq("type", "confirm")
     .eq("token_hash", tokenHash)
     .maybeSingle();
@@ -40,7 +53,10 @@ export default async function ConfirmNewsletterTokenPage({
     return (
       <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
         <div className="mx-auto max-w-2xl">
-          <h1 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Something went wrong</h1>
+          <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+          <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>
+            Something went wrong
+          </h1>
           <p className={`${inter.className} mt-4 text-white/70`}>Server error: {tokenErr.message}</p>
         </div>
       </main>
@@ -51,7 +67,8 @@ export default async function ConfirmNewsletterTokenPage({
     return (
       <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
         <div className="mx-auto max-w-2xl">
-          <h1 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Invalid link</h1>
+          <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+          <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>Invalid link</h1>
           <p className={`${inter.className} mt-4 text-white/70`}>
             This confirmation link is invalid or was already used.
           </p>
@@ -64,7 +81,10 @@ export default async function ConfirmNewsletterTokenPage({
     return (
       <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
         <div className="mx-auto max-w-2xl">
-          <h1 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Already confirmed</h1>
+          <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+          <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>
+            Already confirmed
+          </h1>
           <p className={`${inter.className} mt-4 text-white/70`}>You’re all set — this link was already used.</p>
         </div>
       </main>
@@ -75,7 +95,8 @@ export default async function ConfirmNewsletterTokenPage({
     return (
       <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
         <div className="mx-auto max-w-2xl">
-          <h1 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Link expired</h1>
+          <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+          <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>Link expired</h1>
           <p className={`${inter.className} mt-4 text-white/70`}>
             This confirmation link expired. Subscribe again to get a new one.
           </p>
@@ -93,7 +114,10 @@ export default async function ConfirmNewsletterTokenPage({
     return (
       <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
         <div className="mx-auto max-w-2xl">
-          <h1 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Something went wrong</h1>
+          <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+          <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>
+            Something went wrong
+          </h1>
           <p className={`${inter.className} mt-4 text-white/70`}>Couldn’t activate subscription: {subErr.message}</p>
         </div>
       </main>
@@ -105,12 +129,13 @@ export default async function ConfirmNewsletterTokenPage({
   return (
     <main className="min-h-dvh bg-[rgb(10,10,10)] px-8 py-20 text-white">
       <div className="mx-auto max-w-2xl">
+        <div className={`${inter.className} text-xs text-white/40`}>{ROUTE_MARKER}</div>
+
         <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`} style={{ color: "#7c0902" }}>
           Newsletter
         </div>
 
         <h1 className={`${cinzel.className} mt-3 text-3xl font-medium md:text-4xl`}>Confirmed ✅</h1>
-
         <p className={`${inter.className} mt-4 text-white/70`}>Thanks — your subscription is now active.</p>
 
         <a
