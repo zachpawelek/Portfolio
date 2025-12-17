@@ -40,10 +40,7 @@ export async function POST(req: Request) {
 
     const FROM = process.env.RESEND_FROM;
     if (!FROM) {
-      return NextResponse.json(
-        { ok: false, error: "Missing RESEND_FROM env var." },
-        { status: 500 }
-      );
+      return NextResponse.json({ ok: false, error: "Missing RESEND_FROM env var." }, { status: 500 });
     }
 
     const form = await req.formData();
@@ -77,49 +74,64 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "File too large (max 10MB)." }, { status: 400 });
     }
 
-    // Read into base64 for Resend attachment
+    // Read into Buffer (for Storage + attachment)
     const buf = Buffer.from(await file.arrayBuffer());
+
+    // Upload file to Supabase Storage so "latest issue" can be emailed on confirm
+    const storagePath = `${Date.now()}-${crypto.randomBytes(8).toString("hex")}-${filename}`;
+
+    const contentType =
+      ext === "pdf"
+        ? "application/pdf"
+        : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+    const { error: uploadErr } = await supabaseAdmin.storage
+      .from("newsletters")
+      .upload(storagePath, buf, { contentType, upsert: false });
+
+    if (uploadErr) {
+      return NextResponse.json({ ok: false, error: uploadErr.message }, { status: 500 });
+    }
+
+    // Attachment for the actual send
     const attachment = { filename, content: buf.toString("base64") };
 
     // recipients
     let recipients: Array<{ id: string; email: string }> = [];
 
     if (testEmail) {
-
-        const { data, error } = await supabaseAdmin
+      const { data, error } = await supabaseAdmin
         .from("newsletter_subscribers")
         .select("id,email,status")
         .eq("email", testEmail)
         .maybeSingle();
-      
+
       if (error) {
         return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
       }
-      
+
       if (!data) {
         return NextResponse.json({ ok: false, error: "Test email not found in DB." }, { status: 400 });
       }
-      
+
       if (data.status !== "active") {
         return NextResponse.json(
           { ok: false, error: `Test email is not active (status=${data.status}). Subscribe + confirm first.` },
           { status: 400 }
         );
       }
-      
-      recipients = [{ id: data.id, email: data.email }];
-      
 
-    } 
-    
-    
-    else {
+      recipients = [{ id: data.id, email: data.email }];
+    } else {
       const { data, error } = await supabaseAdmin
         .from("newsletter_subscribers")
         .select("id,email")
         .eq("status", "active");
 
-      if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      if (error) {
+        return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      }
+
       recipients = (data ?? []) as Array<{ id: string; email: string }>;
     }
 
@@ -148,9 +160,34 @@ export async function POST(req: Request) {
         });
 
         if (error) throw new Error(typeof error === "string" ? error : "Resend error");
+
         sent += 1;
       } catch (e: any) {
         failed.push({ email: r.email, error: e?.message ?? "Unknown error" });
+      }
+    }
+
+    // Only update "latest issue" if at least one email was actually sent
+    if (sent > 0) {
+      const { error: clearErr } = await supabaseAdmin
+        .from("newsletters")
+        .update({ is_latest: false })
+        .eq("is_latest", true);
+
+      if (clearErr) {
+        return NextResponse.json({ ok: false, error: clearErr.message }, { status: 500 });
+      }
+
+      const { error: issueErr } = await supabaseAdmin.from("newsletters").insert({
+        subject,
+        filename,
+        storage_path: storagePath,
+        mime_type: contentType,
+        is_latest: true,
+      });
+
+      if (issueErr) {
+        return NextResponse.json({ ok: false, error: issueErr.message }, { status: 500 });
       }
     }
 
