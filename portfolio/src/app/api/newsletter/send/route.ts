@@ -9,8 +9,44 @@ function sha256Hex(input: string) {
   return crypto.createHash("sha256").update(input).digest("hex");
 }
 
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+function stringifyResendError(err: any) {
+  if (!err) return "Unknown error";
+  if (typeof err === "string") return err;
+  if (err?.message) return String(err.message);
+  return JSON.stringify(err);
+}
+
+// Retries only on rate-limit (429) errors
+async function resendSendWithRetry(sendFn: () => Promise<{ error?: any }>, maxTries = 4) {
+  let lastErr: any = null;
+
+  for (let attempt = 1; attempt <= maxTries; attempt++) {
+    const res = await sendFn();
+    if (!res?.error) return;
+
+    lastErr = res.error;
+    const msg = stringifyResendError(lastErr).toLowerCase();
+
+    const is429 =
+      msg.includes("429") ||
+      msg.includes("too many") ||
+      msg.includes("rate limit") ||
+      msg.includes("rate_limit_exceeded");
+
+    if (!is429) break;
+
+    // backoff: 700ms, 1400ms, 2800ms...
+    await sleep(700 * Math.pow(2, attempt - 1));
+  }
+
+  throw new Error(stringifyResendError(lastErr));
+}
+
 async function createUnsubscribeUrl(subscriberId: string, baseUrl: string) {
-  // We generate a fresh raw token because we only store hashes in DB.
   const rawUnsubToken = crypto.randomBytes(32).toString("hex");
   const unsubHash = sha256Hex(rawUnsubToken);
   const unsubExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365);
@@ -32,9 +68,7 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const subject = String(body?.subject ?? "").trim();
     const html = String(body?.html ?? "").trim();
-    const testEmail = String(body?.testEmail ?? "")
-      .trim()
-      .toLowerCase(); // optional
+    const testEmail = String(body?.testEmail ?? "").trim().toLowerCase(); // optional
 
     if (!subject || !html) {
       return NextResponse.json({ ok: false, error: "Missing subject or html." }, { status: 400 });
@@ -50,44 +84,32 @@ export async function POST(req: Request) {
 
     const FROM = process.env.RESEND_FROM;
     if (!FROM) {
-      return NextResponse.json(
-        { ok: false, error: "Missing RESEND_FROM env var." },
-        { status: 500 }
-      );
+      return NextResponse.json({ ok: false, error: "Missing RESEND_FROM env var." }, { status: 500 });
     }
 
     // 1) Choose recipients
     let recipients: Array<{ id: string; email: string }> = [];
 
     if (testEmail) {
-
-        const { data, error } = await supabaseAdmin
+      const { data, error } = await supabaseAdmin
         .from("newsletter_subscribers")
         .select("id,email,status")
         .eq("email", testEmail)
         .maybeSingle();
-      
-      if (error) {
-        return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
-      }
-      
-      if (!data) {
+
+      if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      if (!data)
         return NextResponse.json({ ok: false, error: "Test email not found in DB." }, { status: 400 });
-      }
-      
+
       if (data.status !== "active") {
         return NextResponse.json(
           { ok: false, error: `Test email is not active (status=${data.status}). Subscribe + confirm first.` },
           { status: 400 }
         );
       }
-      
-      recipients = [{ id: data.id, email: data.email }];
-      
 
-    } 
-    
-    else {
+      recipients = [{ id: data.id, email: data.email }];
+    } else {
       const { data, error } = await supabaseAdmin
         .from("newsletter_subscribers")
         .select("id,email")
@@ -114,21 +136,28 @@ export async function POST(req: Request) {
           </p>
         `;
 
-        const { error } = await resend.emails.send({
-          from: FROM,
-          to: [r.email],
-          subject,
-          html: finalHtml,
-        });
+        await resendSendWithRetry(() =>
+          resend.emails.send({
+            from: FROM,
+            to: [r.email],
+            subject,
+            html: finalHtml,
+          })
+        );
 
-        if (error) throw new Error(typeof error === "string" ? error : "Resend error");
+        // Throttle to stay under ~2 req/sec
+        await sleep(600);
+
         sent += 1;
       } catch (e: any) {
         failed.push({ email: r.email, error: e?.message ?? "Unknown error" });
       }
     }
 
-    return NextResponse.json({ ok: true, sent, failedCount: failed.length, failed }, { status: 200 });
+    return NextResponse.json(
+      { ok: true, sent, failedCount: failed.length, failed },
+      { status: 200 }
+    );
   } catch (err: any) {
     return NextResponse.json(
       { ok: false, error: err?.message ?? "Unknown server error." },

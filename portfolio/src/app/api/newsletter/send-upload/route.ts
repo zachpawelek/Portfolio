@@ -11,6 +11,43 @@ function sha256Hex(input: string) {
   return crypto.createHash("sha256").update(input).digest("hex");
 }
 
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+function stringifyResendError(err: any) {
+  if (!err) return "Unknown error";
+  if (typeof err === "string") return err;
+  if (err?.message) return String(err.message);
+  return JSON.stringify(err);
+}
+
+// Retries only on rate-limit (429) errors
+async function resendSendWithRetry(sendFn: () => Promise<{ error?: any }>, maxTries = 4) {
+  let lastErr: any = null;
+
+  for (let attempt = 1; attempt <= maxTries; attempt++) {
+    const res = await sendFn();
+    if (!res?.error) return;
+
+    lastErr = res.error;
+    const msg = stringifyResendError(lastErr).toLowerCase();
+
+    const is429 =
+      msg.includes("429") ||
+      msg.includes("too many") ||
+      msg.includes("rate limit") ||
+      msg.includes("rate_limit_exceeded");
+
+    if (!is429) break;
+
+    // backoff: 700ms, 1400ms, 2800ms...
+    await sleep(700 * Math.pow(2, attempt - 1));
+  }
+
+  throw new Error(stringifyResendError(lastErr));
+}
+
 async function createUnsubscribeUrl(subscriberId: string, baseUrl: string) {
   const raw = crypto.randomBytes(32).toString("hex");
   const hash = sha256Hex(raw);
@@ -151,15 +188,18 @@ export async function POST(req: Request) {
           </p>
         `;
 
-        const { error } = await resend.emails.send({
-          from: FROM,
-          to: [r.email],
-          subject,
-          html,
-          attachments: [attachment],
-        });
+        await resendSendWithRetry(() =>
+          resend.emails.send({
+            from: FROM,
+            to: [r.email],
+            subject,
+            html,
+            attachments: [attachment],
+          })
+        );
 
-        if (error) throw new Error(typeof error === "string" ? error : "Resend error");
+        // Throttle to stay under ~2 req/sec
+        await sleep(600);
 
         sent += 1;
       } catch (e: any) {
