@@ -85,18 +85,35 @@ export async function POST(req: Request) {
     let recipients: Array<{ id: string; email: string }> = [];
 
     if (testEmail) {
-      const { data, error } = await supabaseAdmin
+
+        const { data, error } = await supabaseAdmin
         .from("newsletter_subscribers")
-        .select("id,email")
+        .select("id,email,status")
         .eq("email", testEmail)
         .maybeSingle();
-
-      if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
-      if (!data)
+      
+      if (error) {
+        return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      }
+      
+      if (!data) {
         return NextResponse.json({ ok: false, error: "Test email not found in DB." }, { status: 400 });
-
+      }
+      
+      if (data.status !== "active") {
+        return NextResponse.json(
+          { ok: false, error: `Test email is not active (status=${data.status}). Subscribe + confirm first.` },
+          { status: 400 }
+        );
+      }
+      
       recipients = [{ id: data.id, email: data.email }];
-    } else {
+      
+
+    } 
+    
+    
+    else {
       const { data, error } = await supabaseAdmin
         .from("newsletter_subscribers")
         .select("id,email")
