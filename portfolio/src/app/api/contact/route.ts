@@ -91,15 +91,23 @@ export async function POST(req: Request) {
       </div>
     `;
 
+    const safeName = name.replace(/[^\p{L}\p{N}\s.'-]/gu, "").slice(0, 60) || "Website Visitor";
+
+    // Shows in inbox as: "Jane Doe via zachpawelek.com" (but still from your verified address)
+    const fromWithName = `${safeName} via zachpawelek.com <${from.match(/<(.+)>/)?.[1] ?? from}>`;
+    
+    // Reply goes to the visitor (and many clients show this nicely)
+    const replyTo = `${safeName} <${email}>`;
+    
     await resend.emails.send({
-      from,
+      from: fromWithName,
       to,
-      replyTo: email,
+      replyTo,
       subject,
       text,
       html,
     });
-
+    
     return Response.json({ ok: true });
   } catch {
     return Response.json({ error: "Invalid request." }, { status: 400 });
