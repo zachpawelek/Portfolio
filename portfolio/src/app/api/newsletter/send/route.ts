@@ -9,7 +9,6 @@ function sha256Hex(input: string) {
   return crypto.createHash("sha256").update(input).digest("hex");
 }
 
-
 async function createUnsubscribeUrl(subscriberId: string, baseUrl: string) {
   // We generate a fresh raw token because we only store hashes in DB.
   const rawUnsubToken = crypto.randomBytes(32).toString("hex");
@@ -30,11 +29,12 @@ async function createUnsubscribeUrl(subscriberId: string, baseUrl: string) {
 
 export async function POST(req: Request) {
   try {
-    
     const body = await req.json().catch(() => ({}));
     const subject = String(body?.subject ?? "").trim();
     const html = String(body?.html ?? "").trim();
-    const testEmail = String(body?.testEmail ?? "").trim().toLowerCase(); // optional
+    const testEmail = String(body?.testEmail ?? "")
+      .trim()
+      .toLowerCase(); // optional
 
     if (!subject || !html) {
       return NextResponse.json({ ok: false, error: "Missing subject or html." }, { status: 400 });
@@ -44,6 +44,14 @@ export async function POST(req: Request) {
     if (!baseUrl) {
       return NextResponse.json(
         { ok: false, error: "Missing NEXT_PUBLIC_SITE_URL env var." },
+        { status: 500 }
+      );
+    }
+
+    const FROM = process.env.RESEND_FROM;
+    if (!FROM) {
+      return NextResponse.json(
+        { ok: false, error: "Missing RESEND_FROM env var." },
         { status: 500 }
       );
     }
@@ -59,7 +67,8 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
-      if (!data) return NextResponse.json({ ok: false, error: "Test email not found in DB." }, { status: 400 });
+      if (!data)
+        return NextResponse.json({ ok: false, error: "Test email not found in DB." }, { status: 400 });
 
       recipients = [{ id: data.id, email: data.email }];
     } else {
@@ -73,8 +82,6 @@ export async function POST(req: Request) {
     }
 
     // 2) Send emails
-    const FROM = "Zach <onboarding@resend.dev>";
-
     let sent = 0;
     const failed: Array<{ email: string; error: string }> = [];
 
@@ -107,6 +114,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true, sent, failedCount: failed.length, failed }, { status: 200 });
   } catch (err: any) {
-    return NextResponse.json({ ok: false, error: err?.message ?? "Unknown server error." }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: err?.message ?? "Unknown server error." },
+      { status: 500 }
+    );
   }
 }

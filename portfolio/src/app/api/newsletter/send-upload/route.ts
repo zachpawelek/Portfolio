@@ -38,6 +38,14 @@ export async function POST(req: Request) {
       );
     }
 
+    const FROM = process.env.RESEND_FROM;
+    if (!FROM) {
+      return NextResponse.json(
+        { ok: false, error: "Missing RESEND_FROM env var." },
+        { status: 500 }
+      );
+    }
+
     const form = await req.formData();
 
     const subject = String(form.get("subject") ?? "").trim();
@@ -57,7 +65,10 @@ export async function POST(req: Request) {
     const ext = filename.toLowerCase().split(".").pop();
     const allowedExt = ext === "pdf" || ext === "docx";
     if (!allowedExt) {
-      return NextResponse.json({ ok: false, error: "Only .pdf or .docx files are allowed." }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "Only .pdf or .docx files are allowed." },
+        { status: 400 }
+      );
     }
 
     // size guardrail (10MB)
@@ -81,7 +92,8 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
-      if (!data) return NextResponse.json({ ok: false, error: "Test email not found in DB." }, { status: 400 });
+      if (!data)
+        return NextResponse.json({ ok: false, error: "Test email not found in DB." }, { status: 400 });
 
       recipients = [{ id: data.id, email: data.email }];
     } else {
@@ -93,8 +105,6 @@ export async function POST(req: Request) {
       if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
       recipients = (data ?? []) as Array<{ id: string; email: string }>;
     }
-
-    const FROM = "Zach <onboarding@resend.dev>";
 
     let sent = 0;
     const failed: Array<{ email: string; error: string }> = [];
@@ -121,7 +131,6 @@ export async function POST(req: Request) {
         });
 
         if (error) throw new Error(typeof error === "string" ? error : "Resend error");
-
         sent += 1;
       } catch (e: any) {
         failed.push({ email: r.email, error: e?.message ?? "Unknown error" });
@@ -130,6 +139,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true, sent, failedCount: failed.length, failed }, { status: 200 });
   } catch (err: any) {
-    return NextResponse.json({ ok: false, error: err?.message ?? "Unknown server error." }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: err?.message ?? "Unknown server error." },
+      { status: 500 }
+    );
   }
 }

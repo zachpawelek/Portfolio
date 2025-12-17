@@ -23,6 +23,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Invalid email address." }, { status: 400 });
     }
 
+    const FROM = process.env.RESEND_FROM;
+    if (!FROM) {
+      return NextResponse.json({ ok: false, error: "Missing RESEND_FROM env var." }, { status: 500 });
+    }
+
     // 1) Find existing subscriber (if any)
     const { data: existing, error: existingErr } = await supabaseAdmin
       .from("newsletter_subscribers")
@@ -130,7 +135,7 @@ export async function POST(req: Request) {
     const unsubscribeUrl = `${baseUrl}/newsletter/unsubscribe/${encodeURIComponent(rawUnsubToken)}`;
 
     const { error: emailErr } = await resend.emails.send({
-      from: "Zach <onboarding@resend.dev>",
+      from: FROM,
       to: [email],
       subject: "Confirm your subscription",
       html: `
