@@ -7,13 +7,14 @@ export const metadata: Metadata = {
   description: "A bit about me, what I do, and what I like building.",
 };
 
+const ACCENT = "#7c0902";
+
 function env(name: string, fallback = "") {
   const v = process.env[name];
   return v && v.trim() ? v.trim() : fallback;
 }
 
 export default function AboutPage() {
-  // Optional “public” env vars for display (safe to expose)
   const displayName = env("NEXT_PUBLIC_NAME", "Zach");
   const location = env("NEXT_PUBLIC_LOCATION", "Chicago, IL");
   const role = env("NEXT_PUBLIC_ROLE", "Full-stack developer");
@@ -22,23 +23,32 @@ export default function AboutPage() {
 
   return (
     <main className="relative">
-      {/* Subtle background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        {/* neutral glows */}
         <div className="absolute -top-24 left-1/2 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
         <div className="absolute top-64 left-10 h-60 w-60 rounded-full bg-neutral-200/5 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-neutral-200/5 blur-3xl" />
+        {/* subtle red undertone */}
+        <div
+          className="absolute -top-10 right-24 h-80 w-80 rounded-full blur-3xl"
+          style={{ backgroundColor: "rgba(124, 9, 2, 0.10)" }}
+        />
       </div>
 
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-28 md:px-6">
-        {/* Header */}
         <Reveal>
           <header className="mb-10">
-            <p className="text-xs uppercase tracking-wide text-neutral-500">
+            <p
+              className="text-xs uppercase tracking-wide"
+              style={{ color: ACCENT }}
+            >
               About
             </p>
+
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-100 md:text-4xl">
               Hey, I’m {displayName}.
             </h1>
+
             <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
               I’m a {role} based in {location}. I like building polished UIs,
               thoughtful product experiences, and reliable APIs that hold up in
@@ -83,9 +93,7 @@ export default function AboutPage() {
           </header>
         </Reveal>
 
-        {/* Content */}
         <div className="grid gap-8 md:grid-cols-2">
-          {/* Left column */}
           <section className="space-y-4">
             <Reveal delay={0}>
               <Card title="What I care about">
@@ -119,8 +127,7 @@ export default function AboutPage() {
                   <Pill>Resend</Pill>
                 </div>
                 <p className="mt-3 text-xs text-neutral-500">
-                  (Swap these to match your real stack — this is meant to be
-                  honest and specific.)
+                  (Swap these to match your real stack — keep it honest + specific.)
                 </p>
               </Card>
             </Reveal>
@@ -129,14 +136,17 @@ export default function AboutPage() {
               <Card title="Now">
                 <div className="space-y-3">
                   <TimelineItem
+                    dotColor={ACCENT}
                     title="Building portfolio features"
                     body="Polishing pages, adding real-world backend pieces, and shipping quickly."
                   />
                   <TimelineItem
+                    dotColor={ACCENT}
                     title="Improving UX details"
                     body="Loading states, form feedback, accessibility, and responsive layouts."
                   />
                   <TimelineItem
+                    dotColor={ACCENT}
                     title="Staying curious"
                     body="Trying new tools and patterns, but keeping the basics strong."
                   />
@@ -145,15 +155,14 @@ export default function AboutPage() {
             </Reveal>
           </section>
 
-          {/* Right column */}
           <section className="space-y-4">
             <Reveal delay={40}>
               <Card title="A little more detail">
                 <p className="text-sm leading-6 text-neutral-300">
-                  I enjoy projects where product and engineering overlap —
-                  places where the UI needs to feel great, and the backend needs
-                  to be dependable. I’m especially interested in building
-                  features end-to-end: schema → API → UI → deployment.
+                  I enjoy projects where product and engineering overlap — places
+                  where the UI needs to feel great, and the backend needs to be
+                  dependable. I’m especially interested in building features
+                  end-to-end: schema → API → UI → deployment.
                 </p>
                 <p className="mt-3 text-sm leading-6 text-neutral-300">
                   Outside of coding, I like to recharge with whatever keeps me
@@ -198,13 +207,7 @@ export default function AboutPage() {
   );
 }
 
-function Card({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div
       className={[
@@ -212,9 +215,10 @@ function Card({
         "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
         "transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+        "hover:shadow-[0_0_40px_rgba(124,9,2,0.10)]",
         "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+        "focus-within:shadow-[0_0_40px_rgba(124,9,2,0.10)]",
         "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
-        // subtle “shine” sweep on hover
         "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
         "after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent",
         "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
@@ -233,7 +237,8 @@ function Pill({ children }: { children: React.ReactNode }) {
         "inline-flex items-center",
         "rounded-full border border-neutral-800 bg-neutral-900/40 px-3 py-1 text-xs text-neutral-200",
         "transition-all duration-200 ease-out",
-        "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-900/60",
+        "hover:-translate-y-0.5 hover:bg-neutral-900/60",
+        "hover:shadow-[0_0_24px_rgba(124,9,2,0.10)]",
       ].join(" ")}
     >
       {children}
@@ -248,6 +253,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
         "rounded-xl border border-neutral-800 bg-neutral-950/50 p-4",
         "transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/60",
+        "hover:shadow-[0_0_28px_rgba(124,9,2,0.08)]",
       ].join(" ")}
     >
       <p className="text-xs uppercase tracking-wide text-neutral-500">{label}</p>
@@ -256,10 +262,21 @@ function MiniStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function TimelineItem({ title, body }: { title: string; body: string }) {
+function TimelineItem({
+  title,
+  body,
+  dotColor,
+}: {
+  title: string;
+  body: string;
+  dotColor: string;
+}) {
   return (
     <div className="relative pl-5">
-      <div className="absolute left-0 top-2 h-2 w-2 rounded-full bg-neutral-500" />
+      <div
+        className="absolute left-0 top-2 h-2 w-2 rounded-full"
+        style={{ backgroundColor: dotColor }}
+      />
       <p className="text-sm text-neutral-200">{title}</p>
       <p className="mt-1 text-xs leading-5 text-neutral-500">{body}</p>
     </div>
