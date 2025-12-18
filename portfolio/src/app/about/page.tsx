@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Reveal from "./Reveal";
 
 export const metadata: Metadata = {
   title: "About",
@@ -30,152 +31,166 @@ export default function AboutPage() {
 
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-28 md:px-6">
         {/* Header */}
-        <header className="mb-10">
-          <p className="text-xs uppercase tracking-wide text-neutral-500">
-            About
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-100 md:text-4xl">
-            Hey, I’m {displayName}.
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
-            I’m a {role} based in {location}. I like building polished UIs,
-            thoughtful product experiences, and reliable APIs that hold up in
-            production.
-          </p>
+        <Reveal>
+          <header className="mb-10">
+            <p className="text-xs uppercase tracking-wide text-neutral-500">
+              About
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-100 md:text-4xl">
+              Hey, I’m {displayName}.
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
+              I’m a {role} based in {location}. I like building polished UIs,
+              thoughtful product experiences, and reliable APIs that hold up in
+              production.
+            </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href="/contact"
-              className="rounded-full border border-neutral-800 bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-white"
-            >
-              Contact →
-            </Link>
-
-            <Link
-              href="/projects"
-              className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
-            >
-              Projects →
-            </Link>
-
-            {githubUrl ? (
+            <div className="mt-6 flex flex-wrap gap-3">
               <Link
-                href={githubUrl}
-                target="_blank"
+                href="/contact"
+                className="rounded-full border border-neutral-800 bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-white"
+              >
+                Contact →
+              </Link>
+
+              <Link
+                href="/projects"
                 className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
               >
-                GitHub →
+                Projects →
               </Link>
-            ) : null}
 
-            {linkedinUrl ? (
-              <Link
-                href={linkedinUrl}
-                target="_blank"
-                className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
-              >
-                LinkedIn →
-              </Link>
-            ) : null}
-          </div>
-        </header>
+              {githubUrl ? (
+                <Link
+                  href={githubUrl}
+                  target="_blank"
+                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+                >
+                  GitHub →
+                </Link>
+              ) : null}
+
+              {linkedinUrl ? (
+                <Link
+                  href={linkedinUrl}
+                  target="_blank"
+                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+                >
+                  LinkedIn →
+                </Link>
+              ) : null}
+            </div>
+          </header>
+        </Reveal>
 
         {/* Content */}
         <div className="grid gap-8 md:grid-cols-2">
           {/* Left column */}
           <section className="space-y-4">
-            <Card title="What I care about">
-              <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300">
-                <li>
-                  <span className="text-neutral-200">Craft:</span> responsive,
-                  accessible UI that feels intentional.
-                </li>
-                <li>
-                  <span className="text-neutral-200">Reliability:</span> clean
-                  data flows, sensible validation, predictable behavior.
-                </li>
-                <li>
-                  <span className="text-neutral-200">Performance:</span> fast
-                  pages, smart loading, and avoiding “unnecessary work.”
-                </li>
-              </ul>
-            </Card>
+            <Reveal delay={0}>
+              <Card title="What I care about">
+                <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300">
+                  <li>
+                    <span className="text-neutral-200">Craft:</span> responsive,
+                    accessible UI that feels intentional.
+                  </li>
+                  <li>
+                    <span className="text-neutral-200">Reliability:</span> clean
+                    data flows, sensible validation, predictable behavior.
+                  </li>
+                  <li>
+                    <span className="text-neutral-200">Performance:</span> fast
+                    pages, smart loading, and avoiding “unnecessary work.”
+                  </li>
+                </ul>
+              </Card>
+            </Reveal>
 
-            <Card title="Tech I reach for">
-              <div className="flex flex-wrap gap-2">
-                <Pill>Next.js</Pill>
-                <Pill>TypeScript</Pill>
-                <Pill>React</Pill>
-                <Pill>Tailwind</Pill>
-                <Pill>Supabase</Pill>
-                <Pill>Postgres</Pill>
-                <Pill>Vercel</Pill>
-                <Pill>Resend</Pill>
-              </div>
-              <p className="mt-3 text-xs text-neutral-500">
-                (Swap these to match your real stack — this is meant to be
-                honest and specific.)
-              </p>
-            </Card>
+            <Reveal delay={80}>
+              <Card title="Tech I reach for">
+                <div className="flex flex-wrap gap-2">
+                  <Pill>Next.js</Pill>
+                  <Pill>TypeScript</Pill>
+                  <Pill>React</Pill>
+                  <Pill>Tailwind</Pill>
+                  <Pill>Supabase</Pill>
+                  <Pill>Postgres</Pill>
+                  <Pill>Vercel</Pill>
+                  <Pill>Resend</Pill>
+                </div>
+                <p className="mt-3 text-xs text-neutral-500">
+                  (Swap these to match your real stack — this is meant to be
+                  honest and specific.)
+                </p>
+              </Card>
+            </Reveal>
 
-            <Card title="Now">
-              <div className="space-y-3">
-                <TimelineItem
-                  title="Building portfolio features"
-                  body="Polishing pages, adding real-world backend pieces, and shipping quickly."
-                />
-                <TimelineItem
-                  title="Improving UX details"
-                  body="Loading states, form feedback, accessibility, and responsive layouts."
-                />
-                <TimelineItem
-                  title="Staying curious"
-                  body="Trying new tools and patterns, but keeping the basics strong."
-                />
-              </div>
-            </Card>
+            <Reveal delay={160}>
+              <Card title="Now">
+                <div className="space-y-3">
+                  <TimelineItem
+                    title="Building portfolio features"
+                    body="Polishing pages, adding real-world backend pieces, and shipping quickly."
+                  />
+                  <TimelineItem
+                    title="Improving UX details"
+                    body="Loading states, form feedback, accessibility, and responsive layouts."
+                  />
+                  <TimelineItem
+                    title="Staying curious"
+                    body="Trying new tools and patterns, but keeping the basics strong."
+                  />
+                </div>
+              </Card>
+            </Reveal>
           </section>
 
           {/* Right column */}
           <section className="space-y-4">
-            <Card title="A little more detail">
-              <p className="text-sm leading-6 text-neutral-300">
-                I enjoy projects where product and engineering overlap — places
-                where the UI needs to feel great, and the backend needs to be
-                dependable. I’m especially interested in building features end-to-end:
-                schema → API → UI → deployment.
-              </p>
-              <p className="mt-3 text-sm leading-6 text-neutral-300">
-                Outside of coding, I like to recharge with whatever keeps me
-                grounded and curious — learning, reading, and exploring new
-                ideas.
-              </p>
-            </Card>
+            <Reveal delay={40}>
+              <Card title="A little more detail">
+                <p className="text-sm leading-6 text-neutral-300">
+                  I enjoy projects where product and engineering overlap —
+                  places where the UI needs to feel great, and the backend needs
+                  to be dependable. I’m especially interested in building
+                  features end-to-end: schema → API → UI → deployment.
+                </p>
+                <p className="mt-3 text-sm leading-6 text-neutral-300">
+                  Outside of coding, I like to recharge with whatever keeps me
+                  grounded and curious — learning, reading, and exploring new
+                  ideas.
+                </p>
+              </Card>
+            </Reveal>
 
-            <Card title="Highlights">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <MiniStat label="Strength" value="UI polish" />
-                <MiniStat label="Also strong at" value="API design" />
-                <MiniStat label="I like" value="Shipping" />
-                <MiniStat label="I avoid" value="Over-engineering" />
-              </div>
-            </Card>
+            <Reveal delay={120}>
+              <Card title="Highlights">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <MiniStat label="Strength" value="UI polish" />
+                  <MiniStat label="Also strong at" value="API design" />
+                  <MiniStat label="I like" value="Shipping" />
+                  <MiniStat label="I avoid" value="Over-engineering" />
+                </div>
+              </Card>
+            </Reveal>
 
-            <Card title="What I’m looking for">
-              <ul className="space-y-2 text-sm leading-6 text-neutral-300">
-                <li>• Frontend-leaning full-stack work</li>
-                <li>• Products with real users + feedback loops</li>
-                <li>• Teams that care about quality and iteration</li>
-              </ul>
-              <div className="mt-4">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
-                >
-                  Let’s talk →
-                </Link>
-              </div>
-            </Card>
+            <Reveal delay={200}>
+              <Card title="What I’m looking for">
+                <ul className="space-y-2 text-sm leading-6 text-neutral-300">
+                  <li>• Frontend-leaning full-stack work</li>
+                  <li>• Products with real users + feedback loops</li>
+                  <li>• Teams that care about quality and iteration</li>
+                </ul>
+                <div className="mt-4">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+                  >
+                    Let’s talk →
+                  </Link>
+                </div>
+              </Card>
+            </Reveal>
           </section>
         </div>
       </div>
