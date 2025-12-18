@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "./Reveal";
+import TiltCard from "@/components/TiltCard";
 
 export const metadata: Metadata = {
   title: "About",
@@ -206,23 +207,24 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={[
-        "group relative overflow-hidden",
-        "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
-        "transition-all duration-300 ease-out",
-        "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
-        "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
-        "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
-        // subtle “shine” sweep on hover
-        "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
-        "after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent",
-        "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
-      ].join(" ")}
-    >
-      <h2 className="text-sm font-medium text-neutral-100">{title}</h2>
-      <div className="mt-3">{children}</div>
-    </div>
+    <TiltCard className="group" maxTilt={7} scale={1.015} glare glareOpacity={0.11}>
+      <div
+        className={[
+          "relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
+          "transition-colors duration-300 ease-out",
+          "hover:border-neutral-700 hover:bg-neutral-950/55",
+          "focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+          "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+          // subtle “shine” sweep on hover (stays tasteful)
+          "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+          "after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent",
+          "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+        ].join(" ")}
+      >
+        <h2 className="text-sm font-medium text-neutral-100">{title}</h2>
+        <div className="mt-3">{children}</div>
+      </div>
+    </TiltCard>
   );
 }
 
