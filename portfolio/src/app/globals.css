@@ -17,3 +17,48 @@ body {
   color: var(--foreground);
   font-family: var(--font-cormorant-sc), serif;
 }
+
+/* -------------------------------
+   Themed scrollbar (dark neutral)
+   ------------------------------- */
+
+/* Optional: prevents layout shift when scrollbar appears/disappears (supported in modern browsers) */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #404040 #0a0a0a; /* thumb: neutral-700, track: neutral-950 */
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #0a0a0a;           /* neutral-950 */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #262626;      /* neutral-800 */
+  border: 2px solid #0a0a0a;      /* creates “padding” so it looks sleek */
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #404040;      /* neutral-700 */
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #525252;      /* neutral-600 */
+}
+
+/* Optional: corner where two scrollbars meet (rare) */
+*::-webkit-scrollbar-corner {
+  background: #0a0a0a;
+}
+
