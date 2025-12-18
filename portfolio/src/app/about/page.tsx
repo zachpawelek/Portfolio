@@ -22,7 +22,7 @@ export default function AboutPage() {
 
   return (
     <main className="relative">
-      {/* Subtle background glow (same vibe as Contact cards) */}
+      {/* Subtle background glow */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-24 left-1/2 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
         <div className="absolute top-64 left-10 h-60 w-60 rounded-full bg-neutral-200/5 blur-3xl" />
@@ -48,14 +48,14 @@ export default function AboutPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/contact"
-                className="rounded-full border border-neutral-800 bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-white"
+                className="rounded-full border border-neutral-800 bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
               >
                 Contact →
               </Link>
 
               <Link
                 href="/projects"
-                className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+                className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
               >
                 Projects →
               </Link>
@@ -64,7 +64,7 @@ export default function AboutPage() {
                 <Link
                   href={githubUrl}
                   target="_blank"
-                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                 >
                   GitHub →
                 </Link>
@@ -74,7 +74,7 @@ export default function AboutPage() {
                 <Link
                   href={linkedinUrl}
                   target="_blank"
-                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                 >
                   LinkedIn →
                 </Link>
@@ -184,7 +184,7 @@ export default function AboutPage() {
                 <div className="mt-4">
                   <Link
                     href="/contact"
-                    className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+                    className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                   >
                     Let’s talk →
                   </Link>
@@ -206,7 +206,20 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5">
+    <div
+      className={[
+        "group relative overflow-hidden",
+        "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
+        "transition-all duration-300 ease-out",
+        "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+        "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+        "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+        // subtle “shine” sweep on hover
+        "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+        "after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent",
+        "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+      ].join(" ")}
+    >
       <h2 className="text-sm font-medium text-neutral-100">{title}</h2>
       <div className="mt-3">{children}</div>
     </div>
@@ -215,7 +228,14 @@ function Card({
 
 function Pill({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-3 py-1 text-xs text-neutral-200">
+    <span
+      className={[
+        "inline-flex items-center",
+        "rounded-full border border-neutral-800 bg-neutral-900/40 px-3 py-1 text-xs text-neutral-200",
+        "transition-all duration-200 ease-out",
+        "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-900/60",
+      ].join(" ")}
+    >
       {children}
     </span>
   );
@@ -223,7 +243,13 @@ function Pill({ children }: { children: React.ReactNode }) {
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-neutral-800 bg-neutral-950/50 p-4">
+    <div
+      className={[
+        "rounded-xl border border-neutral-800 bg-neutral-950/50 p-4",
+        "transition-all duration-300 ease-out",
+        "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/60",
+      ].join(" ")}
+    >
       <p className="text-xs uppercase tracking-wide text-neutral-500">{label}</p>
       <p className="mt-1 text-sm text-neutral-200">{value}</p>
     </div>
