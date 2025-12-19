@@ -37,19 +37,25 @@ export default function AboutPage() {
       </div>
 
       {/* Cinematic hero using AZCliffs.jpg */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden min-h-[75vh] md:min-h-[85vh] flex items-center">
+
         {/* Background image + overlays */}
         <div className="absolute inset-0">
-          <Image
-            src="/images/AZCliffs.jpg"
-            alt={`${displayName} in nature`}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-            // Keep the right side (your focal point) visible across crops:
-            style={{ objectPosition: "75% center" }}
-          />
+
+
+        <Image
+  src="/images/AZCliffs.jpg"
+  alt={`${displayName} in nature`}
+  fill
+  priority
+  sizes="100vw"
+  className="object-cover object-[55%_75%]! will-change-transform scale-[1.3] -translate-x-[-9%]"
+
+/>
+
+
+
+
           {/* Base darken */}
           <div className="absolute inset-0 bg-black/35" />
           {/* Legibility gradient (left rail for text) */}
@@ -62,7 +68,7 @@ export default function AboutPage() {
         </div>
 
         {/* Hero content */}
-        <div className="relative mx-auto w-full max-w-6xl px-4 py-16 md:px-6 md:py-24">
+        <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
           <Reveal>
             <header className="max-w-2xl">
               <p className="text-xs uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.75)" }}>
