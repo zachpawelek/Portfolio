@@ -26,25 +26,25 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: "Newsletter System (Vercel + Supabase + Resend)",
+    title: "Personal Website Newsletter System (Right here on this site!)",
     summary:
-      "A production-style newsletter feature with confirmation, unsubscribe flow, admin send, and tracking.",
+      "A Fully Integrated Newsletter System With Email Confirmation, Unsubscribe flow, Admin send, and Database Tracking. Why not give it a try on the 'Home' Page?",
     year: "2025",
     featured: true,
     status: "Shipped",
     tech: ["Next.js", "TypeScript", "Supabase", "Postgres", "Resend", "Vercel"],
-    highlights: ["Double opt-in confirmation", "Unsubscribe flow", "Admin send + stats endpoint"],
+    highlights: ["Double opt-in Email Confirmation", "Unsubscribe flow", "Admin-Only Sending Template", " API called Stats endpoint"],
     links: [{ label: "Site", href: "/" }],
   },
   {
-    title: "Portfolio Website",
+    title: "AI Tutor - Capstone Project - Arizona State University",
     summary:
-      "A fast, minimal portfolio with parallax hero, polished UI pages, and real feature work (newsletter/contact).",
-    year: "2025",
+      "A web application assisting students with Algebra 1 material, allowing for custom problem upload, explained step-by-step with personalized feedback",
+    year: "Fall 2025 - Spring 2026",
     featured: true,
     status: "In progress",
-    tech: ["Next.js", "React", "Tailwind", "Vercel"],
-    highlights: ["Parallax hero", "Contact form UX", "Animated section reveals"],
+    tech: ["Expo", "React Native", "Tailwind", "BetterAuth", "SQLite 3"],
+    highlights: ["OpenAI API Integration", "Persistent Cloud Storage", "Custom Problem text/image Processing"],
     links: [{ label: "Live", href: "/" }],
   },
 ];
@@ -72,11 +72,11 @@ export default function ProjectsPage() {
               Projects
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-100 md:text-4xl">
-              Things I’ve built
+              My Work + Contributions
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
-              A mix of shipped features, experiments, and portfolio work — with links to live demos,
-              repos, and (eventually) deeper case studies.
+              A mix of completed projects, University-sanctioned projects, and portfolio work — with links to live demos,
+              repos, and (eventually) an abundance of more projects.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -100,7 +100,7 @@ export default function ProjectsPage() {
           <section className="mb-10">
             <Reveal delay={40}>
               <h2 className="text-sm font-medium text-neutral-100">Featured</h2>
-              <p className="mt-1 text-xs text-neutral-500">The projects I’d point someone to first.</p>
+              <p className="mt-1 text-xs text-neutral-500">A Great Place To Start.</p>
             </Reveal>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -116,7 +116,7 @@ export default function ProjectsPage() {
         <section>
           <Reveal delay={40}>
             <h2 className="text-sm font-medium text-neutral-100">More</h2>
-            <p className="mt-1 text-xs text-neutral-500">Smaller builds, older work, and experiments.</p>
+            <p className="mt-1 text-xs text-neutral-500">Smaller builds, Works in Progress, and Fun Experiments.</p>
           </Reveal>
 
           <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -134,7 +134,7 @@ export default function ProjectsPage() {
           </div>
         </section>
 
-        <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">END</div>
+        <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">FOLLOW ME</div>
         <SocialLinks />
 
       </div>

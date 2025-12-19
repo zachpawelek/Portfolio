@@ -205,7 +205,7 @@ export default function AboutPage() {
           </section>
         </div>
 
-        <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">END</div>
+        <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">FOLLOW ME</div>
         <SocialLinks />
 
 
