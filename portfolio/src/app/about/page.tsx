@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "./Reveal";
 import SocialLinks from "@/components/footer/SocialLinks";
-
 
 export const metadata: Metadata = {
   title: "About",
@@ -25,92 +25,130 @@ export default function AboutPage() {
 
   return (
     <main className="relative">
+      {/* Page-wide subtle glows (kept) */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        {/* neutral glows */}
         <div className="absolute -top-24 left-1/2 h-72 w-240 -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
         <div className="absolute top-64 left-10 h-60 w-60 rounded-full bg-neutral-200/5 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-neutral-200/5 blur-3xl" />
-        {/* subtle red undertone */}
         <div
           className="absolute -top-10 right-24 h-80 w-80 rounded-full blur-3xl"
           style={{ backgroundColor: "rgba(124, 9, 2, 0.10)" }}
         />
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-28 md:px-6">
-        <Reveal>
-          <header className="mb-10">
-            <p
-              className="text-xs uppercase tracking-wide"
-              style={{ color: ACCENT }}
-            >
-              About
-            </p>
+      {/* Cinematic hero using AZCliffs.jpg */}
+      <section className="relative overflow-hidden">
+        {/* Background image + overlays */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/AZCliffs.jpg"
+            alt={`${displayName} in nature`}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+            // Keep the right side (your focal point) visible across crops:
+            style={{ objectPosition: "75% center" }}
+          />
+          {/* Base darken */}
+          <div className="absolute inset-0 bg-black/35" />
+          {/* Legibility gradient (left rail for text) */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          {/* Subtle accent tint to match your theme */}
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: "rgba(124, 9, 2, 0.10)" }}
+          />
+        </div>
 
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-100 md:text-4xl">
-              Hey, I’m {displayName}.
-            </h1>
+        {/* Hero content */}
+        <div className="relative mx-auto w-full max-w-6xl px-4 py-16 md:px-6 md:py-24">
+          <Reveal>
+            <header className="max-w-2xl">
+              <p className="text-xs uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.75)" }}>
+                About
+              </p>
 
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
-              I’m a {role} based in {location}. I like building polished UIs,
-              thoughtful product experiences, and reliable APIs that hold up in
-              production.
-            </p>
+              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+                Hey, I’m {displayName}.
+              </h1>
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/contact"
-                className="rounded-full border border-neutral-800 bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-              >
-                Contact →
-              </Link>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75">
+                I’m a {role} based in {location}. I like building polished UIs, thoughtful product
+                experiences, and reliable APIs that hold up in production.
+              </p>
 
-              <Link
-                href="/projects"
-                className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-              >
-                Projects →
-              </Link>
-
-              {githubUrl ? (
+              <div className="mt-7 flex flex-wrap gap-3">
                 <Link
-                  href={githubUrl}
-                  target="_blank"
-                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                  href="/contact"
+                  className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur
+                             hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                 >
-                  GitHub →
+                  Contact →
                 </Link>
-              ) : null}
 
-              {linkedinUrl ? (
                 <Link
-                  href={linkedinUrl}
-                  target="_blank"
-                  className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                  href="/projects"
+                  className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur
+                             hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                 >
-                  LinkedIn →
+                  Projects →
                 </Link>
-              ) : null}
-            </div>
-          </header>
-        </Reveal>
 
+                {githubUrl ? (
+                  <Link
+                    href={githubUrl}
+                    target="_blank"
+                    className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur
+                               hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  >
+                    GitHub →
+                  </Link>
+                ) : null}
+
+                {linkedinUrl ? (
+                  <Link
+                    href={linkedinUrl}
+                    target="_blank"
+                    className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur
+                               hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  >
+                    LinkedIn →
+                  </Link>
+                ) : null}
+              </div>
+
+              {/* Optional: small location chip (helps “anchor” the hero) */}
+              <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/70 backdrop-blur">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACCENT }} />
+                {location}
+              </div>
+            </header>
+          </Reveal>
+        </div>
+
+        {/* Soft fade into the page below */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-neutral-950" />
+      </section>
+
+      {/* Rest of your About content (unchanged) */}
+      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         <div className="grid gap-8 md:grid-cols-2">
           <section className="space-y-4">
             <Reveal delay={0}>
               <Card title="What I care about">
                 <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300">
                   <li>
-                    <span className="text-neutral-200">Craft:</span> responsive,
-                    accessible UI that feels intentional.
+                    <span className="text-neutral-200">Craft:</span> responsive, accessible UI that
+                    feels intentional.
                   </li>
                   <li>
-                    <span className="text-neutral-200">Reliability:</span> clean
-                    data flows, sensible validation, predictable behavior.
+                    <span className="text-neutral-200">Reliability:</span> clean data flows, sensible
+                    validation, predictable behavior.
                   </li>
                   <li>
-                    <span className="text-neutral-200">Performance:</span> fast
-                    pages, smart loading, and avoiding “unnecessary work.”
+                    <span className="text-neutral-200">Performance:</span> fast pages, smart loading,
+                    and avoiding “unnecessary work.”
                   </li>
                 </ul>
               </Card>
@@ -161,15 +199,13 @@ export default function AboutPage() {
             <Reveal delay={40}>
               <Card title="A little more detail">
                 <p className="text-sm leading-6 text-neutral-300">
-                  I enjoy projects where product and engineering overlap — places
-                  where the UI needs to feel great, and the backend needs to be
-                  dependable. I’m especially interested in building features
-                  end-to-end: schema → API → UI → deployment.
+                  I enjoy projects where product and engineering overlap — places where the UI needs
+                  to feel great, and the backend needs to be dependable. I’m especially interested in
+                  building features end-to-end: schema → API → UI → deployment.
                 </p>
                 <p className="mt-3 text-sm leading-6 text-neutral-300">
-                  Outside of coding, I like to recharge with whatever keeps me
-                  grounded and curious — learning, reading, and exploring new
-                  ideas.
+                  Outside of coding, I like to recharge with whatever keeps me grounded and curious —
+                  learning, reading, and exploring new ideas.
                 </p>
               </Card>
             </Reveal>
@@ -207,8 +243,6 @@ export default function AboutPage() {
 
         <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">FOLLOW ME</div>
         <SocialLinks />
-
-
       </div>
     </main>
   );
@@ -280,10 +314,7 @@ function TimelineItem({
 }) {
   return (
     <div className="relative pl-5">
-      <div
-        className="absolute left-0 top-2 h-2 w-2 rounded-full"
-        style={{ backgroundColor: dotColor }}
-      />
+      <div className="absolute left-0 top-2 h-2 w-2 rounded-full" style={{ backgroundColor: dotColor }} />
       <p className="text-sm text-neutral-200">{title}</p>
       <p className="mt-1 text-xs leading-5 text-neutral-500">{body}</p>
     </div>
