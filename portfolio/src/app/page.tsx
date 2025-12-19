@@ -774,7 +774,7 @@ export default function Home() {
           <div
             className={`${inter.className} mt-16 text-center text-xs tracking-[0.35em] text-white/35`}
           >
-            END
+            FOLLOW ME
           </div>
 
           <SocialLinks />

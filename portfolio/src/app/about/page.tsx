@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "./Reveal";
+import SocialLinks from "@/components/footer/SocialLinks";
+
 
 export const metadata: Metadata = {
   title: "About",
@@ -202,6 +204,11 @@ export default function AboutPage() {
             </Reveal>
           </section>
         </div>
+
+        <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">END</div>
+        <SocialLinks />
+
+
       </div>
     </main>
   );
