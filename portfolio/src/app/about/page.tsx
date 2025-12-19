@@ -25,7 +25,7 @@ export default function AboutPage() {
     <main className="relative">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         {/* neutral glows */}
-        <div className="absolute -top-24 left-1/2 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
+        <div className="absolute -top-24 left-1/2 h-72 w-240 -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
         <div className="absolute top-64 left-10 h-60 w-60 rounded-full bg-neutral-200/5 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-neutral-200/5 blur-3xl" />
         {/* subtle red undertone */}
@@ -220,7 +220,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
         "focus-within:shadow-[0_0_40px_rgba(124,9,2,0.10)]",
         "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
         "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
-        "after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent",
+        "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
         "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
       ].join(" ")}
     >

@@ -24,7 +24,7 @@ export default function ContactPage() {
   return (
     <main className="relative">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-24 left-1/2 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
+        <div className="absolute -top-24 left-1/2 h-72 w-240 -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
         <div
           className="absolute top-56 right-10 h-72 w-72 rounded-full blur-3xl"
           style={{ backgroundColor: "rgba(124, 9, 2, 0.10)" }}

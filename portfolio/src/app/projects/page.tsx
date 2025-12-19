@@ -54,11 +54,11 @@ export default function ProjectsPage() {
   return (
     <main className="relative">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-24 left-1/2 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
+        <div className="absolute -top-24 left-1/2 h-72 w-240 -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
         <div className="absolute top-72 left-10 h-60 w-60 rounded-full bg-neutral-200/5 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-neutral-200/5 blur-3xl" />
         <div
-          className="absolute top-36 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full blur-3xl"
+          className="absolute top-36 left-1/2 h-72 w-160 -translate-x-1/2 rounded-full blur-3xl"
           style={{ backgroundColor: "rgba(124, 9, 2, 0.08)" }}
         />
       </div>
@@ -148,7 +148,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
         "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
         "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
-        "after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent",
+        "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
         "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
       ].join(" ")}
     >
@@ -170,7 +170,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
           {project.highlights.slice(0, 3).map((h) => (
             <li key={h} className="flex gap-2">
               <span
-                className="mt-[6px] inline-block h-1.5 w-1.5 rounded-full"
+                className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full"
                 style={{ backgroundColor: accent }}
               />
               <span>{h}</span>

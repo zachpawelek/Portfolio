@@ -3,6 +3,8 @@
 import Image from "next/image"; // Optimized image component
 import React, { useCallback, useEffect, useRef, useState } from "react"; // React hooks
 import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects
+import SocialLinks from "@/components/footer/SocialLinks";
+
 
 /**
  * clamp01:
@@ -774,6 +776,8 @@ export default function Home() {
           >
             END
           </div>
+
+          <SocialLinks />
         </div>
       </section>
     </main>
