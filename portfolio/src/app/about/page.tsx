@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Reveal from "./Reveal";
+import LifeCarousel from "./LifeCarousel";
 import SocialLinks from "@/components/footer/SocialLinks";
 
 export const metadata: Metadata = {
@@ -23,6 +24,21 @@ export default function AboutPage() {
   const githubUrl = env("NEXT_PUBLIC_GITHUB_URL", "");
   const linkedinUrl = env("NEXT_PUBLIC_LINKEDIN_URL", "");
 
+  // Drop 6–10 images into: public/images/life/
+  // Then update these filenames to match.
+  const lifePhotos = [
+    { src: "/images/life/01.jpeg", alt: "Personal photo 1" },
+    { src: "/images/life/02.jpeg", alt: "Personal photo 2" },
+    { src: "/images/life/03.jpeg", alt: "Personal photo 3" },
+    { src: "/images/life/04.jpeg", alt: "Personal photo 4" },
+    { src: "/images/life/05.jpeg", alt: "Personal photo 5" },
+    // add up to 10 if you want:
+    // { src: "/images/life/07.jpg", alt: "Personal photo 7" },
+    // { src: "/images/life/08.jpg", alt: "Personal photo 8" },
+    // { src: "/images/life/09.jpg", alt: "Personal photo 9" },
+    // { src: "/images/life/10.jpg", alt: "Personal photo 10" },
+  ];
+
   return (
     <main className="relative">
       {/* Page-wide subtle glows (kept) */}
@@ -38,24 +54,16 @@ export default function AboutPage() {
 
       {/* Cinematic hero using AZCliffs.jpg */}
       <section className="relative overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-center">
-
-
         {/* Background image + overlays */}
         <div className="absolute inset-0">
-
-
-        <Image
-  src="/images/AZCliffs.jpg"
-  alt={`${displayName} in nature`}
-  fill
-  priority
-  sizes="100vw"
-  className="object-cover object-[55%_72%]! will-change-transform scale-[1.3] -translate-x-[-9%]"
-
-/>
-
-
-
+          <Image
+            src="/images/AZCliffs.jpg"
+            alt={`${displayName} in nature`}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[55%_70%]! will-change-transform scale-[1.3] -translate-x-[-9%]"
+          />
 
           {/* Base darken */}
           <div className="absolute inset-0 bg-black/35" />
@@ -72,7 +80,10 @@ export default function AboutPage() {
         <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
           <Reveal>
             <header className="max-w-2xl">
-              <p className="text-xs uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.75)" }}>
+              <p
+                className="text-xs uppercase tracking-wide"
+                style={{ color: "rgba(255,255,255,0.75)" }}
+              >
                 About
               </p>
 
@@ -138,7 +149,7 @@ export default function AboutPage() {
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-neutral-950" />
       </section>
 
-      {/* Rest of your About content (unchanged) */}
+      {/* Rest of your About content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         <div className="grid gap-8 md:grid-cols-2">
           <section className="space-y-4">
@@ -248,6 +259,19 @@ export default function AboutPage() {
           </section>
         </div>
 
+        {/* NEW: Personal-life photo carousel near bottom */}
+        <Reveal delay={240}>
+          <div className="mt-12">
+            <Card title="Life outside of code">
+              <p className="text-sm leading-6 text-neutral-300">
+                A few snapshots from my life — hikes, friends, weekends, whatever I’m into lately.
+              </p>
+
+              <LifeCarousel images={lifePhotos} accent={ACCENT} className="mt-5" />
+            </Card>
+          </div>
+        </Reveal>
+
         <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">FOLLOW ME</div>
         <SocialLinks />
       </div>
@@ -321,7 +345,10 @@ function TimelineItem({
 }) {
   return (
     <div className="relative pl-5">
-      <div className="absolute left-0 top-2 h-2 w-2 rounded-full" style={{ backgroundColor: dotColor }} />
+      <div
+        className="absolute left-0 top-2 h-2 w-2 rounded-full"
+        style={{ backgroundColor: dotColor }}
+      />
       <p className="text-sm text-neutral-200">{title}</p>
       <p className="mt-1 text-xs leading-5 text-neutral-500">{body}</p>
     </div>
