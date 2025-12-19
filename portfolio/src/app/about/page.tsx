@@ -37,7 +37,8 @@ export default function AboutPage() {
       </div>
 
       {/* Cinematic hero using AZCliffs.jpg */}
-      <section className="relative overflow-hidden min-h-[75vh] md:min-h-[85vh] flex items-center">
+      <section className="relative overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-center">
+
 
         {/* Background image + overlays */}
         <div className="absolute inset-0">
@@ -49,7 +50,7 @@ export default function AboutPage() {
   fill
   priority
   sizes="100vw"
-  className="object-cover object-[55%_75%]! will-change-transform scale-[1.3] -translate-x-[-9%]"
+  className="object-cover object-[55%_72%]! will-change-transform scale-[1.3] -translate-x-[-9%]"
 
 />
 
