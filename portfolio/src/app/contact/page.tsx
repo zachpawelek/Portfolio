@@ -19,9 +19,9 @@ function env(name: string, fallback = "") {
 export default function ContactPage() {
   const email = env("NEXT_PUBLIC_CONTACT_EMAIL", "your@email.com");
   const location = env("NEXT_PUBLIC_LOCATION", "Chicago, IL");
-  const githubUrl = env("NEXT_PUBLIC_GITHUB_URL", "");
-  const linkedinUrl = env("NEXT_PUBLIC_LINKEDIN_URL", "");
-  const instagramUrl = env("NEXT_PUBLIC_INSTAGRAM_URL", "");
+  const githubUrl = env("NEXT_PUBLIC_GITHUB_URL", "https://github.com/zachpawelek");
+  const linkedinUrl = env("NEXT_PUBLIC_LINKEDIN_URL", "https://www.linkedin.com/in/zach-pawelek-60a2033a1/");
+  const instagramUrl = env("NEXT_PUBLIC_INSTAGRAM_URL", "https://www.instagram.com/notzachh/");
 
   return (
     <main className="relative">
