@@ -542,26 +542,24 @@ export default function Home() {
   <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>About Me</h2>
 
   <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
-    {/* Headshot */}
-    <div className="flex justify-center md:justify-start">
-      {/* ✅ NEW: outer wrapper so the glow/shadow is NOT clipped by overflow-hidden */}
-      <div className="relative shadow-[0_22px_70px_-35px_rgba(124,9,2,0.40)]">
-        {/* ✅ NEW: subtle red gradient glow behind the image */}
-        <div className="pointer-events-none absolute -inset-10 -z-10 rounded-4xl bg-[radial-gradient(circle_at_30%_30%,rgba(124,9,2,0.15),transparent_20%),linear-gradient(to_bottom,rgba(124,9,2,0.12),transparent_55%)] blur-2xl" />
-
-        {/* ✅ unchanged container (still handles rounding + crop) */}
-        <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
-          <Image
-            src="/images/me.jpg"
-            alt="Headshot of Zach Pawelek"
-            fill
-            sizes="(min-width: 768px) 384px, 288px"
-            className="object-cover"
-            priority={false}
-          />
-        </div>
-      </div>
+   {/* Headshot */}
+<div className="flex justify-center md:justify-start">
+  {/* Neutral shadow wrapper (no red glow) */}
+  <div className="relative shadow-[0_22px_70px_-35px_rgba(255,255,255,0.25)]">
+    {/* Image container (rounding + crop + subtle ring) */}
+    <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
+      <Image
+        src="/images/me.jpg"
+        alt="Headshot of Zach Pawelek"
+        fill
+        sizes="(min-width: 768px) 384px, 288px"
+        className="object-cover"
+        priority={false}
+      />
     </div>
+  </div>
+</div>
+
 
     {/* Bio + buttons */}
 
@@ -679,97 +677,126 @@ export default function Home() {
           </p>
 
           {/* Two-column layout on desktop */}
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {/* Left card: newsletter signup */}
-            <div className="relative overflow-hidden rounded-3xl bg-white/5 ring-1 ring-white/15 backdrop-blur">
-              <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+<div className="mt-10 grid gap-6 md:grid-cols-2">
+  {/* Left card: newsletter signup */}
+  <div
+    className={[
+      "group relative overflow-hidden",
+      "rounded-2xl border border-neutral-800 bg-neutral-950/40",
+      "transition-all duration-300 ease-out",
+      "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+      "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+      "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+      "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+      "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+      "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+      "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
+      "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+    ].join(" ")}
+  >
+    <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl bg-[radial-gradient(circle,rgba(124,9,2,0.18),transparent_65%)]" />
 
-              <div className="relative p-8">
-                <div
-                  className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
-                  style={{ color: "#7c0902" }}
-                >
-                  Newsletter
-                </div>
+    <div className="relative p-8">
+      <div
+        className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
+        style={{ color: "#7c0902" }}
+      >
+        Newsletter
+      </div>
 
-                <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
-                  Subscribe for updates
-                </h3>
+      <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
+        Subscribe for updates
+      </h3>
 
-                <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
-                  Get a short email containing my newsletter. Unsubscribe anytime.
-                </p>
+      <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
+        Get a short email containing my newsletter. Unsubscribe anytime.
+      </p>
 
-                {/* Form (now wired to POST /api/subscribe) */}
-                <form className="mt-6 space-y-3" onSubmit={onSubscribe}>
-                  <label className="block">
-                    <span className={`${inter.className} text-sm text-white/60`}>Email</span>
-                    <input
-                      type="email"
-                      required
-                      value={subEmail}
-                      onChange={(e) => setSubEmail(e.target.value)}
-                      placeholder="you@domain.com"
-                      className="mt-2 w-full rounded-2xl bg-black/30 px-4 py-3 text-white placeholder:text-white/30 ring-1 ring-white/10 outline-none focus:ring-white/25"
-                    />
-                  </label>
+      <form className="mt-6 space-y-3" onSubmit={onSubscribe}>
+        <label className="block">
+          <span className={`${inter.className} text-xs uppercase tracking-wide text-neutral-500`}>
+            Email
+          </span>
+          <input
+            type="email"
+            required
+            value={subEmail}
+            onChange={(e) => setSubEmail(e.target.value)}
+            placeholder="you@domain.com"
+            className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-950/60 px-4 py-3 text-sm text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-700"
+          />
+        </label>
 
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <button
-                      type="submit"
-                      disabled={subStatus === "loading"}
-                      className="rounded-full px-5 py-2.5 text-sm font-medium text-black hover:opacity-90 disabled:opacity-60"
-                      style={{ backgroundColor: "#7c0902" }}
-                    >
-                      {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
-                    </button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            type="submit"
+            disabled={subStatus === "loading"}
+            className="inline-flex items-center justify-center rounded-xl border border-neutral-800 px-5 py-2.5 text-sm font-medium text-white transition-transform duration-200 transform hover:scale-105 active:scale-100 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-700 disabled:opacity-60"
 
-                    <div className={`${inter.className} text-xs text-white/50`}>
-                      By subscribing, you agree to receive emails from me.
-                    </div>
-                  </div>
+            style={{ backgroundColor: "#7c0902" }}
+          >
+            {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
+          </button>
 
-                  {/* Success/Error message */}
-                  {subMsg ? (
-                    <div
-                      className={`${inter.className} text-sm ${
-                        subStatus === "error" ? "text-red-300" : "text-white/70"
-                      }`}
-                    >
-                      {subMsg}
-                    </div>
-                  ) : null}
-                </form>
-              </div>
-            </div>
-
-            {/* Right card: what to expect */}
-            <div className="rounded-3xl bg-white/5 p-8 ring-1 ring-white/15">
-              <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
-
-              <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
-                <li className="flex items-start gap-3">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-                  New projects
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-                  Dev notes &amp; small experiments
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-                  Occasional links + tools I’m liking
-                </li>
-              </ul>
-
-              <div className="mt-8 rounded-2xl bg-black/30 p-5 ring-1 ring-white/10">
-                <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
-                <div className={`${inter.className} mt-1 text-sm text-white/50`}>
-                  Usually 1–2 emails per month.
-                </div>
-              </div>
-            </div>
+          <div className={`${inter.className} text-xs text-white/50`}>
+            By subscribing, you agree to receive emails from me.
           </div>
+        </div>
+
+        {subMsg ? (
+          <div
+            className={`${inter.className} text-sm ${
+              subStatus === "error" ? "text-red-300" : "text-white/70"
+            }`}
+          >
+            {subMsg}
+          </div>
+        ) : null}
+      </form>
+    </div>
+  </div>
+
+  {/* Right card: what to expect */}
+  <div
+    className={[
+      "group relative overflow-hidden",
+      "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-8",
+      "transition-all duration-300 ease-out",
+      "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+      "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+      "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+      "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+      "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+      "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+      "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
+      "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+    ].join(" ")}
+  >
+    <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
+
+    <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
+      <li className="flex items-start gap-3">
+        <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
+        New projects
+      </li>
+      <li className="flex items-start gap-3">
+        <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
+        Dev notes &amp; small experiments
+      </li>
+      <li className="flex items-start gap-3">
+        <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
+        Occasional links + tools I’m liking
+      </li>
+    </ul>
+
+    <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-950/50 p-5">
+      <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
+      <div className={`${inter.className} mt-1 text-sm text-white/50`}>
+        Usually 1–2 emails per month.
+      </div>
+    </div>
+  </div>
+</div>
 
           {/* Tiny footer marker */}
           <div
