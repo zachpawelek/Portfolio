@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react"; // Reac
 import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects
 import SocialLinks from "@/components/footer/SocialLinks";
 
-
 /**
  * clamp01:
  * Utility to clamp any number into the 0..1 range.
@@ -33,8 +32,8 @@ const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
  * - We store the offset in state and apply it as translate3d(...) to the image wrapper.
  */
 function useParallax<T extends HTMLElement>(strength = 140) {
-  const ref = useRef<T | null>(null); // ✅ ref attached to the section we want to parallax
-  const [offset, setOffset] = useState(0); // ✅ computed parallax translate value (in px)
+  const ref = useRef<T | null>(null); //  ref attached to the section we want to parallax
+  const [offset, setOffset] = useState(0); // computed parallax translate value (in px)
 
   /**
    * strengthRef:
@@ -484,8 +483,11 @@ export default function Home() {
           />
         </div>
 
-        {/* Dark overlay to improve text readability */}
-        <div className="absolute inset-0 z-10 bg-black/45" />
+        {/* ✅ Subtle red gradient wash on the background image */}
+        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%,rgba(0,0,0,0.60))]" />
+
+        {/* Dark overlay to improve text readability (kept, slightly lighter) */}
+        <div className="absolute inset-0 z-10 bg-black/35" />
 
         {/* Bottom fade into your base background color */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
@@ -536,25 +538,33 @@ export default function Home() {
           ref={aboutFade.ref}
           style={{ opacity: aboutFade.opacity }}
           className="mx-auto max-w-6xl will-change-[opacity]"
-        >
-          <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>About Me</h2>
+>
+  <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>About Me</h2>
 
-          <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
-            {/* Headshot */}
-            <div className="flex justify-center md:justify-start">
-              <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
-                <Image
-                  src="/images/me.jpg"
-                  alt="Headshot of Zach Pawelek"
-                  fill
-                  sizes="(min-width: 768px) 384px, 288px"
-                  className="object-cover"
-                  priority={false}
-                />
-              </div>
-            </div>
+  <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+    {/* Headshot */}
+    <div className="flex justify-center md:justify-start">
+      {/* ✅ NEW: outer wrapper so the glow/shadow is NOT clipped by overflow-hidden */}
+      <div className="relative shadow-[0_22px_70px_-35px_rgba(124,9,2,0.40)]">
+        {/* ✅ NEW: subtle red gradient glow behind the image */}
+        <div className="pointer-events-none absolute -inset-10 -z-10 rounded-[2rem] bg-[radial-gradient(circle_at_30%_30%,rgba(124,9,2,0.15),transparent_20%),linear-gradient(to_bottom,rgba(124,9,2,0.12),transparent_55%)] blur-2xl" />
 
-            {/* Bio + buttons */}
+        {/* ✅ unchanged container (still handles rounding + crop) */}
+        <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
+          <Image
+            src="/images/me.jpg"
+            alt="Headshot of Zach Pawelek"
+            fill
+            sizes="(min-width: 768px) 384px, 288px"
+            className="object-cover"
+            priority={false}
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* Bio + buttons */}
+
             <div>
               <p className={`${inter.className} text-base leading-relaxed text-white/75 md:text-lg`}>
                 Hello. This is my Bio. I have no idea what I'm going to put here yet but I'm sure
@@ -600,7 +610,10 @@ export default function Home() {
           />
         </div>
 
-        {/* Dark overlay for legibility */}
+        {/* ✅ Subtle red gradient wash on the cliffs background image */}
+        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_80%_70%,rgba(124,9,2,0.20),transparent_60%),linear-gradient(to_top,rgba(124,9,2,0.10),transparent_45%)]" />
+
+        {/* Dark overlay for legibility (kept) */}
         <div className="absolute inset-0 z-10 bg-black/35" />
 
         {/* Top fade into base background */}
@@ -630,10 +643,7 @@ export default function Home() {
               className="pointer-events-none absolute bottom-6 right-0 text-right will-change-[opacity]"
             >
               {/* Accent color: set via style because Tailwind can't do text-#HEX directly */}
-              <div
-                className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
-                style={{ color: "#7c0902" }}
-              >
+              <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>
                 Footer Label
               </div>
 
@@ -659,13 +669,13 @@ export default function Home() {
           className="relative z-20 mx-auto max-w-6xl will-change-[opacity]"
         >
           <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
-            Stay in the loop
+            Stay Up To Date
           </h2>
 
           <p
             className={`${inter.className} mt-3 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg`}
           >
-            Occasional updates on new projects, experiments, and what I’m building. No spam.
+            Occasional updates on my new projects, contributions, and what I’m building. No spam.
           </p>
 
           {/* Two-column layout on desktop */}
@@ -687,7 +697,7 @@ export default function Home() {
                 </h3>
 
                 <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
-                  Get a short email when something new ships. Unsubscribe anytime.
+                  Get a short email containing my newsletter. Unsubscribe anytime.
                 </p>
 
                 {/* Form (now wired to POST /api/subscribe) */}
@@ -739,24 +749,15 @@ export default function Home() {
 
               <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
                 <li className="flex items-start gap-3">
-                  <span
-                    className="mt-1 h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: "#7c0902" }}
-                  />
-                  New projects + case studies
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
+                  New projects
                 </li>
                 <li className="flex items-start gap-3">
-                  <span
-                    className="mt-1 h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: "#7c0902" }}
-                  />
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
                   Dev notes &amp; small experiments
                 </li>
                 <li className="flex items-start gap-3">
-                  <span
-                    className="mt-1 h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: "#7c0902" }}
-                  />
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
                   Occasional links + tools I’m liking
                 </li>
               </ul>

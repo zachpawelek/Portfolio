@@ -68,7 +68,7 @@ export default function AboutPage() {
           {/* Base darken */}
           <div className="absolute inset-0 bg-black/35" />
           {/* Legibility gradient (left rail for text) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
           {/* Subtle accent tint to match your theme */}
           <div
             className="absolute inset-0"
@@ -146,7 +146,7 @@ export default function AboutPage() {
         </div>
 
         {/* Soft fade into the page below */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-neutral-950" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 
       {/* Rest of your About content */}
