@@ -4,13 +4,13 @@ import Image from "next/image"; // Optimized image component
 import React, { useCallback, useEffect, useRef, useState } from "react"; // React hooks
 import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects
 import SocialLinks from "@/components/footer/SocialLinks";
+import CliffsParticles from "@/components/home/CliffsParticles";
 
 /**
  * clamp01:
  * Utility to clamp any number into the 0..1 range.
  * This is used for opacity math (opacity must stay between 0 and 1).
  */
-
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
 
 /**
@@ -214,11 +214,20 @@ export default function Home() {
    * Fade controllers:
    * - aboutFade fades the "About Me" content in AND out near header.
    * - cliffsHeaderFade fades the top-left cliffs heading in/out.
+   * - cliffsParticlesFade fades the particle field in/out in the empty space.
    * - cliffsFooterFade fades the bottom-right cliffs "footer" in/out, later than header.
    * - bottomFade fades the final section IN only (no fade-out).
    */
   const aboutFade = useScrollFade<HTMLDivElement>();
   const cliffsHeaderFade = useScrollFade<HTMLDivElement>();
+
+  // ✅ Particle layer in cliffs (fills dead space, fades in/out)
+  const cliffsParticlesFade = useScrollFade<HTMLDivElement>({
+    enterStartMult: 0.96,
+    enterEndMult: 0.76,
+    graceMult: 3.25,
+    fadeDistMult: 3.1,
+  });
 
   // Bottom-right footer: fades in later and fades out later than the cliffs header.
   const cliffsFooterFade = useScrollFade<HTMLDivElement>({
@@ -372,6 +381,7 @@ export default function Home() {
        */
       aboutFade.update(viewportH, headerBottom, headerH);
       cliffsHeaderFade.update(viewportH, headerBottom, headerH);
+      cliffsParticlesFade.update(viewportH, headerBottom, headerH); // ✅ added
       cliffsFooterFade.update(viewportH, headerBottom, headerH);
       bottomFade.update(viewportH, headerBottom, headerH);
 
@@ -457,6 +467,7 @@ export default function Home() {
     cliffs.update,
     aboutFade.update,
     cliffsHeaderFade.update,
+    cliffsParticlesFade.update, // ✅ added
     cliffsFooterFade.update,
     bottomFade.update,
   ]);
@@ -488,6 +499,11 @@ export default function Home() {
 
         {/* Dark overlay to improve text readability (kept, slightly lighter) */}
         <div className="absolute inset-0 z-10 bg-black/35" />
+
+        {/* ✅ Subtle particle field over the horses background */}
+        <div className="pointer-events-none absolute inset-0 z-[15]">
+          <CliffsParticles />
+        </div>
 
         {/* Bottom fade into your base background color */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
@@ -538,31 +554,29 @@ export default function Home() {
           ref={aboutFade.ref}
           style={{ opacity: aboutFade.opacity }}
           className="mx-auto max-w-6xl will-change-[opacity]"
->
-  <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>About Me</h2>
+        >
+          <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>About Me</h2>
 
-  <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
-   {/* Headshot */}
-<div className="flex justify-center md:justify-start">
-  {/* Neutral shadow wrapper (no red glow) */}
-  <div className="relative shadow-[0_22px_70px_-35px_rgba(255,255,255,0.25)]">
-    {/* Image container (rounding + crop + subtle ring) */}
-    <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
-      <Image
-        src="/images/me.jpg"
-        alt="Headshot of Zach Pawelek"
-        fill
-        sizes="(min-width: 768px) 384px, 288px"
-        className="object-cover"
-        priority={false}
-      />
-    </div>
-  </div>
-</div>
+          <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
+            {/* Headshot */}
+            <div className="flex justify-center md:justify-start">
+              {/* Neutral shadow wrapper (no red glow) */}
+              <div className="relative shadow-[0_22px_70px_-35px_rgba(255,255,255,0.25)]">
+                {/* Image container (rounding + crop + subtle ring) */}
+                <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
+                  <Image
+                    src="/images/me.jpg"
+                    alt="Headshot of Zach Pawelek"
+                    fill
+                    sizes="(min-width: 768px) 384px, 288px"
+                    className="object-cover"
+                    priority={false}
+                  />
+                </div>
+              </div>
+            </div>
 
-
-    {/* Bio + buttons */}
-
+            {/* Bio + buttons */}
             <div>
               <p className={`${inter.className} text-base leading-relaxed text-white/75 md:text-lg`}>
                 Hello. I'm Zach.
@@ -584,14 +598,12 @@ export default function Home() {
                 >
                   Contact
                 </a>
-                
               </div>
+
               <p className={`${inter.className} text-base py-11 leading-relaxed text-white/25 md:text-sm`}>
                 Take a Look around and get to know me, and my work, a little bit better!
-                </p>
-              
+              </p>
             </div>
-            
           </div>
         </div>
       </section>
@@ -635,18 +647,28 @@ export default function Home() {
             <div
               ref={cliffsHeaderFade.ref}
               style={{ opacity: cliffsHeaderFade.opacity }}
-              className="will-change-[opacity]"
+              className="relative z-10 will-change-[opacity]" // ✅ ensure it's above particles
             >
               <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
                 Another Section
               </h2>
             </div>
 
+            {/* ✅ Subtle particle field (fades in/out with scroll) */}
+            <div
+              ref={cliffsParticlesFade.ref}
+              style={{ opacity: cliffsParticlesFade.opacity }}
+              className="pointer-events-none absolute inset-0 z-0 will-change-[opacity]"
+            >
+              {/* NOTE: don't pass changing opacity prop to avoid re-init on scroll */}
+              <CliffsParticles />
+            </div>
+
             {/* Bottom-right footer: fades using cliffsFooterFade, later than the header */}
             <div
               ref={cliffsFooterFade.ref}
               style={{ opacity: cliffsFooterFade.opacity }}
-              className="pointer-events-none absolute bottom-6 right-0 text-right will-change-[opacity]"
+              className="pointer-events-none absolute bottom-6 right-0 z-10 text-right will-change-[opacity]" // ✅ ensure it's above particles
             >
               {/* Accent color: set via style because Tailwind can't do text-#HEX directly */}
               <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>
@@ -685,126 +707,136 @@ export default function Home() {
           </p>
 
           {/* Two-column layout on desktop */}
-<div className="mt-10 grid gap-6 md:grid-cols-2">
-  {/* Left card: newsletter signup */}
-  <div
-    className={[
-      "group relative overflow-hidden",
-      "rounded-2xl border border-neutral-800 bg-neutral-950/40",
-      "transition-all duration-300 ease-out",
-      "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
-      "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-      "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
-      "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-      "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
-      "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
-      "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
-      "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
-    ].join(" ")}
-  >
-    <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl bg-[radial-gradient(circle,rgba(124,9,2,0.18),transparent_65%)]" />
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {/* Left card: newsletter signup */}
+            <div
+              className={[
+                "group relative overflow-hidden",
+                "rounded-2xl border border-neutral-800 bg-neutral-950/40",
+                "transition-all duration-300 ease-out",
+                "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+                "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+                "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+                "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+                "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
+                "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+              ].join(" ")}
+            >
+              <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl bg-[radial-gradient(circle,rgba(124,9,2,0.18),transparent_65%)]" />
 
-    <div className="relative p-8">
-      <div
-        className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
-        style={{ color: "#7c0902" }}
-      >
-        Newsletter
-      </div>
+              <div className="relative p-8">
+                <div
+                  className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
+                  style={{ color: "#7c0902" }}
+                >
+                  Newsletter
+                </div>
 
-      <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
-        Subscribe for updates
-      </h3>
+                <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
+                  Subscribe for updates
+                </h3>
 
-      <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
-        Get a short email containing my newsletter. Unsubscribe anytime.
-      </p>
+                <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
+                  Get a short email containing my newsletter. Unsubscribe anytime.
+                </p>
 
-      <form className="mt-6 space-y-3" onSubmit={onSubscribe}>
-        <label className="block">
-          <span className={`${inter.className} text-xs uppercase tracking-wide text-neutral-500`}>
-            Email
-          </span>
-          <input
-            type="email"
-            required
-            value={subEmail}
-            onChange={(e) => setSubEmail(e.target.value)}
-            placeholder="you@domain.com"
-            className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-950/60 px-4 py-3 text-sm text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-700"
-          />
-        </label>
+                <form className="mt-6 space-y-3" onSubmit={onSubscribe}>
+                  <label className="block">
+                    <span
+                      className={`${inter.className} text-xs uppercase tracking-wide text-neutral-500`}
+                    >
+                      Email
+                    </span>
+                    <input
+                      type="email"
+                      required
+                      value={subEmail}
+                      onChange={(e) => setSubEmail(e.target.value)}
+                      placeholder="you@domain.com"
+                      className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-950/60 px-4 py-3 text-sm text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-700"
+                    />
+                  </label>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <button
-            type="submit"
-            disabled={subStatus === "loading"}
-            className="inline-flex items-center justify-center rounded-xl border border-neutral-800 px-5 py-2.5 text-sm font-medium text-white transition-transform duration-200 transform hover:scale-105 active:scale-100 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-700 disabled:opacity-60"
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <button
+                      type="submit"
+                      disabled={subStatus === "loading"}
+                      className="inline-flex items-center justify-center rounded-xl border border-neutral-800 px-5 py-2.5 text-sm font-medium text-white transition-transform duration-200 transform hover:scale-105 active:scale-100 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-700 disabled:opacity-60"
+                      style={{ backgroundColor: "#7c0902" }}
+                    >
+                      {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
+                    </button>
 
-            style={{ backgroundColor: "#7c0902" }}
-          >
-            {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
-          </button>
+                    <div className={`${inter.className} text-xs text-white/50`}>
+                      By subscribing, you agree to receive emails from me.
+                    </div>
+                  </div>
 
-          <div className={`${inter.className} text-xs text-white/50`}>
-            By subscribing, you agree to receive emails from me.
+                  {subMsg ? (
+                    <div
+                      className={`${inter.className} text-sm ${
+                        subStatus === "error" ? "text-red-300" : "text-white/70"
+                      }`}
+                    >
+                      {subMsg}
+                    </div>
+                  ) : null}
+                </form>
+              </div>
+            </div>
+
+            {/* Right card: what to expect */}
+            <div
+              className={[
+                "group relative overflow-hidden",
+                "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-8",
+                "transition-all duration-300 ease-out",
+                "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+                "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+                "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+                "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+                "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
+                "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+              ].join(" ")}
+            >
+              <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
+
+              <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-1 h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: "#7c0902" }}
+                  />
+                  New projects
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-1 h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: "#7c0902" }}
+                  />
+                  Dev notes &amp; small experiments
+                </li>
+                <li className="flex items-start gap-3">
+                  <span
+                    className="mt-1 h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: "#7c0902" }}
+                  />
+                  Occasional links + tools I’m liking
+                </li>
+              </ul>
+
+              <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-950/50 p-5">
+                <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
+                <div className={`${inter.className} mt-1 text-sm text-white/50`}>
+                  Usually 1–2 emails per month.
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-
-        {subMsg ? (
-          <div
-            className={`${inter.className} text-sm ${
-              subStatus === "error" ? "text-red-300" : "text-white/70"
-            }`}
-          >
-            {subMsg}
-          </div>
-        ) : null}
-      </form>
-    </div>
-  </div>
-
-  {/* Right card: what to expect */}
-  <div
-    className={[
-      "group relative overflow-hidden",
-      "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-8",
-      "transition-all duration-300 ease-out",
-      "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
-      "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-      "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
-      "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-      "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
-      "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
-      "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
-      "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
-    ].join(" ")}
-  >
-    <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
-
-    <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
-      <li className="flex items-start gap-3">
-        <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-        New projects
-      </li>
-      <li className="flex items-start gap-3">
-        <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-        Dev notes &amp; small experiments
-      </li>
-      <li className="flex items-start gap-3">
-        <span className="mt-1 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#7c0902" }} />
-        Occasional links + tools I’m liking
-      </li>
-    </ul>
-
-    <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-950/50 p-5">
-      <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
-      <div className={`${inter.className} mt-1 text-sm text-white/50`}>
-        Usually 1–2 emails per month.
-      </div>
-    </div>
-  </div>
-</div>
 
           {/* Tiny footer marker */}
           <div
