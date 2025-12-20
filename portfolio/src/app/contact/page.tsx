@@ -30,10 +30,8 @@ export default function ContactPage() {
     <main className="relative">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-24 left-1/2 h-72 w-240 -translate-x-1/2 rounded-full bg-neutral-200/10 blur-3xl" />
-        <div
-          className="absolute top-56 right-10 h-72 w-72 rounded-full blur-3xl"
-          style={{ backgroundColor: "rgba(124, 9, 2, 0.10)" }}
-        />
+        {/* Subtle red glow (gradient, not flat) */}
+        <div className="absolute top-56 right-10 h-72 w-72 rounded-full blur-3xl bg-[radial-gradient(circle,rgba(124,9,2,0.18),transparent_65%)]" />
       </div>
 
       {/* Cinematic hero header */}
@@ -50,8 +48,9 @@ export default function ContactPage() {
 
           <div className="absolute inset-0 bg-black/35" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,rgba(124,9,2,0.22),transparent_35%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
 
+          {/* Accent wash (gradient, red pooled on right) */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
         </div>
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
@@ -76,31 +75,36 @@ export default function ContactPage() {
 
       {/* Page content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
-        <div className="grid gap-8 md:grid-cols-2">
-          <section className="space-y-4">
-            <Reveal delay={0}>
-              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-neutral-500">Email</p>
-                    <p className="mt-1 text-sm text-neutral-200">{email}</p>
-                    <p className="mt-2 text-xs text-neutral-500">
-                      Best for: project inquiries, freelance, collabs
-                    </p>
+        <div className="space-y-18">
+          {/* ✅ Group Row 1 + Row 2 with tighter spacing between them */}
+          <div className="space-y-8">
+            {/* Row 1: Email + Location */}
+            <div className="grid gap-8 md:grid-cols-2">
+              <Reveal delay={0}>
+                <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-neutral-500">Email</p>
+                      <p className="mt-1 text-sm text-neutral-200">{email}</p>
+                      <p className="mt-2 text-xs text-neutral-500">
+                        Best for: project inquiries, freelance, collabs
+                      </p>
+                    </div>
+                    <CopyButton text={email} />
                   </div>
-                  <CopyButton text={email} />
                 </div>
-              </div>
-            </Reveal>
+              </Reveal>
 
-            <Reveal delay={80}>
-              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
-                <p className="text-xs uppercase tracking-wide text-neutral-500">Location</p>
-                <p className="mt-1 text-sm text-neutral-200">{location}</p>
-                <p className="mt-2 text-xs text-neutral-500">Open to remote + hybrid.</p>
-              </div>
-            </Reveal>
+              <Reveal delay={80}>
+                <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
+                  <p className="text-xs uppercase tracking-wide text-neutral-500">Location</p>
+                  <p className="mt-1 text-sm text-neutral-200">{location}</p>
+                  <p className="mt-2 text-xs text-neutral-500">Open to remote + hybrid.</p>
+                </div>
+              </Reveal>
+            </div>
 
+            {/* Row 2: Connect (full width) */}
             <Reveal delay={160}>
               <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">Connect</p>
@@ -197,7 +201,8 @@ export default function ContactPage() {
                   ) : null}
                 </div>
 
-                <div className="mt-4 flex flex-wrap gap-3">
+                {/* Center the Home button */}
+                <div className="mt-5 flex justify-center">
                   <Link
                     href="/"
                     className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900
@@ -207,21 +212,30 @@ export default function ContactPage() {
                   </Link>
                 </div>
 
-                <p className="mt-3 text-xs text-neutral-500">
+                {/* Center the tip text */}
+                <p className="mt-3 text-center text-xs text-neutral-500">
                   Tip: add your resume link here if you have one.
                 </p>
               </div>
             </Reveal>
-          </section>
+          </div>
 
-          <Reveal delay={40} className="h-fit">
+          {/* Divider + subtle fade spacer */}
+          <div className="relative my-14">
+            <div className="pointer-events-none absolute inset-x-0 -top-8 h-16 bg-gradient-to-b from-transparent via-[rgba(124,9,2,0.14)] to-transparent blur-2xl" />
+            <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+          </div>
+
+          {/* Bottom: Send a message (full width, independent) */}
+          <Reveal delay={40}>
             <section className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
               <h2 className="text-lg font-medium text-neutral-100">Send a message</h2>
               <p className="mt-1 text-xs text-neutral-500">
                 This form sends via Resend through a Next.js API route.
               </p>
 
-              <div className="mt-6">
+              {/* ✅ Center the submit button + "By sending..." line inside ContactForm */}
+              <div className="mt-6 [&_button[type='submit']]:mx-auto [&_button[type='submit']]:block [&_p.text-xs]:text-center [&_div.text-xs]:text-center">
                 <ContactForm />
               </div>
             </section>
