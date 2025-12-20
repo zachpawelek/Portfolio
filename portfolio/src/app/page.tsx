@@ -565,8 +565,10 @@ export default function Home() {
 
             <div>
               <p className={`${inter.className} text-base leading-relaxed text-white/75 md:text-lg`}>
-                Hello. This is my Bio. I have no idea what I'm going to put here yet but I'm sure
-                it'll be great.
+                Hello. I'm Zach.
+                <br />
+                Welcome to my Personal Website and online Portfolio.
+                <br />
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">
@@ -582,8 +584,14 @@ export default function Home() {
                 >
                   Contact
                 </a>
+                
               </div>
+              <p className={`${inter.className} text-base py-11 leading-relaxed text-white/25 md:text-sm`}>
+                Take a Look around and get to know me, and my work, a little bit better!
+                </p>
+              
             </div>
+            
           </div>
         </div>
       </section>

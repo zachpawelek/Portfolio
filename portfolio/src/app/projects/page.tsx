@@ -100,7 +100,7 @@ export default function ProjectsPage() {
           {/* Base darken */}
           <div className="absolute inset-0 bg-black/35" />
           {/* Legibility gradient rail */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
           {/* Accent wash (red pooled on right) */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
         </div>
