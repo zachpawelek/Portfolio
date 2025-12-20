@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "../about/Reveal";
 import SocialLinks from "@/components/footer/SocialLinks";
 import LifeCarousel from "../about/LifeCarousel";
@@ -45,7 +46,7 @@ const projects: Project[] = [
     images: [
       { src: "/images/projects/01.jpeg", alt: "Subscription form on Home page" },
       { src: "/images/projects/02.jpeg", alt: "Subscription form on Home page" },
-    ],    
+    ],
   },
   {
     title: "AI Tutor - Capstone Project - Arizona State University",
@@ -64,7 +65,7 @@ const projects: Project[] = [
     images: [
       { src: "/images/projects/01.jpeg", alt: "Subscription form on Home page" },
       { src: "/images/projects/02.jpeg", alt: "Subscription form on Home page" },
-    ],    
+    ],
   },
 ];
 
@@ -84,37 +85,67 @@ export default function ProjectsPage() {
         />
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-28 md:px-6">
-        <Reveal>
-          <header className="mb-10">
-            <p className="text-xs uppercase tracking-wide" style={{ color: ACCENT }}>
-              Projects
-            </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-100 md:text-4xl">
-              My Work + Contributions
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
-              A mix of completed projects, University-sanctioned projects, and portfolio work — with links to live demos,
-              repos, and (eventually) an abundance of more projects.
-            </p>
+      {/* ✅ Cinematic hero header (matches About/Contact structure) */}
+      <section className="relative overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-center">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/rivers.jpg"
+            alt="Projects header background"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[55%_58%]"
+          />
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/contact"
-                className="rounded-full border border-neutral-800 bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-white"
-              >
-                Contact →
-              </Link>
-              <Link
-                href="/about"
-                className="rounded-full border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
-              >
-                About →
-              </Link>
-            </div>
-          </header>
-        </Reveal>
+          {/* Base darken */}
+          <div className="absolute inset-0 bg-black/35" />
+          {/* Legibility gradient rail */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          {/* Accent wash (red pooled on right) */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
+        </div>
 
+        <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <Reveal>
+            <header className="max-w-2xl">
+              <p className="text-xs uppercase tracking-wide text-white/75">Projects</p>
+
+              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+                My Work + Contributions
+              </h1>
+
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75">
+                A mix of completed projects, University-sanctioned projects, and portfolio work — with links to live
+                demos, repos, and (eventually) an abundance of more projects.
+              </p>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href="/contact"
+                  className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur
+                             hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                >
+                  Contact →
+                </Link>
+
+                <Link
+                  href="/about"
+                  className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur
+                             hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                >
+                  About →
+                </Link>
+              </div>
+            </header>
+          </Reveal>
+        </div>
+
+        {/* Soft fade into the page below */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-neutral-950" />
+      </section>
+
+      {/* Page content */}
+      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         {featured.length > 0 ? (
           <section className="mb-10">
             <Reveal delay={40}>
@@ -144,25 +175,22 @@ export default function ProjectsPage() {
               </div>
             </Reveal>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        {more.length > 0 ? (
-          more.map((project, idx) => (
-          <Reveal key={project.title} delay={80 + idx * 60}>
-            <ProjectCard project={project} accent={ACCENT} />
-          </Reveal>
-      ))
-    ) : (
-  
-    <div className="md:col-span-2 w-full flex justify-center">
-    <Reveal delay={80}>
-      <div className="mx-auto w-full max-w-md">
-        <EmptyState />
-      </div>
-      </Reveal>
-    </div>
-
-)}
-
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              {more.length > 0 ? (
+                more.map((project, idx) => (
+                  <Reveal key={project.title} delay={80 + idx * 60}>
+                    <ProjectCard project={project} accent={ACCENT} />
+                  </Reveal>
+                ))
+              ) : (
+                <div className="md:col-span-2 w-full flex justify-center">
+                  <Reveal delay={80}>
+                    <div className="mx-auto w-full max-w-md">
+                      <EmptyState />
+                    </div>
+                  </Reveal>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -197,7 +225,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
             className="text-base font-medium text-neutral-100"
             style={{
               display: "-webkit-box",
-              WebkitLineClamp: 2, // ✅ consistent title height
+              WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
@@ -212,17 +240,16 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         </div>
       </div>
 
-      {/* ✅ Reserved space for carousel (so cards match even before images exist) */}
+      {/* Carousel area */}
       <div className="mt-5 py-10 min-h-[320px] sm:min-h-[360px]">
-  <LifeCarousel images={project.images ?? []} accent={accent} />
-</div>
-
+        <LifeCarousel images={project.images ?? []} accent={accent} />
+      </div>
 
       <p
         className="mt-4 text-sm leading-6 text-neutral-300 min-h-[72px]"
         style={{
           display: "-webkit-box",
-          WebkitLineClamp: 3, // ✅ same # of summary lines
+          WebkitLineClamp: 3,
           WebkitBoxOrient: "vertical",
           overflow: "hidden",
         }}
@@ -230,7 +257,6 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         {project.summary}
       </p>
 
-      {/* ✅ Keep highlights area consistent height even if some projects have fewer */}
       <div className="mt-4 min-h-[78px]">
         {project.highlights?.length ? (
           <ul className="space-y-1 text-sm text-neutral-400">
@@ -243,7 +269,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
                 <span
                   style={{
                     display: "-webkit-box",
-                    WebkitLineClamp: 1, // ✅ consistent highlight line height
+                    WebkitLineClamp: 1,
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                   }}
@@ -262,7 +288,6 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         ))}
       </div>
 
-      {/* ✅ Push links to bottom for equal “button baseline” */}
       <div className="mt-auto pt-5 flex flex-wrap gap-2">
         {project.links.map((l) => (
           <LinkButton key={l.href + l.label} href={l.href} label={l.label} />
