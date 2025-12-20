@@ -144,23 +144,25 @@ export default function ProjectsPage() {
               </div>
             </Reveal>
 
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
-              {more.length > 0 ? (
-                more.map((project, idx) => (
-                  <Reveal key={project.title} delay={80 + idx * 60}>
-                    <ProjectCard project={project} accent={ACCENT} />
-                  </Reveal>
-                ))
-              ) : (
-                <Reveal delay={80}>
-                  {/* ✅ Center empty state under the grid */}
-                  <div className="md:col-span-2 flex justify-center">
-                    <div className="w-full max-w-md">
-                      <EmptyState />
-                    </div>
-                  </div>
-                </Reveal>
-              )}
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        {more.length > 0 ? (
+          more.map((project, idx) => (
+          <Reveal key={project.title} delay={80 + idx * 60}>
+            <ProjectCard project={project} accent={ACCENT} />
+          </Reveal>
+      ))
+    ) : (
+  
+    <div className="md:col-span-2 w-full flex justify-center">
+    <Reveal delay={80}>
+      <div className="mx-auto w-full max-w-md">
+        <EmptyState />
+      </div>
+      </Reveal>
+    </div>
+
+)}
+
             </div>
           </div>
         </section>
