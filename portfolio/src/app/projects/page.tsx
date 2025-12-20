@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "../about/Reveal";
 import SocialLinks from "@/components/footer/SocialLinks";
-
+import LifeCarousel from "../about/LifeCarousel";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 const ACCENT = "#7c0902";
 
 type ProjectLink = { label: string; href: string };
+type ProjectPhoto = { src: string; alt?: string };
 
 type Project = {
   title: string;
@@ -22,6 +23,7 @@ type Project = {
   tech: string[];
   highlights?: string[];
   links: ProjectLink[];
+  images?: ProjectPhoto[]; // ✅ screenshots/progress photos for carousel
 };
 
 const projects: Project[] = [
@@ -33,8 +35,17 @@ const projects: Project[] = [
     featured: true,
     status: "Shipped",
     tech: ["Next.js", "TypeScript", "Supabase", "Postgres", "Resend", "Vercel"],
-    highlights: ["Double opt-in Email Confirmation", "Unsubscribe flow", "Admin-Only Sending Template", " API called Stats endpoint"],
+    highlights: [
+      "Double opt-in Email Confirmation",
+      "Unsubscribe flow",
+      "Admin-Only Sending Template",
+      "API called Stats endpoint",
+    ],
     links: [{ label: "Site", href: "/" }],
+    images: [
+      { src: "/images/projects/01.jpeg", alt: "Subscription form on Home page" },
+      { src: "/images/projects/02.jpeg", alt: "Subscription form on Home page" },
+    ],    
   },
   {
     title: "AI Tutor - Capstone Project - Arizona State University",
@@ -44,8 +55,16 @@ const projects: Project[] = [
     featured: true,
     status: "In progress",
     tech: ["Expo", "React Native", "Tailwind", "BetterAuth", "SQLite 3"],
-    highlights: ["OpenAI API Integration", "Persistent Cloud Storage", "Custom Problem text/image Processing"],
+    highlights: [
+      "OpenAI API Integration",
+      "Persistent Cloud Storage",
+      "Custom Problem text/image Processing",
+    ],
     links: [{ label: "Live", href: "/" }],
+    images: [
+      { src: "/images/projects/01.jpeg", alt: "Subscription form on Home page" },
+      { src: "/images/projects/02.jpeg", alt: "Subscription form on Home page" },
+    ],    
   },
 ];
 
@@ -103,7 +122,7 @@ export default function ProjectsPage() {
               <p className="mt-1 text-xs text-neutral-500">A Great Place To Start.</p>
             </Reveal>
 
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="mt-4 grid items-stretch gap-4 md:grid-cols-2">
               {featured.map((project, idx) => (
                 <Reveal key={project.title} delay={80 + idx * 60}>
                   <ProjectCard project={project} accent={ACCENT} />
@@ -113,30 +132,41 @@ export default function ProjectsPage() {
           </section>
         ) : null}
 
-        <section>
-          <Reveal delay={40}>
-            <h2 className="text-sm font-medium text-neutral-100">More</h2>
-            <p className="mt-1 text-xs text-neutral-500">Smaller builds, Works in Progress, and Fun Experiments.</p>
-          </Reveal>
+        {/* ✅ Centered "More" section under Featured */}
+        <section className="mt-14">
+          <div className="mx-auto max-w-4xl">
+            <Reveal delay={40}>
+              <div className="text-center">
+                <h2 className="text-sm font-medium text-neutral-100">More</h2>
+                <p className="mt-1 text-xs text-neutral-500">
+                  Smaller builds, Works in Progress, and Fun Experiments.
+                </p>
+              </div>
+            </Reveal>
 
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
-            {more.length > 0 ? (
-              more.map((project, idx) => (
-                <Reveal key={project.title} delay={80 + idx * 60}>
-                  <ProjectCard project={project} accent={ACCENT} />
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              {more.length > 0 ? (
+                more.map((project, idx) => (
+                  <Reveal key={project.title} delay={80 + idx * 60}>
+                    <ProjectCard project={project} accent={ACCENT} />
+                  </Reveal>
+                ))
+              ) : (
+                <Reveal delay={80}>
+                  {/* ✅ Center empty state under the grid */}
+                  <div className="md:col-span-2 flex justify-center">
+                    <div className="w-full max-w-md">
+                      <EmptyState />
+                    </div>
+                  </div>
                 </Reveal>
-              ))
-            ) : (
-              <Reveal delay={80}>
-                <EmptyState />
-              </Reveal>
-            )}
+              )}
+            </div>
           </div>
         </section>
 
         <div className="mt-16 text-center text-xs tracking-[0.35em] text-white/35">FOLLOW ME</div>
         <SocialLinks />
-
       </div>
     </main>
   );
@@ -148,6 +178,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
       className={[
         "group relative overflow-hidden",
         "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
+        "h-full flex flex-col", // ✅ ensures equal height inside grid
         "transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
         "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
@@ -159,8 +190,18 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
       ].join(" ")}
     >
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className="text-base font-medium text-neutral-100">{project.title}</h3>
+        <div className="min-w-0">
+          <h3
+            className="text-base font-medium text-neutral-100"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2, // ✅ consistent title height
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {project.title}
+          </h3>
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-neutral-500">
             {project.status ? <Badge accent={accent}>{project.status}</Badge> : null}
@@ -169,21 +210,49 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         </div>
       </div>
 
-      <p className="mt-3 text-sm leading-6 text-neutral-300">{project.summary}</p>
+      {/* ✅ Reserved space for carousel (so cards match even before images exist) */}
+      <div className="mt-5 py-10 min-h-[320px] sm:min-h-[360px]">
+  <LifeCarousel images={project.images ?? []} accent={accent} />
+</div>
 
-      {project.highlights?.length ? (
-        <ul className="mt-4 space-y-1 text-sm text-neutral-400">
-          {project.highlights.slice(0, 3).map((h) => (
-            <li key={h} className="flex gap-2">
-              <span
-                className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: accent }}
-              />
-              <span>{h}</span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+
+      <p
+        className="mt-4 text-sm leading-6 text-neutral-300 min-h-[72px]"
+        style={{
+          display: "-webkit-box",
+          WebkitLineClamp: 3, // ✅ same # of summary lines
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }}
+      >
+        {project.summary}
+      </p>
+
+      {/* ✅ Keep highlights area consistent height even if some projects have fewer */}
+      <div className="mt-4 min-h-[78px]">
+        {project.highlights?.length ? (
+          <ul className="space-y-1 text-sm text-neutral-400">
+            {project.highlights.slice(0, 3).map((h) => (
+              <li key={h} className="flex gap-2">
+                <span
+                  className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full shrink-0"
+                  style={{ backgroundColor: accent }}
+                />
+                <span
+                  style={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 1, // ✅ consistent highlight line height
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
+                  {h}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         {project.tech.slice(0, 8).map((t) => (
@@ -191,7 +260,8 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         ))}
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      {/* ✅ Push links to bottom for equal “button baseline” */}
+      <div className="mt-auto pt-5 flex flex-wrap gap-2">
         {project.links.map((l) => (
           <LinkButton key={l.href + l.label} href={l.href} label={l.label} />
         ))}
