@@ -70,10 +70,11 @@ export default function AboutPage() {
           {/* Legibility gradient (left rail for text) */}
           <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
           {/* Subtle accent tint to match your theme */}
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: "rgba(124, 9, 2, 0.10)" }}
-          />
+          {/* Subtle accent gradient wash to match Home page (not a flat tint) */}
+{/* Subtle accent gradient wash (red on the right) */}
+<div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,rgba(124,9,2,0.22),transparent_45%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
+
+
         </div>
 
         {/* Hero content */}

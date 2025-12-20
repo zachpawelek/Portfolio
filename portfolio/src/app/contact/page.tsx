@@ -50,10 +50,8 @@ export default function ContactPage() {
 
           <div className="absolute inset-0 bg-black/35" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: "rgba(124, 9, 2, 0.10)" }}
-          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,rgba(124,9,2,0.22),transparent_35%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
+
         </div>
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">

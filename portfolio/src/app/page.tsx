@@ -547,7 +547,7 @@ export default function Home() {
       {/* ✅ NEW: outer wrapper so the glow/shadow is NOT clipped by overflow-hidden */}
       <div className="relative shadow-[0_22px_70px_-35px_rgba(124,9,2,0.40)]">
         {/* ✅ NEW: subtle red gradient glow behind the image */}
-        <div className="pointer-events-none absolute -inset-10 -z-10 rounded-[2rem] bg-[radial-gradient(circle_at_30%_30%,rgba(124,9,2,0.15),transparent_20%),linear-gradient(to_bottom,rgba(124,9,2,0.12),transparent_55%)] blur-2xl" />
+        <div className="pointer-events-none absolute -inset-10 -z-10 rounded-4xl bg-[radial-gradient(circle_at_30%_30%,rgba(124,9,2,0.15),transparent_20%),linear-gradient(to_bottom,rgba(124,9,2,0.12),transparent_55%)] blur-2xl" />
 
         {/* ✅ unchanged container (still handles rounding + crop) */}
         <div className="relative h-72 w-72 overflow-hidden rounded-3xl ring-1 ring-white/15 md:h-115 md:w-96">
