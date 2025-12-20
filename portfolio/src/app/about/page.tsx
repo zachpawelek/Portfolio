@@ -32,11 +32,6 @@ export default function AboutPage() {
     { src: "/images/life/03.jpeg", alt: "Personal photo 3" },
     { src: "/images/life/04.jpeg", alt: "Personal photo 4" },
     { src: "/images/life/05.jpeg", alt: "Personal photo 5" },
-    // add up to 10 if you want:
-    // { src: "/images/life/07.jpg", alt: "Personal photo 7" },
-    // { src: "/images/life/08.jpg", alt: "Personal photo 8" },
-    // { src: "/images/life/09.jpg", alt: "Personal photo 9" },
-    // { src: "/images/life/10.jpg", alt: "Personal photo 10" },
   ];
 
   return (
@@ -69,12 +64,8 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-black/35" />
           {/* Legibility gradient (left rail for text) */}
           <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
-          {/* Subtle accent tint to match your theme */}
-          {/* Subtle accent gradient wash to match Home page (not a flat tint) */}
-{/* Subtle accent gradient wash (red on the right) */}
-<div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,rgba(124,9,2,0.22),transparent_45%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
-
-
+          {/* Subtle accent gradient wash (red on the right) */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,rgba(124,9,2,0.22),transparent_45%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
         </div>
 
         {/* Hero content */}
@@ -137,7 +128,7 @@ export default function AboutPage() {
                 ) : null}
               </div>
 
-              {/* Optional: small location chip (helps “anchor” the hero) */}
+              {/* Optional: small location chip */}
               <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/70 backdrop-blur">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACCENT }} />
                 {location}
@@ -152,118 +143,115 @@ export default function AboutPage() {
 
       {/* Rest of your About content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
-        <div className="grid gap-8 md:grid-cols-2">
-          <section className="space-y-4">
-            <Reveal delay={0}>
-              <Card title="What I care about">
-                <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300">
-                  <li>
-                    <span className="text-neutral-200">Craft:</span> responsive, accessible UI that
-                    feels intentional.
-                  </li>
-                  <li>
-                    <span className="text-neutral-200">Reliability:</span> clean data flows, sensible
-                    validation, predictable behavior.
-                  </li>
-                  <li>
-                    <span className="text-neutral-200">Performance:</span> fast pages, smart loading,
-                    and avoiding “unnecessary work.”
-                  </li>
-                </ul>
-              </Card>
-            </Reveal>
+        {/* ✅ Symmetric 2-column grid, with equal-height cards per row */}
+        <div className="grid items-stretch gap-8 md:grid-cols-2">
+          <Reveal delay={0} className="h-full flex">
+            <Card title="What I care about" className="flex-1">
+              <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300">
+                <li>
+                  <span className="text-neutral-200">Craft:</span> responsive, accessible UI that
+                  feels intentional.
+                </li>
+                <li>
+                  <span className="text-neutral-200">Reliability:</span> clean data flows, sensible
+                  validation, predictable behavior.
+                </li>
+                <li>
+                  <span className="text-neutral-200">Performance:</span> fast pages, smart loading,
+                  and avoiding “unnecessary work.”
+                </li>
+              </ul>
+            </Card>
+          </Reveal>
 
-            <Reveal delay={80}>
-              <Card title="Tech I reach for">
-                <div className="flex flex-wrap gap-2">
-                  <Pill>Next.js</Pill>
-                  <Pill>TypeScript</Pill>
-                  <Pill>React</Pill>
-                  <Pill>Tailwind</Pill>
-                  <Pill>Supabase</Pill>
-                  <Pill>Postgres</Pill>
-                  <Pill>Vercel</Pill>
-                  <Pill>Resend</Pill>
-                </div>
-                <p className="mt-3 text-xs text-neutral-500">
-                  (Swap these to match your real stack — keep it honest + specific.)
-                </p>
-              </Card>
-            </Reveal>
+          <Reveal delay={0} className="h-full flex">
+            <Card title="A little more detail" className="flex-1">
+              <p className="text-sm leading-6 text-neutral-300">
+                I enjoy projects where product and engineering overlap — places where the UI needs
+                to feel great, and the backend needs to be dependable. I’m especially interested in
+                building features end-to-end: schema → API → UI → deployment.
+              </p>
+              <p className="mt-3 text-sm leading-6 text-neutral-300">
+                Outside of coding, I like to recharge with whatever keeps me grounded and curious —
+                learning, reading, and exploring new ideas.
+              </p>
+            </Card>
+          </Reveal>
 
-            <Reveal delay={160}>
-              <Card title="Now">
-                <div className="space-y-3">
-                  <TimelineItem
-                    dotColor={ACCENT}
-                    title="Building portfolio features"
-                    body="Polishing pages, adding real-world backend pieces, and shipping quickly."
-                  />
-                  <TimelineItem
-                    dotColor={ACCENT}
-                    title="Improving UX details"
-                    body="Loading states, form feedback, accessibility, and responsive layouts."
-                  />
-                  <TimelineItem
-                    dotColor={ACCENT}
-                    title="Staying curious"
-                    body="Trying new tools and patterns, but keeping the basics strong."
-                  />
-                </div>
-              </Card>
-            </Reveal>
-          </section>
+          <Reveal delay={80} className="h-full flex">
+            <Card title="Tech I reach for" className="flex-1">
+              <div className="flex flex-wrap gap-2">
+                <Pill>Next.js</Pill>
+                <Pill>TypeScript</Pill>
+                <Pill>React</Pill>
+                <Pill>Tailwind</Pill>
+                <Pill>Supabase</Pill>
+                <Pill>Postgres</Pill>
+                <Pill>Vercel</Pill>
+                <Pill>Resend</Pill>
+              </div>
+              <p className="mt-3 text-xs text-neutral-500">
+                (Swap these to match your real stack — keep it honest + specific.)
+              </p>
+            </Card>
+          </Reveal>
 
-          <section className="space-y-4">
-            <Reveal delay={40}>
-              <Card title="A little more detail">
-                <p className="text-sm leading-6 text-neutral-300">
-                  I enjoy projects where product and engineering overlap — places where the UI needs
-                  to feel great, and the backend needs to be dependable. I’m especially interested in
-                  building features end-to-end: schema → API → UI → deployment.
-                </p>
-                <p className="mt-3 text-sm leading-6 text-neutral-300">
-                  Outside of coding, I like to recharge with whatever keeps me grounded and curious —
-                  learning, reading, and exploring new ideas.
-                </p>
-              </Card>
-            </Reveal>
+          <Reveal delay={80} className="h-full flex">
+            <Card title="Highlights" className="flex-1">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <MiniStat label="Strength" value="UI polish" />
+                <MiniStat label="Also strong at" value="API design" />
+                <MiniStat label="I like" value="Shipping" />
+                <MiniStat label="I avoid" value="Over-engineering" />
+              </div>
+            </Card>
+          </Reveal>
 
-            <Reveal delay={120}>
-              <Card title="Highlights">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <MiniStat label="Strength" value="UI polish" />
-                  <MiniStat label="Also strong at" value="API design" />
-                  <MiniStat label="I like" value="Shipping" />
-                  <MiniStat label="I avoid" value="Over-engineering" />
-                </div>
-              </Card>
-            </Reveal>
+          <Reveal delay={160} className="h-full flex">
+            <Card title="Now" className="flex-1">
+              <div className="space-y-3">
+                <TimelineItem
+                  dotColor={ACCENT}
+                  title="Building portfolio features"
+                  body="Polishing pages, adding real-world backend pieces, and shipping quickly."
+                />
+                <TimelineItem
+                  dotColor={ACCENT}
+                  title="Improving UX details"
+                  body="Loading states, form feedback, accessibility, and responsive layouts."
+                />
+                <TimelineItem
+                  dotColor={ACCENT}
+                  title="Staying curious"
+                  body="Trying new tools and patterns, but keeping the basics strong."
+                />
+              </div>
+            </Card>
+          </Reveal>
 
-            <Reveal delay={200}>
-              <Card title="What I’m looking for">
-                <ul className="space-y-2 text-sm leading-6 text-neutral-300">
-                  <li>• Frontend-leaning full-stack work</li>
-                  <li>• Products with real users + feedback loops</li>
-                  <li>• Teams that care about quality and iteration</li>
-                </ul>
-                <div className="mt-4">
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-                  >
-                    Let’s talk →
-                  </Link>
-                </div>
-              </Card>
-            </Reveal>
-          </section>
+          <Reveal delay={160} className="h-full flex">
+            <Card title="What I’m looking for" className="flex-1">
+              <ul className="space-y-2 text-sm leading-6 text-neutral-300">
+                <li>• Frontend-leaning full-stack work</li>
+                <li>• Products with real users + feedback loops</li>
+                <li>• Teams that care about quality and iteration</li>
+              </ul>
+              <div className="mt-4">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                >
+                  Let’s talk →
+                </Link>
+              </div>
+            </Card>
+          </Reveal>
         </div>
 
-        {/* NEW: Personal-life photo carousel near bottom */}
+        {/* Personal-life photo carousel near bottom */}
         <Reveal delay={240}>
           <div className="mt-12">
-            <Card title="Life outside of code">
+            <Card title="Life outside of code" noHoverTint>
               <p className="text-sm leading-6 text-neutral-300">
                 A few snapshots from my life — hikes, friends, weekends, whatever I’m into lately.
               </p>
@@ -280,25 +268,46 @@ export default function AboutPage() {
   );
 }
 
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
+function Card({
+  title,
+  children,
+  noHoverTint,
+  className,
+}: {
+  title: string;
+  children: React.ReactNode;
+  noHoverTint?: boolean;
+  className?: string;
+}) {
   return (
     <div
       className={[
-        "group relative overflow-hidden",
-        "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
+        // ✅ h-full + flex-col makes the card able to stretch with the grid row
+        "group relative h-full overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
+        "flex flex-col",
         "transition-all duration-300 ease-out",
-        "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+
+        // Hover / focus styles
+        "hover:-translate-y-0.5 hover:border-neutral-700",
+        noHoverTint ? "hover:bg-neutral-950/40" : "hover:bg-neutral-950/55",
         "hover:shadow-[0_0_40px_rgba(124,9,2,0.10)]",
-        "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+
+        "focus-within:-translate-y-0.5 focus-within:border-neutral-700",
+        noHoverTint ? "focus-within:bg-neutral-950/40" : "focus-within:bg-neutral-950/55",
         "focus-within:shadow-[0_0_40px_rgba(124,9,2,0.10)]",
         "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+
+        // Shimmer sweep
         "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
         "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
         "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+
+        className ?? "",
       ].join(" ")}
     >
       <h2 className="text-sm font-medium text-neutral-100">{title}</h2>
-      <div className="mt-3">{children}</div>
+      {/* ✅ flex-1 makes the content area take remaining height cleanly */}
+      <div className="mt-3 flex-1">{children}</div>
     </div>
   );
 }
