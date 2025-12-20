@@ -251,9 +251,9 @@ export default function AboutPage() {
         {/* Personal-life photo carousel near bottom */}
         <Reveal delay={240}>
           <div className="mt-12">
-            <Card title="Life outside of code" noHoverTint>
+            <Card title="Life Outside Of Code" noHoverTint>
               <p className="text-sm leading-6 text-neutral-300">
-                A few snapshots from my life — hikes, friends, weekends, whatever I’m into lately.
+                Take a peek into my life — hiking, friends, traveling! 
               </p>
 
               <LifeCarousel images={lifePhotos} accent={ACCENT} className="mt-5" />
