@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { createPortal } from "react-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 
@@ -32,8 +33,15 @@ export default function LifeCarousel({ images, accent = "#7c0902", className = "
   // Lightbox (full picture view)
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
 
+  // Portal readiness (prevents SSR/CSR mismatch)
+  const [portalReady, setPortalReady] = useState(false);
+
   const safeImages = useMemo(() => images.filter((x) => !!x?.src), [images]);
   const total = safeImages.length;
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   const hydrateItems = useCallback(() => {
     const el = scrollerRef.current;
@@ -336,117 +344,119 @@ export default function LifeCarousel({ images, accent = "#7c0902", className = "
         ))}
       </div>
 
+      {/* Bottom bar: dots | helper text | counter */}
       <div className="mt-3 grid items-center gap-3 sm:grid-cols-3">
-  {/* Left: dots */}
-  <div className="flex flex-wrap items-center gap-2 justify-start">
-    {safeImages.map((_, i) => (
-      <button
-        key={i}
-        type="button"
-        onClick={() => scrollToIndex(i)}
-        className="h-2.5 w-2.5 rounded-full border border-neutral-700 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
-        aria-label={`Go to photo ${i + 1}`}
-        style={{ backgroundColor: active === i ? accent : "transparent" }}
-      />
-    ))}
-  </div>
-
-  {/* Center: helper text */}
-  <p className="text-center text-[16px] text-neutral-500">
-    Click a Photo Above for more Information
-  </p>
-
-  {/* Right: counter */}
-  <p className="text-right text-xs text-neutral-500">
-    {active + 1} / {total}
-  </p>
-</div>
-
-
-      {/* Lightbox / Full picture view */}
-      {lightboxIdx !== null && activePhoto ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-8 md:p-10"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Photo viewer"
-        >
-          {/* Backdrop (click to close) */}
-          <button
-            type="button"
-            className="absolute inset-0 cursor-default bg-black/80"
-            aria-label="Close photo viewer"
-            onClick={closeLightbox}
-          />
-
-          {/* Subtle red glow layer (above backdrop, below content) */}
-          <div className="pointer-events-none absolute inset-0">
-            <div
-              className="absolute -top-24 right-16 h-96 w-96 rounded-full blur-3xl"
-              style={{ backgroundColor: "rgba(124, 9, 2, 0.22)" }}
+        <div className="flex flex-wrap items-center gap-2 justify-start">
+          {safeImages.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => scrollToIndex(i)}
+              className="h-2.5 w-2.5 rounded-full border border-neutral-700 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+              aria-label={`Go to photo ${i + 1}`}
+              style={{ backgroundColor: active === i ? accent : "transparent" }}
             />
-            <div
-              className="absolute bottom-10 left-16 h-80 w-80 rounded-full blur-3xl"
-              style={{ backgroundColor: "rgba(124, 9, 2, 0.14)" }}
-            />
-          </div>
+          ))}
+        </div>
 
-          {/* Content */}
-          <div className="relative z-10 w-full max-w-5xl">
-            <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-4 sm:p-6">
-              {/* ✅ Sane height values (prevents overflow/scroll “jump”) */}
-              <div className="relative h-[72vh] w-full sm:h-[78vh] md:h-[42vh]">
-                <Image
-                  src={activePhoto.src}
-                  alt={activePhoto.alt ?? `Personal photo ${lightboxIdx + 1}`}
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                  priority
+        <p className="text-center text-[11px] text-neutral-500">
+          Click to expand photo with information
+        </p>
+
+        <p className="text-right text-xs text-neutral-500">
+          {active + 1} / {total}
+        </p>
+      </div>
+
+      {/* Lightbox / Full picture view (rendered in a portal to avoid transform/fixed offset bugs) */}
+      {portalReady && lightboxIdx !== null && activePhoto
+        ? createPortal(
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-8 md:p-10"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Photo viewer"
+            >
+              {/* Backdrop (click to close) */}
+              <button
+                type="button"
+                className="absolute inset-0 cursor-default bg-black/80"
+                aria-label="Close photo viewer"
+                onClick={closeLightbox}
+              />
+
+              {/* Subtle red glow layer (above backdrop, below content) */}
+              <div className="pointer-events-none absolute inset-0">
+                <div
+                  className="absolute -top-24 right-16 h-96 w-96 rounded-full blur-3xl"
+                  style={{ backgroundColor: "rgba(124, 9, 2, 0.22)" }}
+                />
+                <div
+                  className="absolute bottom-10 left-16 h-80 w-80 rounded-full blur-3xl"
+                  style={{ backgroundColor: "rgba(124, 9, 2, 0.14)" }}
                 />
               </div>
 
-              <button
-                type="button"
-                onClick={closeLightbox}
-                className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm text-white/90 hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
-                aria-label="Close"
-              >
-                ✕
-              </button>
-            </div>
+              {/* Content */}
+              <div className="relative z-10 w-full max-w-5xl">
+                <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-4 sm:p-6">
+                  {/* Adjust these vh values to taste */}
+                  <div className="relative h-[58vh] w-full sm:h-[62vh] md:h-[66vh]">
+                    <Image
+                      src={activePhoto.src}
+                      alt={activePhoto.alt ?? `Personal photo ${lightboxIdx + 1}`}
+                      fill
+                      sizes="100vw"
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
 
-            <p className="mx-auto mt-3 max-w-3xl text-center text-xs leading-5 text-white/60">
-              {caption}
-            </p>
+                  <button
+                    type="button"
+                    onClick={closeLightbox}
+                    className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm text-white/90 hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                </div>
 
-            <div className="mt-5 flex items-center justify-between gap-3">
-              <button
-                type="button"
-                onClick={lightboxPrev}
-                className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
-                aria-label="Previous photo"
-              >
-                ← Prev
-              </button>
+                <p className="mx-auto mt-3 max-w-3xl text-center text-xs leading-5 text-white/60">
+                  {caption}
+                </p>
 
-              <div className="text-xs text-white/70">
-                {lightboxIdx + 1} / {total}{" "}
-                <span className="hidden sm:inline">• Press Esc to close • ←/→ to navigate</span>
+                <div className="mt-5 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={lightboxPrev}
+                    className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
+                    aria-label="Previous photo"
+                  >
+                    ← Prev
+                  </button>
+
+                  <div className="text-xs text-white/70">
+                    {lightboxIdx + 1} / {total}{" "}
+                    <span className="hidden sm:inline">
+                      • Press Esc to close • ←/→ to navigate
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={lightboxNext}
+                    className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
+                    aria-label="Next photo"
+                  >
+                    Next →
+                  </button>
+                </div>
               </div>
-
-              <button
-                type="button"
-                onClick={lightboxNext}
-                className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
-                aria-label="Next photo"
-              >
-                Next →
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }
