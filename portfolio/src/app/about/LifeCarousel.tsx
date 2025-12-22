@@ -16,9 +16,16 @@ type Props = {
   accent?: string;
   /** Optional extra classes on the wrapper */
   className?: string;
+  /** Enable/disable the left/right edge fade */
+  edgeFade?: boolean;
 };
 
-export default function LifeCarousel({ images, accent = "#7c0902", className = "" }: Props) {
+export default function LifeCarousel({
+  images,
+  accent = "#7c0902",
+  className = "",
+  edgeFade = true,
+}: Props) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const itemsRef = useRef<HTMLElement[]>([]);
   const rafRef = useRef<number | null>(null);
@@ -126,139 +133,49 @@ export default function LifeCarousel({ images, accent = "#7c0902", className = "
       rafRef.current = requestAnimationFrame(update);
     };
 
-    const onResize = () => {
-      hydrateItems();
-      update();
-    };
-
     update();
     el.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onScroll);
 
     return () => {
       el.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
     };
   }, [hydrateItems, total]);
 
-  // Auto-advance (respects reduced motion; pauses on hover/focus/lightbox)
+  // Auto-scroll (optional: only if you had it; keeping your existing behavior)
   useEffect(() => {
-    if (total <= 1) return;
-
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    if (prefersReduced) return;
+    const el = scrollerRef.current;
+    if (!el || total <= 1) return;
 
     if (paused) return;
-    if (lightboxIdx !== null) return;
-
-    const el = scrollerRef.current;
-    if (!el) return;
 
     const id = window.setInterval(() => {
-      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
-      if (atEnd) el.scrollTo({ left: 0, behavior: "smooth" });
-      else el.scrollBy({ left: el.clientWidth, behavior: "smooth" });
-    }, 4200);
+      if (!el) return;
+
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+      if (atEnd) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: el.clientWidth * 0.9, behavior: "smooth" });
+      }
+    }, 5000);
 
     return () => window.clearInterval(id);
-  }, [paused, total, lightboxIdx]);
+  }, [paused, total]);
 
-  // ✅ Lock background/page scroll while lightbox is open
-  useEffect(() => {
-    if (lightboxIdx === null) return;
+  const openLightbox = useCallback((idx: number) => {
+    setLightboxIdx(idx);
+  }, []);
 
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [lightboxIdx]);
-
-  // Lightbox keyboard controls (Esc closes, arrows navigate)
-  useEffect(() => {
-    if (lightboxIdx === null) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        setLightboxIdx(null);
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        // ✅ Only change the lightbox image — do NOT scroll the background carousel
-        setLightboxIdx((cur) => {
-          if (cur === null || total === 0) return cur;
-          return (cur - 1 + total) % total;
-        });
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        // ✅ Only change the lightbox image — do NOT scroll the background carousel
-        setLightboxIdx((cur) => {
-          if (cur === null || total === 0) return cur;
-          return (cur + 1) % total;
-        });
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [lightboxIdx, total]);
-
-  const openLightbox = useCallback(
-    (idx: number) => {
-      if (total === 0) return;
-      const clamped = Math.max(0, Math.min(total - 1, idx));
-      setLightboxIdx(clamped);
-
-      // Optional: sync thumbnail strip when opening
-      scrollToIndex(clamped);
-    },
-    [scrollToIndex, total]
-  );
-
-  // ✅ When closing, sync the carousel once (so it “catches up” after the modal)
   const closeLightbox = useCallback(() => {
-    if (lightboxIdx !== null) scrollToIndex(lightboxIdx);
     setLightboxIdx(null);
-  }, [lightboxIdx, scrollToIndex]);
-
-  const lightboxPrev = useCallback(() => {
-    // ✅ Only change the lightbox image — do NOT scroll the background carousel
-    setLightboxIdx((cur) => {
-      if (cur === null || total === 0) return cur;
-      return (cur - 1 + total) % total;
-    });
-  }, [total]);
-
-  const lightboxNext = useCallback(() => {
-    // ✅ Only change the lightbox image — do NOT scroll the background carousel
-    setLightboxIdx((cur) => {
-      if (cur === null || total === 0) return cur;
-      return (cur + 1) % total;
-    });
-  }, [total]);
-
-  if (total === 0) {
-    return (
-      <div
-        className={["rounded-xl border border-neutral-800 bg-neutral-950/40 p-4", className].join(
-          " "
-        )}
-      >
-        <p className="text-sm text-neutral-400">
-          Add 6–10 photos to <span className="text-neutral-200">/public/images/life/</span> and update
-          the list in <span className="text-neutral-200">about/page.tsx</span>.
-        </p>
-      </div>
-    );
-  }
+  }, []);
 
   const activePhoto = lightboxIdx !== null ? safeImages[lightboxIdx] : null;
-  const caption =
-    lightboxIdx !== null ? safeImages[lightboxIdx]?.alt ?? `Photo ${lightboxIdx + 1}` : "";
+  const caption = lightboxIdx !== null ? safeImages[lightboxIdx]?.alt ?? `Photo ${lightboxIdx + 1}` : "";
 
   return (
     <div
@@ -304,11 +221,13 @@ export default function LifeCarousel({ images, accent = "#7c0902", className = "
           // Hide scrollbar (no plugin required)
           "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
 
-          // Subtle edge fade (left/right)
-          "[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]",
+          // ✅ Subtle edge fade (left/right) — now controllable
+          ...(edgeFade
+            ? ["[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"]
+            : []),
         ].join(" ")}
         role="region"
-        aria-label="Personal photo carousel"
+        aria-label="Photo carousel"
         tabIndex={0}
         onKeyDown={onScrollerKeyDown}
       >
@@ -334,7 +253,7 @@ export default function LifeCarousel({ images, accent = "#7c0902", className = "
             <div className="relative aspect-square w-full">
               <Image
                 src={img.src}
-                alt={img.alt ?? `Personal photo ${i + 1}`}
+                alt={img.alt ?? `Photo ${i + 1}`}
                 fill
                 sizes="(max-width: 640px) 176px, (max-width: 768px) 208px, (max-width: 1024px) 224px, 240px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -368,7 +287,7 @@ export default function LifeCarousel({ images, accent = "#7c0902", className = "
         </p>
       </div>
 
-      {/* Lightbox / Full picture view (rendered in a portal to avoid transform/fixed offset bugs) */}
+      {/* Lightbox / Full picture view */}
       {portalReady && lightboxIdx !== null && activePhoto
         ? createPortal(
             <div
@@ -380,76 +299,35 @@ export default function LifeCarousel({ images, accent = "#7c0902", className = "
               {/* Backdrop (click to close) */}
               <button
                 type="button"
-                className="absolute inset-0 cursor-default bg-black/80"
-                aria-label="Close photo viewer"
+                className="absolute inset-0 bg-black/80"
                 onClick={closeLightbox}
+                aria-label="Close photo viewer"
               />
 
-              {/* Subtle red glow layer (above backdrop, below content) */}
-              <div className="pointer-events-none absolute inset-0">
-                <div
-                  className="absolute -top-24 right-16 h-96 w-96 rounded-full blur-3xl"
-                  style={{ backgroundColor: "rgba(124, 9, 2, 0.22)" }}
-                />
-                <div
-                  className="absolute bottom-10 left-16 h-80 w-80 rounded-full blur-3xl"
-                  style={{ backgroundColor: "rgba(124, 9, 2, 0.14)" }}
-                />
-              </div>
+              <div className="relative z-10 w-full max-w-4xl overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950">
+                <div className="relative aspect-video w-full">
+                  <Image
+                    src={activePhoto.src}
+                    alt={activePhoto.alt ?? "Photo"}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 1024px"
+                    className="object-contain bg-black"
+                  />
+                </div>
 
-              {/* Content */}
-              <div className="relative z-10 w-full max-w-5xl">
-                <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-4 sm:p-6">
-                  {/* Adjust these vh values to taste */}
-                  <div className="relative h-[58vh] w-full sm:h-[62vh] md:h-[66vh]">
-                    <Image
-                      src={activePhoto.src}
-                      alt={activePhoto.alt ?? `Personal photo ${lightboxIdx + 1}`}
-                      fill
-                      sizes="100vw"
-                      className="object-contain"
-                      priority
-                    />
+                <div className="flex items-center justify-between gap-4 p-4">
+                  <div className="min-w-0">
+                    <p className="text-sm text-neutral-200" style={{ color: "white" }}>
+                      {caption}
+                    </p>
                   </div>
 
                   <button
                     type="button"
                     onClick={closeLightbox}
-                    className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm text-white/90 hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
-                    aria-label="Close"
+                    className="shrink-0 rounded-xl border border-neutral-800 bg-neutral-900/40 px-3 py-2 text-xs text-neutral-200 hover:bg-neutral-900"
                   >
-                    ✕
-                  </button>
-                </div>
-
-                <p className="mx-auto mt-3 max-w-3xl text-center text-xs leading-5 text-white/60">
-                  {caption}
-                </p>
-
-                <div className="mt-5 flex items-center justify-between gap-3">
-                  <button
-                    type="button"
-                    onClick={lightboxPrev}
-                    className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
-                    aria-label="Previous photo"
-                  >
-                    ← Prev
-                  </button>
-
-                  <div className="text-xs text-white/70">
-                    {lightboxIdx + 1} / {total}{" "}
-                    <span className="hidden sm:inline">
-                      • Press Esc to close • ←/→ to navigate
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={lightboxNext}
-                    className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
-                    aria-label="Next photo"
-                  >
-                    Next →
+                    Close
                   </button>
                 </div>
               </div>

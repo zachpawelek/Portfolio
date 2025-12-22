@@ -1,7 +1,7 @@
 "use client"; // Next.js App Router directive: this file runs on the client (uses hooks like useState/useEffect)
 
 import Image from "next/image"; // Optimized image component
-import React, { useCallback, useEffect, useRef, useState } from "react"; // React hooks
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"; // React hooks
 import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects
 import SocialLinks from "@/components/footer/SocialLinks";
 import CliffsParticles from "@/components/home/CliffsParticles";
@@ -32,53 +32,40 @@ const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
  * - That progress (0..1) becomes an offset multiplier.
  * - We store the offset in state and apply it as translate3d(...) to the image wrapper.
  */
-function useParallax<T extends HTMLElement>(strength = 140) {
-  const ref = useRef<T | null>(null); //  ref attached to the section we want to parallax
-  const [offset, setOffset] = useState(0); // computed parallax translate value (in px)
+function useParallax<TSection extends HTMLElement, TLayer extends HTMLElement>(strength = 140) {
+  const ref = useRef<TSection | null>(null); // attach to the section we want to measure
+  const layerRef = useRef<TLayer | null>(null); // attach to the element we want to translate
 
   /**
-   * strengthRef:
-   * We store strength in a ref so you can change the strength prop without recreating update().
-   * update() stays stable, but uses the latest strength value.
+   * PERF NOTE:
+   * The original version stored `offset` in React state and used it in render.
+   * That means every scroll/RAF tick re-rendered the *entire* page.
+   *
+   * This version writes the computed transform directly to the parallax layer's style,
+   * so scrolling doesn't trigger React renders (much smoother on slower devices).
    */
   const strengthRef = useRef(strength);
   useEffect(() => {
     strengthRef.current = strength;
   }, [strength]);
 
-  /**
-   * update(viewportH)
-   * Called by your main RAF loop on scroll/resize.
-   * Computes the parallax offset based on how far the element has progressed through the viewport.
-   */
   const update = useCallback((viewportH: number) => {
-    const el = ref.current;
-    if (!el) return;
+    const sectionEl = ref.current;
+    const layerEl = layerRef.current;
+    if (!sectionEl || !layerEl) return;
 
-    const rect = el.getBoundingClientRect();
-
-    /**
-     * progress:
-     * A normalized value that represents how far the section has traveled through the viewport.
-     * - When rect.top is high (below viewport), progress is smaller.
-     * - When rect.top goes negative (scrolled up), progress increases.
-     */
+    const rect = sectionEl.getBoundingClientRect();
     const progress = (viewportH - rect.top) / (viewportH + rect.height);
-
-    // Clamp into 0..1 so we get stable bounds.
     const p = clamp01(progress);
+    const offset = (p - 0.5) * strengthRef.current;
 
-    /**
-     * offset formula:
-     * p is 0..1 -> (p - 0.5) becomes -0.5..0.5
-     * Multiply by strength to get a pixel translate range.
-     * Example: strength 140 => -70..+70px.
-     */
-    setOffset((p - 0.5) * strengthRef.current);
+    // Avoid tiny string churn; keep a little precision to reduce layout jitter.
+    layerEl.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
   }, []);
 
-  return { ref, offset, update }; // ✅ used by the caller to attach ref + apply offset
+  return { ref, layerRef, update };
 }
+
 
 /**
  * useScrollFade
@@ -115,101 +102,68 @@ function useScrollFade<T extends HTMLElement>(opts?: {
   // Toggle fade-out (keep fade-in)
   fadeOut?: boolean; // default true
 }) {
-  const ref = useRef<T | null>(null); // ✅ attach to the element you want to fade
-  const [opacity, setOpacity] = useState(1); // ✅ computed opacity output
+  const ref = useRef<T | null>(null); // attach to the element we want to fade
 
   /**
-   * Default tuning values:
-   * These are chosen to feel similar to your hero fade vibe.
-   * You override these per element by passing opts.
+   * PERF NOTE:
+   * Like useParallax, we avoid React state here. We compute opacity and write it
+   * directly to the element's style. This prevents scroll-driven full-page re-renders.
    */
-  const enterStartMult = opts?.enterStartMult ?? 0.9;
-  const enterEndMult = opts?.enterEndMult ?? 0.6;
-  const graceMult = opts?.graceMult ?? 2.75;
-  const fadeDistMult = opts?.fadeDistMult ?? 3.5;
-  const fadeOut = opts?.fadeOut ?? true;
+  const optsRef = useRef({
+    enterStartMult: opts?.enterStartMult ?? 0.9,
+    enterEndMult: opts?.enterEndMult ?? 0.6,
+    graceMult: opts?.graceMult ?? 2.75,
+    fadeDistMult: opts?.fadeDistMult ?? 3.5,
+    fadeOut: opts?.fadeOut ?? true,
+  });
 
-  /**
-   * update(viewportH, headerBottom, headerH)
-   * Called by your main RAF loop.
-   * Outputs a single opacity value that combines:
-   * - enter (fade-in) AND
-   * - exit (fade-out, optional)
-   */
-  const update = useCallback(
-    (viewportH: number, headerBottom: number, headerH: number) => {
-      const el = ref.current;
-      if (!el) return;
+  useEffect(() => {
+    optsRef.current = {
+      enterStartMult: opts?.enterStartMult ?? 0.9,
+      enterEndMult: opts?.enterEndMult ?? 0.6,
+      graceMult: opts?.graceMult ?? 2.75,
+      fadeDistMult: opts?.fadeDistMult ?? 3.5,
+      fadeOut: opts?.fadeOut ?? true,
+    };
+  }, [opts?.enterStartMult, opts?.enterEndMult, opts?.graceMult, opts?.fadeDistMult, opts?.fadeOut]);
 
-      const rect = el.getBoundingClientRect();
+  const update = useCallback((viewportH: number, headerBottom: number, headerH: number) => {
+    const el = ref.current;
+    if (!el) return;
 
-      /**
-       * ----------------------------
-       * FADE IN (ENTER) CALCULATION
-       * ----------------------------
-       * We use rect.top so it starts fading in when the top of the block
-       * approaches the bottom-ish portion of the viewport.
-       *
-       * enterStart: where fade-in starts (opacity ~0)
-       * enterEnd: where fade-in ends (opacity ~1)
-       *
-       * enter = 0..1
-       */
-      const enterStart = viewportH * enterStartMult;
-      const enterEnd = viewportH * enterEndMult;
-      const enter = clamp01((enterStart - rect.top) / (enterStart - enterEnd));
+    const { enterStartMult, enterEndMult, graceMult, fadeDistMult, fadeOut } = optsRef.current;
 
-      /**
-       * ----------------------------
-       * FADE OUT (EXIT) CALCULATION
-       * ----------------------------
-       * Optional: disabled if fadeOut === false.
-       *
-       * We build a "fade zone" near the header:
-       * - fadeStart: point where opacity should still be 1
-       * - fadeEnd: point where opacity should reach 0
-       *
-       * Using headerH multiples makes it responsive to different header sizes.
-       */
-      let exit = 1;
-      if (fadeOut && headerH > 0) {
-        const grace = headerH * graceMult; // ✅ start fading later if this is larger
-        const fadeDistance = headerH * fadeDistMult; // ✅ fade slower if this is larger
+    const rect = el.getBoundingClientRect();
 
-        const fadeStart = headerBottom + grace; // opacity = 1
-        const fadeEnd = fadeStart - fadeDistance; // opacity = 0
+    // Fade IN based on top entering the viewport.
+    const enterStart = viewportH * (enterStartMult ?? 0.9);
+    const enterEnd = viewportH * (enterEndMult ?? 0.6);
+    const enterOpacity = clamp01((enterStart - rect.top) / (enterStart - enterEnd));
 
-        /**
-         * anchorY:
-         * Using rect.bottom delays fade-out for tall sections.
-         * (If you used rect.top, tall sections would start fading too early.)
-         */
-        const anchorY = rect.bottom;
+    // Optional fade OUT as the bottom approaches the header zone.
+    let outOpacity = 1;
+    if (fadeOut) {
+      const grace = headerH * (graceMult ?? 2.75);
+      const fadeDistance = headerH * (fadeDistMult ?? 3.5);
+      const fadeStart = headerBottom + grace; // opacity = 1 here
+      const fadeEnd = fadeStart - fadeDistance; // opacity = 0 here
+      outOpacity = clamp01((rect.bottom - fadeEnd) / (fadeStart - fadeEnd));
+    }
 
-        // exit is 0..1: 1 outside the zone, decreasing to 0 through the zone.
-        exit = clamp01((anchorY - fadeEnd) / (fadeStart - fadeEnd));
-      }
+    const opacity = enterOpacity * outOpacity;
+    el.style.opacity = opacity.toFixed(3);
+  }, []);
 
-      /**
-       * Final opacity is the product:
-       * - Must have entered (enter) AND not yet exited (exit).
-       */
-      setOpacity(enter * exit);
-    },
-    [enterStartMult, enterEndMult, graceMult, fadeDistMult, fadeOut]
-  );
-
-  return { ref, opacity, update };
+  return { ref, update };
 }
-
 export default function Home() {
   /**
    * Parallax controllers:
    * hero -> horses background section
    * cliffs -> cliffs background section
    */
-  const hero = useParallax<HTMLElement>(140);
-  const cliffs = useParallax<HTMLElement>(140);
+  const hero = useParallax<HTMLElement, HTMLDivElement>(140);
+  const cliffs = useParallax<HTMLElement, HTMLDivElement>(140);
 
   /**
    * Fade controllers:
@@ -258,12 +212,8 @@ export default function Home() {
    * based on header position.
    */
   const titleWrapRef = useRef<HTMLDivElement | null>(null);
-
-  // Controls the scroll hint visibility
-  const [hideScrollHint, setHideScrollHint] = useState(false);
-
-  // Controls hero title opacity
-  const [titleOpacity, setTitleOpacity] = useState(1);
+  // Refs used for scroll-driven opacity without triggering React renders
+  const scrollHintRef = useRef<HTMLDivElement | null>(null);
 
   // Newsletter form state (drives input, loading state, and success/error messaging)
   const [subEmail, setSubEmail] = useState(""); // User's email input
@@ -341,7 +291,7 @@ export default function Home() {
    * - update all fade controllers
    * - update hero title opacity (after fonts are loaded to avoid flicker)
    */
-  useEffect(() => {
+  useLayoutEffect(() => {
     let raf = 0;
     let canFadeTitle = false; // ✅ gate hero title fade until fonts settle
 
@@ -364,7 +314,8 @@ export default function Home() {
        * - When heroProgress > 0.2, we fade out the hint.
        */
       const heroProgress = clamp01((-heroRect.top) / heroRect.height);
-      setHideScrollHint(heroProgress > 0.2);
+      const hideHint = heroProgress > 0.2;
+      if (scrollHintRef.current) scrollHintRef.current.style.opacity = hideHint ? "0" : "1";
 
       /**
        * Header metrics:
@@ -391,13 +342,13 @@ export default function Home() {
        * Wait until fonts are ready before starting this behavior to avoid layout shift flicker.
        */
       if (!canFadeTitle) {
-        setTitleOpacity(1);
+        if (titleWrapRef.current) titleWrapRef.current.style.opacity = "1";
         return;
       }
 
       // If missing refs or header size, just keep title fully visible.
       if (!titleWrapRef.current || headerH <= 0) {
-        setTitleOpacity(1);
+        if (titleWrapRef.current) titleWrapRef.current.style.opacity = "1";
         return;
       }
 
@@ -419,7 +370,7 @@ export default function Home() {
 
       // Normalize into 0..1 for opacity.
       const opacity = clamp01((titleTop - fadeEnd) / (fadeStart - fadeEnd));
-      setTitleOpacity(opacity);
+      if (titleWrapRef.current) titleWrapRef.current.style.opacity = opacity.toFixed(3);
     };
 
     /**
@@ -481,8 +432,8 @@ export default function Home() {
       <section ref={hero.ref} className="relative h-[140vh] overflow-hidden">
         {/* Parallax image layer: translate in Y based on hero.offset */}
         <div
+          ref={hero.layerRef}
           className="absolute inset-0 z-0 will-change-transform"
-          style={{ transform: `translate3d(0, ${hero.offset}px, 0)` }}
         >
           <Image
             src="/images/horses/bg.jpg"
@@ -502,7 +453,7 @@ export default function Home() {
         <div className="absolute inset-0 z-10 bg-black/35" />
 
         {/* ✅ Subtle particle field over the horses background */}
-        <div className="pointer-events-none absolute inset-0 z-15">
+        <div className="pointer-events-none absolute inset-0 z-[15]">
           <CliffsParticles />
         </div>
 
@@ -514,8 +465,7 @@ export default function Home() {
           {/* Title block fades based on titleOpacity */}
           <div
             ref={titleWrapRef}
-            style={{ opacity: titleOpacity }}
-            className="max-w-3xl will-change-[opacity]"
+            className="max-w-3xl will-change-[opacity] ml-4 md:ml-10 lg:ml-16"
           >
             <div className="space-y-2">
               <h1 className={`${cinzel.className} text-5xl font-medium md:text-6xl text-white`}>
@@ -529,11 +479,8 @@ export default function Home() {
 
           {/* Scroll hint: fades out based on hideScrollHint */}
           <div
-            className={[
-              "pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-center",
-              "transition-opacity duration-700",
-              hideScrollHint ? "opacity-0" : "opacity-100",
-            ].join(" ")}
+            ref={scrollHintRef}
+            className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-center transition-opacity duration-700"
           >
             <div className={`${inter.className} text-sm uppercase tracking-[0.35em] text-white/85`}>
               Scroll
@@ -553,7 +500,6 @@ export default function Home() {
         {/* Entire content wrapper is faded by aboutFade.opacity */}
         <div
           ref={aboutFade.ref}
-          style={{ opacity: aboutFade.opacity }}
           className="mx-auto max-w-6xl will-change-[opacity]"
         >
           <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>About Me</h2>
@@ -615,8 +561,8 @@ export default function Home() {
       <section ref={cliffs.ref} className="relative h-[140vh] overflow-hidden bg-[rgb(10,10,10)]">
         {/* Parallax image layer: translate in Y based on cliffs.offset */}
         <div
+          ref={cliffs.layerRef}
           className="absolute inset-x-0 inset-y-0 z-0 will-change-transform"
-          style={{ transform: `translate3d(0, ${cliffs.offset}px, 0)` }}
         >
           <Image
             src="/images/cliffs.jpg"
@@ -647,7 +593,6 @@ export default function Home() {
             {/* Top-left header: fades using cliffsHeaderFade */}
             <div
               ref={cliffsHeaderFade.ref}
-              style={{ opacity: cliffsHeaderFade.opacity }}
               className="relative z-10 will-change-[opacity]"
             >
               <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
@@ -660,7 +605,6 @@ export default function Home() {
             {/* ✅ Glass cards (fills the previous particle "dead space", fades in/out) */}
 <div
   ref={cliffsCardsFade.ref}
-  style={{ opacity: cliffsCardsFade.opacity }}
   className="absolute inset-0 z-0 flex items-center justify-center px-4 will-change-[opacity]"
 >
 <div className="w-full max-w-4xl transform-gpu origin-center scale-[0.87]">
@@ -715,237 +659,236 @@ export default function Home() {
             <li>Hover/focus parity for accessibility</li>
           </ul>
         }
-      >
-        Subtle motion, readable typography, and intentional layout—no clutter, no noise.
-      </GlassCard>
-    </div>
-
-    <div className="mt-5 grid gap-5 md:grid-cols-2">
-      <GlassCard
-        title="Projects"
-        kicker="Featured"
-        delayMs={360}
-        backTitle="What you'll find"
-        backKicker="Project highlights"
-        backChildren={
-          <ul className="mt-2 space-y-2">
-            <li>Full-stack builds + UI work</li>
-            <li>Performance-minded implementations</li>
-            <li>Clean code + maintainability</li>
-            <li>Links, demos, and write-ups</li>
-          </ul>
-        }
-      >
-        Highlight key builds here with links, stats, or tech bullets.
-      </GlassCard>
-
-      <GlassCard
-        title="Contact"
-        kicker="Let’s build"
-        delayMs={480}
-        backTitle="Reach out"
-        backKicker="Best ways to connect"
-        backChildren={
-          <ul className="mt-2 space-y-2">
-            <li>Email me with an idea or role</li>
-            <li>Use the contact form for quick notes</li>
-            <li>Check socials for recent updates</li>
-            <li>Happy to talk collaboration</li>
-          </ul>
-        }
-      >
-        Add a CTA, email, or a button to your contact page.
-      </GlassCard>
+        >
+          Subtle motion, readable typography, and intentional layout—no clutter, no noise.
+        </GlassCard>
+      </div>
+  
+      <div className="mt-5 grid gap-5 md:grid-cols-2">
+        <GlassCard
+          title="Projects"
+          kicker="Featured"
+          delayMs={360}
+          backTitle="What you'll find"
+          backKicker="Project highlights"
+          backChildren={
+            <ul className="mt-2 space-y-2">
+              <li>Full-stack builds + UI work</li>
+              <li>Performance-minded implementations</li>
+              <li>Clean code + maintainability</li>
+              <li>Links, demos, and write-ups</li>
+            </ul>
+          }
+        >
+          Highlight key builds here with links, stats, or tech bullets.
+        </GlassCard>
+  
+        <GlassCard
+          title="Contact"
+          kicker="Let’s build"
+          delayMs={480}
+          backTitle="Reach out"
+          backKicker="Best ways to connect"
+          backChildren={
+            <ul className="mt-2 space-y-2">
+              <li>Email me with an idea or role</li>
+              <li>Use the contact form for quick notes</li>
+              <li>Check socials for recent updates</li>
+              <li>Happy to talk collaboration</li>
+            </ul>
+          }
+        >
+          Add a CTA, email, or a button to your contact page.
+        </GlassCard>
+      </div>
     </div>
   </div>
-</div>
-
-
-
-            {/* Bottom-right footer: fades using cliffsFooterFade, later than the header */}
-            <div
-              ref={cliffsFooterFade.ref}
-              style={{ opacity: cliffsFooterFade.opacity }}
-              className="pointer-events-none absolute bottom-6 right-0 z-10 text-right will-change-[opacity]"
-            >
-              {/* Accent color: set via style because Tailwind can't do text-#HEX directly */}
-              <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>
-                Footer Label
-              </div>
-
-              <div className={`${cinzel.className} mt-2 text-2xl font-medium md:text-3xl`}>
-                Bottom Right Text
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* BOTTOM SECTION (newsletter) — fades IN only (no fade-out)            */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="relative bg-[rgb(10,10,10)] px-8 py-20 pb-32 text-white">
-        {/* Subtle top fade so it transitions nicely from above */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
-
-        {/* Entire content wrapper fades IN only via bottomFade (fadeOut: false) */}
-        <div
-          ref={bottomFade.ref}
-          style={{ opacity: bottomFade.opacity }}
-          className="relative z-20 mx-auto max-w-6xl will-change-[opacity]"
-        >
-          <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
-            Stay Up To Date
-          </h2>
-
-          <p
-            className={`${inter.className} mt-3 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg`}
-          >
-            Occasional updates on my new projects, contributions, and what I’m building. No spam.
-          </p>
-
-          {/* Two-column layout on desktop */}
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {/* Left card: newsletter signup */}
-            <div
-              className={[
-                "group relative overflow-hidden",
-                "rounded-2xl border border-neutral-800 bg-neutral-950/40",
-                "transition-all duration-300 ease-out",
-                "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
-                "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-                "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
-                "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-                "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
-                "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
-                "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
-                "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
-              ].join(" ")}
-            >
-              <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl bg-[radial-gradient(circle,rgba(124,9,2,0.18),transparent_65%)]" />
-
-              <div className="relative p-8">
-                <div
-                  className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
-                  style={{ color: "#7c0902" }}
-                >
-                  Newsletter
+  
+  
+  
+              {/* Bottom-right footer: fades using cliffsFooterFade, later than the header */}
+              <div
+                ref={cliffsFooterFade.ref}
+                className="pointer-events-none absolute bottom-6 right-0 z-10 text-right will-change-[opacity]"
+              >
+                {/* Accent color: set via style because Tailwind can't do text-#HEX directly */}
+                <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>
+                  Footer Label
                 </div>
-
-                <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
-                  Subscribe for updates
-                </h3>
-
-                <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
-                  Get a short email containing my newsletter. Unsubscribe anytime.
-                </p>
-
-                <form className="mt-6 space-y-3" onSubmit={onSubscribe}>
-                  <label className="block">
-                    <span
-                      className={`${inter.className} text-xs uppercase tracking-wide text-neutral-500`}
-                    >
-                      Email
-                    </span>
-                    <input
-                      type="email"
-                      required
-                      value={subEmail}
-                      onChange={(e) => setSubEmail(e.target.value)}
-                      placeholder="you@domain.com"
-                      className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-950/60 px-4 py-3 text-sm text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-700"
-                    />
-                  </label>
-
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <button
-                      type="submit"
-                      disabled={subStatus === "loading"}
-                      className="inline-flex items-center justify-center rounded-xl border border-neutral-800 px-5 py-2.5 text-sm font-medium text-white transition-transform duration-200 transform hover:scale-105 active:scale-100 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-700 disabled:opacity-60"
-                      style={{ backgroundColor: "#7c0902" }}
-                    >
-                      {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
-                    </button>
-
-                    <div className={`${inter.className} text-xs text-white/50`}>
-                      By subscribing, you agree to receive emails from me.
-                    </div>
-                  </div>
-
-                  {subMsg ? (
-                    <div
-                      className={`${inter.className} text-sm ${
-                        subStatus === "error" ? "text-red-300" : "text-white/70"
-                      }`}
-                    >
-                      {subMsg}
-                    </div>
-                  ) : null}
-                </form>
-              </div>
-            </div>
-
-            {/* Right card: what to expect */}
-            <div
-              className={[
-                "group relative overflow-hidden",
-                "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-8",
-                "transition-all duration-300 ease-out",
-                "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
-                "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-                "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
-                "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
-                "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
-                "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
-                "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
-                "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
-              ].join(" ")}
-            >
-              <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
-
-              <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-1 h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: "#7c0902" }}
-                  />
-                  New projects
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-1 h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: "#7c0902" }}
-                  />
-                  Dev notes &amp; small experiments
-                </li>
-                <li className="flex items-start gap-3">
-                  <span
-                    className="mt-1 h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: "#7c0902" }}
-                  />
-                  Occasional links + tools I’m liking
-                </li>
-              </ul>
-
-              <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-950/50 p-5">
-                <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
-                <div className={`${inter.className} mt-1 text-sm text-white/50`}>
-                  Usually 1–2 emails per month.
+  
+                <div className={`${cinzel.className} mt-2 text-2xl font-medium md:text-3xl`}>
+                  Bottom Right Text
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Tiny footer marker */}
+        </section>
+  
+        {/* ------------------------------------------------------------------ */}
+        {/* BOTTOM SECTION (newsletter) — fades IN only (no fade-out)            */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="relative bg-[rgb(10,10,10)] px-8 py-20 pb-32 text-white">
+          {/* Subtle top fade so it transitions nicely from above */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
+  
+          {/* Entire content wrapper fades IN only via bottomFade (fadeOut: false) */}
           <div
-            className={`${inter.className} mt-16 text-center text-xs tracking-[0.35em] text-white/35`}
+            ref={bottomFade.ref}
+            className="relative z-20 mx-auto max-w-6xl will-change-[opacity]"
           >
-            FOLLOW ME
+            <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
+              Stay Up To Date
+            </h2>
+  
+            <p
+              className={`${inter.className} mt-3 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg`}
+            >
+              Occasional updates on my new projects, contributions, and what I’m building. No spam.
+            </p>
+  
+            {/* Two-column layout on desktop */}
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
+              {/* Left card: newsletter signup */}
+              <div
+                className={[
+                  "group relative overflow-hidden",
+                  "rounded-2xl border border-neutral-800 bg-neutral-950/40",
+                  "transition-all duration-300 ease-out",
+                  "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+                  "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                  "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+                  "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                  "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+                  "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+                  "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
+                  "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+                ].join(" ")}
+              >
+                <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl bg-[radial-gradient(circle,rgba(124,9,2,0.18),transparent_65%)]" />
+  
+                <div className="relative p-8">
+                  <div
+                    className={`${inter.className} text-xs uppercase tracking-[0.35em]`}
+                    style={{ color: "#7c0902" }}
+                  >
+                    Newsletter
+                  </div>
+  
+                  <h3 className={`${cinzel.className} mt-3 text-2xl font-medium md:text-3xl`}>
+                    Subscribe for updates
+                  </h3>
+  
+                  <p className={`${inter.className} mt-4 text-base leading-relaxed text-white/70`}>
+                    Get a short email containing my newsletter. Unsubscribe anytime.
+                  </p>
+  
+                  <form className="mt-6 space-y-3" onSubmit={onSubscribe}>
+                    <label className="block">
+                      <span
+                        className={`${inter.className} text-xs uppercase tracking-wide text-neutral-500`}
+                      >
+                        Email
+                      </span>
+                      <input
+                        type="email"
+                        required
+                        value={subEmail}
+                        onChange={(e) => setSubEmail(e.target.value)}
+                        placeholder="you@domain.com"
+                        className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-950/60 px-4 py-3 text-sm text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-700"
+                      />
+                    </label>
+  
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <button
+                        type="submit"
+                        disabled={subStatus === "loading"}
+                        className="inline-flex items-center justify-center rounded-xl border border-neutral-800 px-5 py-2.5 text-sm font-medium text-white transition-transform duration-200 transform hover:scale-105 active:scale-100 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-700 disabled:opacity-60"
+                        style={{ backgroundColor: "#7c0902" }}
+                      >
+                        {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
+                      </button>
+  
+                      <div className={`${inter.className} text-xs text-white/50`}>
+                        By subscribing, you agree to receive emails from me.
+                      </div>
+                    </div>
+  
+                    {subMsg ? (
+                      <div
+                        className={`${inter.className} text-sm ${
+                          subStatus === "error" ? "text-red-300" : "text-white/70"
+                        }`}
+                      >
+                        {subMsg}
+                      </div>
+                    ) : null}
+                  </form>
+                </div>
+              </div>
+  
+              {/* Right card: what to expect */}
+              <div
+                className={[
+                  "group relative overflow-hidden",
+                  "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-8",
+                  "transition-all duration-300 ease-out",
+                  "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
+                  "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                  "focus-within:-translate-y-0.5 focus-within:border-neutral-700 focus-within:bg-neutral-950/55",
+                  "focus-within:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
+                  "focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-700 focus-within:ring-offset-2 focus-within:ring-offset-neutral-950",
+                  "after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-all after:duration-700",
+                  "after:bg-linear-to-r after:from-transparent after:via-white/5 after:to-transparent",
+                  "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
+                ].join(" ")}
+              >
+                <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
+  
+                <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
+                  <li className="flex items-start gap-3">
+                    <span
+                      className="mt-1 h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: "#7c0902" }}
+                    />
+                    New projects
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span
+                      className="mt-1 h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: "#7c0902" }}
+                    />
+                    Dev notes &amp; small experiments
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span
+                      className="mt-1 h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: "#7c0902" }}
+                    />
+                    Occasional links + tools I’m liking
+                  </li>
+                </ul>
+  
+                <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-950/50 p-5">
+                  <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
+                  <div className={`${inter.className} mt-1 text-sm text-white/50`}>
+                    Usually 1–2 emails per month.
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            {/* Tiny footer marker */}
+            <div
+              className={`${inter.className} mt-16 text-center text-xs tracking-[0.35em] text-white/35`}
+            >
+              FOLLOW ME
+            </div>
+  
+            <SocialLinks />
           </div>
-
-          <SocialLinks />
-        </div>
-      </section>
-    </main>
-  );
-}
+        </section>
+      </main>
+    );
+  }
+  

@@ -242,7 +242,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
 
       {/* Carousel area */}
       <div className="mt-5 py-10 min-h-[320px] sm:min-h-[360px]">
-        <LifeCarousel images={project.images ?? []} accent={accent} />
+        <LifeCarousel images={project.images ?? []} accent={accent}edgeFade={false} />
       </div>
 
       <p

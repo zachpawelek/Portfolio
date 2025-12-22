@@ -19,6 +19,21 @@ body {
 }
 
 /* -------------------------------------------------
+   Backdrop-blur performance toggle
+   -------------------------------------------------
+   Add class "glass-surface" to any element that uses backdrop-blur.
+   While the user is actively scrolling, we temporarily disable backdrop-filter
+   to avoid expensive per-frame re-blurring.
+*/
+html.is-scrolling .glass-surface {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  /* Optional: keep a glassy feel while blur is disabled during scroll */
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* -------------------------------------------------
    Glass noise overlay (no external image required)
    Usage: add class "glass-noise" on the card wrapper
    ------------------------------------------------- */
