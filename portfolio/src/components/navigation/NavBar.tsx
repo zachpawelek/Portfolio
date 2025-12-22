@@ -28,7 +28,7 @@ export default function NavBar({ variant = "dark" }: { variant?: "dark" | "light
 
   return (
     <nav aria-label="Main" className={`rounded-full ${shell}`}>
-      <ul className="flex items-center gap-5 px-4 py-2">
+      <ul className="flex items-center gap-6 px-4 py-2">
         {links.map((l) => {
           const active = pathname === l.href;
           return (

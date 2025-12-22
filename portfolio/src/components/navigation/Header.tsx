@@ -18,7 +18,7 @@ export default function Header() {
     <header
       className={[
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "bg-white/70 backdrop-blur-md ring-1 ring-black/5" : "bg-transparent",
+        scrolled ? "bg-white/60 backdrop-blur-md ring-1 ring-black/5" : "bg-transparent",
       ].join(" ")}
     >
       <div
