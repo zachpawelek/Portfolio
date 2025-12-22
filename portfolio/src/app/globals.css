@@ -18,6 +18,66 @@ body {
   font-family: var(--font-cormorant-sc), serif;
 }
 
+/* -------------------------------------------------
+   Glass noise overlay (no external image required)
+   Usage: add class "glass-noise" on the card wrapper
+   ------------------------------------------------- */
+.glass-noise {
+  position: relative;
+  isolation: isolate; /* keeps blend effects contained to the card */
+}
+
+.glass-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* Inline SVG turbulence => true noise, no image file */
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20width%3D'160'%20height%3D'160'%3E%3Cfilter%20id%3D'n'%3E%3CfeTurbulence%20type%3D'fractalNoise'%20baseFrequency%3D'.9'%20numOctaves%3D'2'%20stitchTiles%3D'stitch'/%3E%3C/filter%3E%3Crect%20width%3D'160'%20height%3D'160'%20filter%3D'url(%23n)'%20opacity%3D'.55'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  background-repeat: repeat;
+
+  opacity: 0.06; /* tune: 0.03–0.09 */
+  mix-blend-mode: overlay;
+  border-radius: inherit;
+}
+
+/* -------------------------------
+   Glass card animations
+   ------------------------------- */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+/* Optional accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* -------------------------------
    Themed scrollbar (dark neutral)
    ------------------------------- */
@@ -40,25 +100,24 @@ html {
 }
 
 *::-webkit-scrollbar-track {
-  background: #0a0a0a;           /* neutral-950 */
+  background: #0a0a0a; /* neutral-950 */
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #262626;      /* neutral-800 */
-  border: 2px solid #0a0a0a;      /* creates “padding” so it looks sleek */
+  background-color: #262626; /* neutral-800 */
+  border: 2px solid #0a0a0a; /* creates “padding” so it looks sleek */
   border-radius: 999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #404040;      /* neutral-700 */
+  background-color: #404040; /* neutral-700 */
 }
 
 *::-webkit-scrollbar-thumb:active {
-  background-color: #525252;      /* neutral-600 */
+  background-color: #525252; /* neutral-600 */
 }
 
 /* Optional: corner where two scrollbars meet (rare) */
 *::-webkit-scrollbar-corner {
   background: #0a0a0a;
 }
-

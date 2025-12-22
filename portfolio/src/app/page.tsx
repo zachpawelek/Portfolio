@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react"; // Reac
 import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects
 import SocialLinks from "@/components/footer/SocialLinks";
 import CliffsParticles from "@/components/home/CliffsParticles";
+import GlassCard from "@/components/home/GlassCard";
 
 /**
  * clamp01:
@@ -214,15 +215,15 @@ export default function Home() {
    * Fade controllers:
    * - aboutFade fades the "About Me" content in AND out near header.
    * - cliffsHeaderFade fades the top-left cliffs heading in/out.
-   * - cliffsParticlesFade fades the particle field in/out in the empty space.
+   * - cliffsCardsFade fades the glass card block in/out in the empty space.
    * - cliffsFooterFade fades the bottom-right cliffs "footer" in/out, later than header.
    * - bottomFade fades the final section IN only (no fade-out).
    */
   const aboutFade = useScrollFade<HTMLDivElement>();
   const cliffsHeaderFade = useScrollFade<HTMLDivElement>();
 
-  // ✅ Particle layer in cliffs (fills dead space, fades in/out)
-  const cliffsParticlesFade = useScrollFade<HTMLDivElement>({
+  // ✅ Glass cards layer in cliffs (fills dead space, fades in/out)
+  const cliffsCardsFade = useScrollFade<HTMLDivElement>({
     enterStartMult: 0.96,
     enterEndMult: 0.76,
     graceMult: 3.25,
@@ -381,7 +382,7 @@ export default function Home() {
        */
       aboutFade.update(viewportH, headerBottom, headerH);
       cliffsHeaderFade.update(viewportH, headerBottom, headerH);
-      cliffsParticlesFade.update(viewportH, headerBottom, headerH); // ✅ added
+      cliffsCardsFade.update(viewportH, headerBottom, headerH);
       cliffsFooterFade.update(viewportH, headerBottom, headerH);
       bottomFade.update(viewportH, headerBottom, headerH);
 
@@ -467,7 +468,7 @@ export default function Home() {
     cliffs.update,
     aboutFade.update,
     cliffsHeaderFade.update,
-    cliffsParticlesFade.update, // ✅ added
+    cliffsCardsFade.update,
     cliffsFooterFade.update,
     bottomFade.update,
   ]);
@@ -647,28 +648,125 @@ export default function Home() {
             <div
               ref={cliffsHeaderFade.ref}
               style={{ opacity: cliffsHeaderFade.opacity }}
-              className="relative z-10 will-change-[opacity]" // ✅ ensure it's above particles
+              className="relative z-10 will-change-[opacity]"
             >
               <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
                 Another Section
               </h2>
             </div>
 
-            {/* ✅ Subtle particle field (fades in/out with scroll) */}
-            <div
-              ref={cliffsParticlesFade.ref}
-              style={{ opacity: cliffsParticlesFade.opacity }}
-              className="pointer-events-none absolute inset-0 z-0 will-change-[opacity]"
-            >
-              {/* NOTE: don't pass changing opacity prop to avoid re-init on scroll */}
-              <CliffsParticles />
-            </div>
+
+
+            {/* ✅ Glass cards (fills the previous particle "dead space", fades in/out) */}
+<div
+  ref={cliffsCardsFade.ref}
+  style={{ opacity: cliffsCardsFade.opacity }}
+  className="absolute inset-0 z-0 flex items-center justify-center px-4 will-change-[opacity]"
+>
+<div className="w-full max-w-4xl transform-gpu origin-center scale-[0.87]">
+    <div className="grid gap-4 md:grid-cols-3">
+      <GlassCard
+        title="Fast"
+        kicker="Performance"
+        delayMs={0}
+        backTitle="How I keep it fast"
+        backKicker="What I focus on"
+        backChildren={
+          <ul className="mt-2 space-y-2">
+            <li>GPU-friendly transforms (translate3d)</li>
+            <li>RAF-throttled scroll updates</li>
+            <li>Minimal re-renders (stable callbacks)</li>
+            <li>Optimized images &amp; sensible priorities</li>
+          </ul>
+        }
+      >
+        Lightweight UI, smooth parallax, and buttery transitions—focused on feel and clarity.
+      </GlassCard>
+
+      <GlassCard
+        title="Modern"
+        kicker="Stack"
+        delayMs={120}
+        backTitle="Core tools"
+        backKicker="What this site uses"
+        backChildren={
+          <ul className="mt-2 space-y-2">
+            <li>Next.js App Router</li>
+            <li>TypeScript</li>
+            <li>Tailwind CSS</li>
+            <li>Reusable components + clean structure</li>
+          </ul>
+        }
+      >
+        Next.js App Router, Tailwind, and clean component structure designed to scale.
+      </GlassCard>
+
+      <GlassCard
+        title="Polished"
+        kicker="UX"
+        delayMs={240}
+        backTitle="UX details"
+        backKicker="Design choices"
+        backChildren={
+          <ul className="mt-2 space-y-2">
+            <li>Readable typography + spacing</li>
+            <li>Subtle motion (no chaos)</li>
+            <li>High contrast on image sections</li>
+            <li>Hover/focus parity for accessibility</li>
+          </ul>
+        }
+      >
+        Subtle motion, readable typography, and intentional layout—no clutter, no noise.
+      </GlassCard>
+    </div>
+
+    <div className="mt-5 grid gap-5 md:grid-cols-2">
+      <GlassCard
+        title="Projects"
+        kicker="Featured"
+        delayMs={360}
+        backTitle="What you'll find"
+        backKicker="Project highlights"
+        backChildren={
+          <ul className="mt-2 space-y-2">
+            <li>Full-stack builds + UI work</li>
+            <li>Performance-minded implementations</li>
+            <li>Clean code + maintainability</li>
+            <li>Links, demos, and write-ups</li>
+          </ul>
+        }
+      >
+        Highlight key builds here with links, stats, or tech bullets.
+      </GlassCard>
+
+      <GlassCard
+        title="Contact"
+        kicker="Let’s build"
+        delayMs={480}
+        backTitle="Reach out"
+        backKicker="Best ways to connect"
+        backChildren={
+          <ul className="mt-2 space-y-2">
+            <li>Email me with an idea or role</li>
+            <li>Use the contact form for quick notes</li>
+            <li>Check socials for recent updates</li>
+            <li>Happy to talk collaboration</li>
+          </ul>
+        }
+      >
+        Add a CTA, email, or a button to your contact page.
+      </GlassCard>
+    </div>
+  </div>
+</div>
+
+
 
             {/* Bottom-right footer: fades using cliffsFooterFade, later than the header */}
             <div
               ref={cliffsFooterFade.ref}
               style={{ opacity: cliffsFooterFade.opacity }}
-              className="pointer-events-none absolute bottom-6 right-0 z-10 text-right will-change-[opacity]" // ✅ ensure it's above particles
+              className="pointer-events-none absolute bottom-6 right-0 z-10 text-right will-change-[opacity]"
             >
               {/* Accent color: set via style because Tailwind can't do text-#HEX directly */}
               <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>
