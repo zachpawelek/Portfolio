@@ -48,7 +48,7 @@ export default function AboutPage() {
       </div>
 
       {/* Cinematic hero using AZCliffs.jpg */}
-      <section className="relative overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-center">
+      <section className="relative overflow-hidden h-[100svh] md:min-h-[70vh] flex items-center">
         {/* Background image + overlays */}
         <div className="absolute inset-0">
           <Image
@@ -71,7 +71,8 @@ export default function AboutPage() {
         {/* Hero content */}
         <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
           <Reveal>
-            <header className="max-w-2xl">
+          <header className="max-w-2xl text-center md:text-left mx-auto md:mx-0 -translate-y-6 md:translate-y-0">
+
               <p
                 className="text-xs uppercase tracking-wide"
                 style={{ color: "rgba(255,255,255,0.75)" }}
@@ -88,7 +89,8 @@ export default function AboutPage() {
                 experiences, and reliable APIs that hold up in production.
               </p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-6 md:mt-7 flex flex-wrap gap-3 justify-center md:justify-start">
+
                 <Link
                   href="/contact"
                   className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur
@@ -129,10 +131,11 @@ export default function AboutPage() {
               </div>
 
               {/* Optional: small location chip */}
-              <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/70 backdrop-blur">
-                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACCENT }} />
-                {location}
-              </div>
+              <div className="hidden md:inline-flex mt-8 items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/70 backdrop-blur md:mx-0">
+  <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACCENT }} />
+  {location}
+</div>
+
             </header>
           </Reveal>
         </div>
@@ -236,14 +239,15 @@ export default function AboutPage() {
                 <li>• Products with real users + feedback loops</li>
                 <li>• Teams that care about quality and iteration</li>
               </ul>
-              <div className="mt-4">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-                >
-                  Let’s talk →
-                </Link>
-              </div>
+              <div className="mt-4 flex justify-center md:justify-start">
+  <Link
+    href="/contact"
+    className="inline-flex items-center rounded-xl border border-neutral-800 bg-neutral-900/40 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+  >
+    Let’s talk →
+  </Link>
+</div>
+
             </Card>
           </Reveal>
         </div>
@@ -252,9 +256,10 @@ export default function AboutPage() {
         <Reveal delay={240}>
           <div className="mt-12">
             <Card title="Life Outside Of Code" noHoverTint>
-              <p className="text-sm leading-6 text-neutral-300">
-                Take a peek into my life — hiking, friends, traveling! 
-              </p>
+            <p className="text-sm leading-6 text-neutral-300 text-center md:text-left">
+  Take a peek into my life — hiking, friends, traveling!
+</p>
+
 
               <LifeCarousel images={lifePhotos} accent={ACCENT} className="mt-4" density="compact" />
             </Card>
@@ -305,7 +310,10 @@ function Card({
         className ?? "",
       ].join(" ")}
     >
-      <h2 className="text-sm font-medium text-neutral-100">{title}</h2>
+      <h2 className="text-sm font-medium text-neutral-100 text-center md:text-left">
+  {title}
+</h2>
+
       {/* ✅ flex-1 makes the content area take remaining height cleanly */}
       <div className="mt-3 flex-1">{children}</div>
     </div>

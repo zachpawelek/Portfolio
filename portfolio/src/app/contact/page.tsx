@@ -35,45 +35,46 @@ export default function ContactPage() {
       </div>
 
       {/* Cinematic hero header */}
-      <section className="relative overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-center">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/rivers.jpg"
-            alt="River landscape"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
+<section className="relative overflow-hidden min-h-[100svh] md:min-h-[70vh] flex items-center">
+  <div className="absolute inset-0">
+    <Image
+      src="/images/rivers.jpg"
+      alt="River landscape"
+      fill
+      priority
+      sizes="100vw"
+      className="object-cover object-center"
+    />
 
-          <div className="absolute inset-0 bg-black/35" />
-          <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
+    <div className="absolute inset-0 bg-black/35" />
+    <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
 
-          {/* Accent wash (gradient, red pooled on right) */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
-        </div>
+    {/* Accent wash (gradient, red pooled on right) */}
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
+  </div>
 
-        <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
-          <Reveal>
-            <header className="max-w-2xl">
-              <p className="text-xs uppercase tracking-wide text-white/75">Contact</p>
+  <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
+    <Reveal>
+      {/* ✅ mobile centered, desktop unchanged */}
+      <header className="max-w-2xl text-center md:text-left mx-auto md:mx-0">
+        <p className="text-xs uppercase tracking-wide text-white/75">Contact</p>
 
-              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                Let’s talk
-              </h1>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+          Let’s talk
+        </h1>
 
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75">
-                Want to reach out, have a question, or just want to say hi? 
-                <br>
-                </br>
-                Send a message here and I’ll get back to you ASAP!
-              </p>
-            </header>
-          </Reveal>
-        </div>
+        <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 mx-auto md:mx-0">
+          Want to reach out, have a question, or saying hello?
+          <br />
+          Send a message here and I’ll get back to you ASAP!
+        </p>
+      </header>
+    </Reveal>
+  </div>
 
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
-      </section>
+  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
+</section>
+
 
       {/* Page content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
@@ -231,10 +232,12 @@ export default function ContactPage() {
           {/* Bottom: Send a message (full width, independent) */}
           <Reveal delay={40}>
             <section className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
-              <h2 className="text-lg font-medium text-neutral-100">Send a message</h2>
-              <p className="mt-1 text-xs text-neutral-500">
-                Questions? Comments? Concerns? 
-              </p>
+            <h2 className="text-lg font-medium text-neutral-100 text-center md:text-left">
+  Send a message
+</h2>
+<p className="mt-1 text-xs text-neutral-500 text-center md:text-left">
+  Questions? Comments? Concerns?
+</p>
 
               {/* ✅ Center the submit button + "By sending..." line inside ContactForm */}
               <div className="mt-6 [&_button[type='submit']]:mx-auto [&_button[type='submit']]:block [&_p.text-xs]:text-center [&_div.text-xs]:text-center">
