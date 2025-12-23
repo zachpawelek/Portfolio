@@ -214,10 +214,10 @@ export default function LifeCarousel({
       <div
         ref={scrollerRef}
         className={[
+          "min-w-0 w-full",
           "flex gap-4 overflow-x-auto overflow-y-visible pb-3",
           "snap-x snap-mandatory scroll-smooth",
           "rounded-2xl border border-neutral-800 bg-neutral-950/30 p-4",
-
           // Hide scrollbar (no plugin required)
           "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
 
@@ -239,7 +239,7 @@ export default function LifeCarousel({
             onClick={() => openLightbox(i)}
             className={[
               "group relative shrink-0",
-              "w-44 sm:w-52 md:w-56 lg:w-60",
+              "w-[72vw] sm:w-52 md:w-56 lg:w-60",
               "snap-center",
               "rounded-xl border border-neutral-800 bg-neutral-900/20",
               "overflow-hidden",

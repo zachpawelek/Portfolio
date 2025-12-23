@@ -155,7 +155,11 @@ export default function ProjectsPage() {
 
             <div className="mt-4 grid items-stretch gap-4 md:grid-cols-2">
               {featured.map((project, idx) => (
-                <Reveal key={project.title} delay={80 + idx * 60}>
+                <Reveal 
+                  key={project.title} 
+                  delay={80 + idx * 60}
+                  className="min-w-0"
+                >
                   <ProjectCard project={project} accent={ACCENT} />
                 </Reveal>
               ))}
@@ -178,7 +182,11 @@ export default function ProjectsPage() {
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {more.length > 0 ? (
                 more.map((project, idx) => (
-                  <Reveal key={project.title} delay={80 + idx * 60}>
+                  <Reveal 
+                    key={project.title} 
+                    delay={80 + idx * 60}
+                    className="min-w-0"
+                  >
                     <ProjectCard project={project} accent={ACCENT} />
                   </Reveal>
                 ))
@@ -242,7 +250,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
 
       {/* Carousel area */}
       <div className="mt-5 py-10 min-h-80 sm:min-h-90">
-        <LifeCarousel images={project.images ?? []} accent={accent}edgeFade={false} />
+        <LifeCarousel images={project.images ?? []} accent={accent} edgeFade={false} />
       </div>
 
       <p
