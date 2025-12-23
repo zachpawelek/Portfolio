@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Reveal from "../about/Reveal";
@@ -24,7 +25,7 @@ type Project = {
   tech: string[];
   highlights?: string[];
   links: ProjectLink[];
-  images?: ProjectPhoto[]; // ✅ screenshots/progress photos for carousel
+  images?: ProjectPhoto[];
 };
 
 const projects: Project[] = [
@@ -85,7 +86,6 @@ export default function ProjectsPage() {
         />
       </div>
 
-      {/* ✅ Cinematic hero header (matches About/Contact structure) */}
       <section className="relative overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-center">
         <div className="absolute inset-0">
           <Image
@@ -97,11 +97,8 @@ export default function ProjectsPage() {
             className="object-cover object-[55%_58%]"
           />
 
-          {/* Base darken */}
           <div className="absolute inset-0 bg-black/35" />
-          {/* Legibility gradient rail */}
           <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
-          {/* Accent wash (red pooled on right) */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
         </div>
 
@@ -140,11 +137,9 @@ export default function ProjectsPage() {
           </Reveal>
         </div>
 
-        {/* Soft fade into the page below */}
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 
-      {/* Page content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         {featured.length > 0 ? (
           <section className="mb-10">
@@ -155,11 +150,7 @@ export default function ProjectsPage() {
 
             <div className="mt-4 grid items-stretch gap-4 md:grid-cols-2">
               {featured.map((project, idx) => (
-                <Reveal 
-                  key={project.title} 
-                  delay={80 + idx * 60}
-                  className="min-w-0"
-                >
+                <Reveal key={project.title} delay={80 + idx * 60} className="min-w-0">
                   <ProjectCard project={project} accent={ACCENT} />
                 </Reveal>
               ))}
@@ -167,26 +158,19 @@ export default function ProjectsPage() {
           </section>
         ) : null}
 
-        {/* ✅ Centered "More" section under Featured */}
         <section className="mt-14">
           <div className="mx-auto max-w-4xl">
             <Reveal delay={40}>
               <div className="text-center">
                 <h2 className="text-sm font-medium text-neutral-100">More</h2>
-                <p className="mt-1 text-xs text-neutral-500">
-                  Smaller builds, Works in Progress, and Fun Experiments.
-                </p>
+                <p className="mt-1 text-xs text-neutral-500">Smaller builds, Works in Progress, and Fun Experiments.</p>
               </div>
             </Reveal>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {more.length > 0 ? (
                 more.map((project, idx) => (
-                  <Reveal 
-                    key={project.title} 
-                    delay={80 + idx * 60}
-                    className="min-w-0"
-                  >
+                  <Reveal key={project.title} delay={80 + idx * 60} className="min-w-0">
                     <ProjectCard project={project} accent={ACCENT} />
                   </Reveal>
                 ))
@@ -215,8 +199,9 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
     <article
       className={[
         "group relative overflow-hidden",
-        "rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
-        "h-full flex flex-col", // ✅ ensures equal height inside grid
+        "rounded-2xl border border-neutral-800 bg-neutral-950/40",
+        "p-4 sm:p-5", // ✅ smaller on mobile
+        "h-full flex flex-col",
         "transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
         "hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]",
@@ -230,7 +215,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h3
-            className="text-base font-medium text-neutral-100"
+            className="text-sm sm:text-base font-medium text-neutral-100"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
@@ -248,55 +233,85 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         </div>
       </div>
 
-      {/* Carousel area */}
-      <div className="mt-5 py-10 min-h-80 sm:min-h-90">
-        <LifeCarousel images={project.images ?? []} accent={accent} edgeFade={false} />
+      {/* ✅ Mobile-compact carousel block */}
+      <div className="mt-3 sm:mt-5 py-2 sm:py-8 min-h-[160px] sm:min-h-[320px]">
+        <LifeCarousel images={project.images ?? []} accent={accent} edgeFade={false} density="compact" />
       </div>
 
+      {/* ✅ Smaller + fewer lines on mobile; no forced min-height on mobile */}
       <p
-        className="mt-4 text-sm leading-6 text-neutral-300 min-h-18"
-        style={{
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-        }}
+        className="mt-3 sm:mt-4 text-[13px] sm:text-sm leading-5 sm:leading-6 text-neutral-300
+                   min-h-0 sm:min-h-[72px]
+                   [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
+                   [-webkit-line-clamp:2] sm:[-webkit-line-clamp:3]"
       >
         {project.summary}
       </p>
 
-      <div className="mt-4 min-h-19.5">
+      {/* ✅ Don’t reserve vertical space on mobile */}
+      <div className="mt-3 sm:mt-4 min-h-0 sm:min-h-[78px]">
         {project.highlights?.length ? (
-          <ul className="space-y-1 text-sm text-neutral-400">
-            {project.highlights.slice(0, 3).map((h) => (
-              <li key={h} className="flex gap-2">
-                <span
-                  className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full shrink-0"
-                  style={{ backgroundColor: accent }}
-                />
-                <span
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {h}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <>
+            {/* Mobile: show fewer highlights */}
+            <ul className="space-y-1 text-[13px] text-neutral-400 sm:hidden">
+              {project.highlights.slice(0, 2).map((h) => (
+                <li key={h} className="flex gap-2">
+                  <span
+                    className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: accent }}
+                  />
+                  <span
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {h}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Desktop: show more highlights */}
+            <ul className="hidden sm:block space-y-1 text-sm text-neutral-400">
+              {project.highlights.slice(0, 3).map((h) => (
+                <li key={h} className="flex gap-2">
+                  <span
+                    className="mt-1.5 inline-block h-1.5 w-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: accent }}
+                  />
+                  <span
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {h}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </>
         ) : null}
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {project.tech.slice(0, 8).map((t) => (
+      {/* ✅ Fewer pills on mobile */}
+      <div className="mt-3 sm:mt-4 flex flex-wrap gap-2">
+        {project.tech.slice(0, 4).map((t) => (
           <Pill key={t}>{t}</Pill>
         ))}
+        <span className="hidden sm:contents">
+          {project.tech.slice(4, 8).map((t) => (
+            <Pill key={t}>{t}</Pill>
+          ))}
+        </span>
       </div>
 
-      <div className="mt-auto pt-5 flex flex-wrap gap-2">
+      <div className="mt-auto pt-4 sm:pt-5 flex flex-wrap gap-2">
         {project.links.map((l) => (
           <LinkButton key={l.href + l.label} href={l.href} label={l.label} />
         ))}
@@ -311,7 +326,9 @@ function LinkButton({ href, label }: { href: string; label: string }) {
     <Link
       href={href}
       target={isExternal ? "_blank" : undefined}
-      className="inline-flex items-center gap-2 rounded-xl border border-neutral-800 bg-neutral-900/40 px-3 py-2 text-xs text-neutral-200 hover:bg-neutral-900"
+      className="inline-flex items-center gap-2 rounded-xl border border-neutral-800 bg-neutral-900/40
+                 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[11px] sm:text-xs text-neutral-200
+                 hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
     >
       <span>{label}</span>
       <span aria-hidden className="text-neutral-500">
@@ -321,7 +338,7 @@ function LinkButton({ href, label }: { href: string; label: string }) {
   );
 }
 
-function Badge({ children, accent }: { children: React.ReactNode; accent: string }) {
+function Badge({ children, accent }: { children: ReactNode; accent: string }) {
   return (
     <span
       className="rounded-full border px-2 py-0.5 text-xs"
@@ -336,9 +353,14 @@ function Badge({ children, accent }: { children: React.ReactNode; accent: string
   );
 }
 
-function Pill({ children }: { children: React.ReactNode }) {
+function Pill({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-neutral-800 bg-neutral-900/40 px-3 py-1 text-xs text-neutral-200 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-neutral-900/60 hover:shadow-[0_0_24px_rgba(124,9,2,0.10)]">
+    <span
+      className="inline-flex items-center rounded-full border border-neutral-800 bg-neutral-900/40
+                 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs text-neutral-200
+                 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-neutral-900/60
+                 hover:shadow-[0_0_24px_rgba(124,9,2,0.10)]"
+    >
       {children}
     </span>
   );
@@ -347,14 +369,12 @@ function Pill({ children }: { children: React.ReactNode }) {
 function EmptyState() {
   return (
     <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5">
-      <h3 className="text-sm font-medium text-neutral-100">No projects yet</h3>
+      <h3 className="text-sm sm:text-base font-medium text-neutral-100">No projects yet</h3>
       <p className="mt-2 text-sm leading-6 text-neutral-400">
         Add projects to the <code className="text-neutral-300">projects</code> array in{" "}
         <code className="text-neutral-300">src/app/projects/page.tsx</code>.
       </p>
-      <p className="mt-2 text-xs text-neutral-500">
-        Link to GitHub repos now and add in-site case studies later.
-      </p>
+      <p className="mt-2 text-xs text-neutral-500">Link to GitHub repos now and add in-site case studies later.</p>
     </div>
   );
 }

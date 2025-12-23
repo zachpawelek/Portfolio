@@ -18,6 +18,8 @@ type Props = {
   className?: string;
   /** Enable/disable the left/right edge fade */
   edgeFade?: boolean;
+  /** Compact mode for tight layouts (used on Projects) */
+  density?: "default" | "compact";
 };
 
 export default function LifeCarousel({
@@ -25,7 +27,10 @@ export default function LifeCarousel({
   accent = "#7c0902",
   className = "",
   edgeFade = true,
+  density = "default",
 }: Props) {
+  const compact = density === "compact";
+
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const itemsRef = useRef<HTMLElement[]>([]);
   const rafRef = useRef<number | null>(null);
@@ -33,14 +38,10 @@ export default function LifeCarousel({
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  // For smarter arrows
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
-  // Lightbox (full picture view)
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-
-  // Portal readiness (prevents SSR/CSR mismatch)
   const [portalReady, setPortalReady] = useState(false);
 
   const safeImages = useMemo(() => images.filter((x) => !!x?.src), [images]);
@@ -63,7 +64,6 @@ export default function LifeCarousel({
 
       const clamped = Math.max(0, Math.min(total - 1, idx));
 
-      // Use cached items (fallback to hydrate if needed)
       if (itemsRef.current.length !== total) hydrateItems();
       const target = itemsRef.current[clamped];
       if (!target) return;
@@ -79,7 +79,6 @@ export default function LifeCarousel({
     el.scrollBy({ left: dir * el.clientWidth, behavior: "smooth" });
   }, []);
 
-  // Keyboard support when scroller is focused
   const onScrollerKeyDown = useCallback(
     (e: ReactKeyboardEvent<HTMLDivElement>) => {
       if (e.key === "ArrowLeft") {
@@ -93,7 +92,6 @@ export default function LifeCarousel({
     [scrollByPage]
   );
 
-  // Track which item is closest to center (dots + counter) + compute canPrev/canNext
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el || total === 0) return;
@@ -104,7 +102,6 @@ export default function LifeCarousel({
       const items = itemsRef.current;
       if (!items.length) return;
 
-      // Use scrollLeft + offsetLeft math (stable even if items have transforms on hover)
       const centerX = el.scrollLeft + el.clientWidth / 2;
 
       let best = 0;
@@ -145,11 +142,9 @@ export default function LifeCarousel({
     };
   }, [hydrateItems, total]);
 
-  // Auto-scroll (optional: only if you had it; keeping your existing behavior)
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el || total <= 1) return;
-
     if (paused) return;
 
     const id = window.setInterval(() => {
@@ -177,6 +172,13 @@ export default function LifeCarousel({
   const activePhoto = lightboxIdx !== null ? safeImages[lightboxIdx] : null;
   const caption = lightboxIdx !== null ? safeImages[lightboxIdx]?.alt ?? `Photo ${lightboxIdx + 1}` : "";
 
+  const arrowBtnClass = [
+    "rounded-full border border-neutral-800 bg-neutral-900/40 text-neutral-200 hover:bg-neutral-900",
+    "disabled:opacity-40 disabled:hover:bg-neutral-900/40",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+    compact ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm",
+  ].join(" ");
+
   return (
     <div
       className={["relative", className].join(" ")}
@@ -185,7 +187,7 @@ export default function LifeCarousel({
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className={compact ? "mb-2 flex items-center justify-between gap-2" : "mb-3 flex items-center justify-between gap-3"}>
         <p className="text-xs uppercase tracking-wide text-neutral-500">Photos</p>
 
         <div className="flex items-center gap-2">
@@ -193,7 +195,7 @@ export default function LifeCarousel({
             type="button"
             onClick={() => scrollByPage(-1)}
             disabled={!canPrev}
-            className="rounded-full border border-neutral-800 bg-neutral-900/40 px-3 py-1.5 text-sm text-neutral-200 hover:bg-neutral-900 disabled:opacity-40 disabled:hover:bg-neutral-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+            className={arrowBtnClass}
             aria-label="Previous photos"
           >
             ‹
@@ -203,7 +205,7 @@ export default function LifeCarousel({
             type="button"
             onClick={() => scrollByPage(1)}
             disabled={!canNext}
-            className="rounded-full border border-neutral-800 bg-neutral-900/40 px-3 py-1.5 text-sm text-neutral-200 hover:bg-neutral-900 disabled:opacity-40 disabled:hover:bg-neutral-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+            className={arrowBtnClass}
             aria-label="Next photos"
           >
             ›
@@ -215,13 +217,11 @@ export default function LifeCarousel({
         ref={scrollerRef}
         className={[
           "min-w-0 w-full",
-          "flex gap-4 overflow-x-auto overflow-y-visible pb-3",
+          "flex overflow-x-auto overflow-y-visible pb-2",
           "snap-x snap-mandatory scroll-smooth",
-          "rounded-2xl border border-neutral-800 bg-neutral-950/30 p-4",
-          // Hide scrollbar (no plugin required)
+          compact ? "gap-3 rounded-xl p-3" : "gap-4 rounded-2xl p-4",
+          "border border-neutral-800 bg-neutral-950/30",
           "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-
-          // ✅ Subtle edge fade (left/right) — now controllable
           ...(edgeFade
             ? ["mask-[linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"]
             : []),
@@ -238,24 +238,23 @@ export default function LifeCarousel({
             data-carousel-item="1"
             onClick={() => openLightbox(i)}
             className={[
-              "group relative shrink-0",
-              "w-[72vw] sm:w-52 md:w-56 lg:w-60",
-              "snap-center",
-              "rounded-xl border border-neutral-800 bg-neutral-900/20",
-              "overflow-hidden",
-              "transition-transform duration-300",
-              "hover:-translate-y-0.5 hover:scale-[1.02]",
+              "group relative shrink-0 snap-center",
+              // ✅ compact mode is narrower on mobile
+              compact ? "w-[58vw] sm:w-52 md:w-56 lg:w-60" : "w-[72vw] sm:w-52 md:w-56 lg:w-60",
+              "rounded-xl border border-neutral-800 bg-neutral-900/20 overflow-hidden",
+              "transition-transform duration-300 hover:-translate-y-0.5 hover:scale-[1.02]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25",
             ].join(" ")}
             aria-label={`Open photo ${i + 1} of ${total}`}
             style={active === i ? { boxShadow: `0 0 0 1px ${accent}22` } : undefined}
           >
-            <div className="relative aspect-square w-full">
+            {/* ✅ compact mode uses 4:3 instead of square (shorter on mobile) */}
+            <div className={compact ? "relative aspect-[4/3] w-full" : "relative aspect-square w-full"}>
               <Image
                 src={img.src}
                 alt={img.alt ?? `Photo ${i + 1}`}
                 fill
-                sizes="(max-width: 640px) 176px, (max-width: 768px) 208px, (max-width: 1024px) 224px, 240px"
+                sizes="(max-width: 640px) 60vw, (max-width: 768px) 208px, (max-width: 1024px) 224px, 240px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
@@ -263,8 +262,7 @@ export default function LifeCarousel({
         ))}
       </div>
 
-      {/* Bottom bar: dots | helper text | counter */}
-      <div className="mt-3 grid items-center gap-3 sm:grid-cols-3">
+      <div className="mt-2 grid items-center gap-3 sm:grid-cols-3">
         <div className="flex flex-wrap items-center gap-2 justify-start">
           {safeImages.map((_, i) => (
             <button
@@ -278,7 +276,8 @@ export default function LifeCarousel({
           ))}
         </div>
 
-        <p className="text-center text-[11px] text-neutral-500">
+        {/* ✅ Hide helper text in compact mode on mobile */}
+        <p className={compact ? "hidden sm:block text-center text-[11px] text-neutral-500" : "text-center text-[11px] text-neutral-500"}>
           Click to expand photo with information
         </p>
 
@@ -287,7 +286,6 @@ export default function LifeCarousel({
         </p>
       </div>
 
-      {/* Lightbox / Full picture view */}
       {portalReady && lightboxIdx !== null && activePhoto
         ? createPortal(
             <div
@@ -296,7 +294,6 @@ export default function LifeCarousel({
               aria-modal="true"
               aria-label="Photo viewer"
             >
-              {/* Backdrop (click to close) */}
               <button
                 type="button"
                 className="absolute inset-0 bg-black/80"
