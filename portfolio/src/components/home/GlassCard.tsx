@@ -55,6 +55,8 @@ function GlassCardImpl({
         "glass-surface",
 
         "group relative overflow-hidden rounded-2xl",
+        "flex flex-col",
+        "h-[160px] sm:h-[280px] md:h-auto",
         "border border-white/10 ring-1 ring-white/10",
 
         // Backdrop blur is costly while scrolling; keep it high on desktop, reduce on small screens.
@@ -182,7 +184,7 @@ function GlassCardImpl({
           <div
             className={[
               "col-start-1 row-start-1",
-              "relative px-6 pt-10 pb-2 pr-16 md:px-7 md:pt-12 md:pb-2 md:pr-18",
+              "relative h-full px-5 pt-8 pb-4 pr-14 sm:px-6 sm:pt-10 sm:pb-4 sm:pr-16 md:px-7 md:pt-12 md:pb-2 md:pr-18",
               "backface-hidden",
               flipped ? "pointer-events-none" : "pointer-events-auto",
             ].join(" ")}
@@ -197,9 +199,14 @@ function GlassCardImpl({
               {title}
             </h3>
 
-            <div className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70`}>
-              {children}
-            </div>
+            <div
+  className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70
+  [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
+  [-webkit-line-clamp:4] sm:[-webkit-line-clamp:5] md:[-webkit-line-clamp:unset]`}
+>
+  {children}
+</div>
+
           </div>
 
           {/* BACK (lazy-mounted) */}
@@ -207,7 +214,7 @@ function GlassCardImpl({
             <div
               className={[
                 "col-start-1 row-start-1",
-                "relative px-6 pt-10 pb-2 pr-16 md:px-7 md:pt-12 md:pb-2 md:pr-18",
+                "relative h-full px-5 pt-8 pb-4 pr-14 sm:px-6 sm:pt-10 sm:pb-4 sm:pr-16 md:px-7 md:pt-12 md:pb-2 md:pr-18",
                 "backface-hidden",
                 "transform-[rotateY(180deg)]",
                 flipped ? "pointer-events-auto" : "pointer-events-none",
@@ -223,9 +230,14 @@ function GlassCardImpl({
                 {backTitle ?? title}
               </h3>
 
-              <div className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70`}>
-                {backChildren ?? children}
-              </div>
+              <div
+  className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70
+  [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
+  [-webkit-line-clamp:4] sm:[-webkit-line-clamp:5] md:[-webkit-line-clamp:unset]`}
+>
+  {children}
+</div>
+
             </div>
           ) : null}
         </div>

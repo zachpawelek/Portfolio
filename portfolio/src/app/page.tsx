@@ -429,7 +429,8 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* HERO SECTION (horses background + title + scroll hint)              */}
       {/* ------------------------------------------------------------------ */}
-      <section ref={hero.ref} className="relative h-[140vh] overflow-hidden">
+      <section ref={hero.ref} className="relative h-[105vh] sm:h-[140vh] overflow-hidden">
+
         {/* Parallax image layer: translate in Y based on hero.offset */}
         <div
           ref={hero.layerRef}
@@ -442,7 +443,8 @@ export default function Home() {
             priority
             quality={90}
             sizes="100vw"
-            className="object-cover" // fills container, cropping as needed
+            className="object-cover object-[30%_37%] sm:object-center"
+ // fills container, cropping as needed
           />
         </div>
 
@@ -502,7 +504,10 @@ export default function Home() {
           ref={aboutFade.ref}
           className="mx-auto max-w-6xl will-change-[opacity]"
         >
-          <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>About Me</h2>
+          <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl text-center md:text-left`}>
+  About Me
+</h2>
+
 
           <div className="mt-10 grid items-center gap-10 md:grid-cols-2">
             {/* Headshot */}
@@ -524,7 +529,7 @@ export default function Home() {
             </div>
 
             {/* Bio + buttons */}
-            <div>
+            <div className="text-center md:text-left">
               <p className={`${inter.className} text-base leading-relaxed text-white/75 md:text-lg`}>
                 Hello. I'm Zach.
                 <br />
@@ -532,7 +537,7 @@ export default function Home() {
                 <br />
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap gap-3 justify-center md:justify-start">
                 <a
                   href="/projects"
                   className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black hover:bg-white/90"
@@ -547,7 +552,7 @@ export default function Home() {
                 </a>
               </div>
 
-              <p className={`${inter.className} text-base py-11 leading-relaxed text-white/25 md:text-sm`}>
+              <p className={`${inter.className} text-base pt-8 pb-2 leading-relaxed text-white/25 md:text-sm md:py-11`}>
                 Take a Look around and get to know me, and my work, a little bit better!
               </p>
             </div>
@@ -598,7 +603,8 @@ export default function Home() {
   <div className="relative mx-auto h-full max-w-6xl grid grid-rows-[auto,1fr,auto] gap-6">
     {/* Top-left header */}
     <div ref={cliffsHeaderFade.ref} className="relative z-10 will-change-[opacity]">
-      <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Another Section</h2>
+    <h2 className={`${cinzel.className} text-2xl font-medium md:text-3xl`}>Another Section</h2>
+
     </div>
 
     {/* Cards area (middle row) — scrolls inside on small screens instead of overlapping */}
@@ -607,7 +613,7 @@ export default function Home() {
       className="relative z-0 min-h-0 overflow-auto lg:overflow-visible will-change-[opacity] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <div className="flex min-h-full items-center justify-center">
-        <div className="w-full max-w-4xl transform-gpu origin-center scale-[0.78] sm:scale-[0.87]">
+      <div className="w-full max-w-4xl transform-gpu origin-center scale-[0.78] sm:scale-[0.87] -translate-y-10 sm:-translate-y-4 lg:translate-y-0">
           <div className="grid gap-4 md:grid-cols-3">
             <GlassCard
               title="Fast"
@@ -710,8 +716,9 @@ export default function Home() {
       ref={cliffsFooterFade.ref}
       className="pointer-events-none z-10 text-right will-change-[opacity] justify-self-end"
     >
-      <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>Footer Label</div>
-      <div className={`${cinzel.className} mt-2 text-2xl font-medium md:text-3xl`}>Bottom Right Text</div>
+   <div className={`${inter.className} text-[10px] uppercase tracking-[0.35em]`}>Footer Label</div>
+<div className={`${cinzel.className} mt-2 text-xl font-medium md:text-2xl`}>Bottom Right Text</div>
+
     </div>
   </div>
 </div>
@@ -730,14 +737,17 @@ export default function Home() {
             ref={bottomFade.ref}
             className="relative z-20 mx-auto max-w-6xl will-change-[opacity]"
           >
-            <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
+            <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl text-center`}>
               Stay Up To Date
             </h2>
   
             <p
-              className={`${inter.className} mt-3 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg`}
+              className={`${inter.className} mt-3 mx-auto max-w-2xl text-center text-sm leading-relaxed text-white/70 md:text-lg`}
             >
-              Occasional updates on my new projects, contributions, and what I’m building. No spam.
+              Occasional updates on my new projects, contributions, and what I’m building. 
+              <br>
+              </br>
+              No spam. Ever.
             </p>
   
             {/* Two-column layout on desktop */}
@@ -803,7 +813,7 @@ export default function Home() {
                         {subStatus === "loading" ? "Subscribing..." : "Subscribe"}
                       </button>
   
-                      <div className={`${inter.className} text-xs text-white/50`}>
+                      <div className={`${inter.className} text-xs text-white/50 text-center sm:text-left sm:flex-1`}>
                         By subscribing, you agree to receive emails from me.
                       </div>
                     </div>
@@ -837,7 +847,10 @@ export default function Home() {
                   "after:translate-x-[-120%] hover:after:opacity-100 hover:after:translate-x-[120%]",
                 ].join(" ")}
               >
-                <h4 className={`${cinzel.className} text-xl font-medium`}>What you’ll get</h4>
+                <h4 className={`${cinzel.className} text-xl font-medium text-center md:text-left`}>
+  What you’ll get
+</h4>
+
   
                 <ul className={`${inter.className} mt-5 space-y-3 text-white/70`}>
                   <li className="flex items-start gap-3">
