@@ -588,140 +588,134 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 bg-linear-to-b from-transparent to-[rgb(10,10,10)]" />
 
         {/* Foreground overlay spans the full section so we can position text in corners */}
-        <div className="absolute inset-0 z-30 px-8 py-20 text-white">
-          <div className="relative mx-auto h-full max-w-6xl">
-            {/* Top-left header: fades using cliffsHeaderFade */}
-            <div
-              ref={cliffsHeaderFade.ref}
-              className="relative z-10 will-change-[opacity]"
+
+
+
+
+
+        {/* Foreground overlay: grid ensures header/cards/footer never overlap */}
+<div className="absolute inset-0 z-30 px-4 sm:px-8 py-16 sm:py-20 text-white">
+  <div className="relative mx-auto h-full max-w-6xl grid grid-rows-[auto,1fr,auto] gap-6">
+    {/* Top-left header */}
+    <div ref={cliffsHeaderFade.ref} className="relative z-10 will-change-[opacity]">
+      <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>Another Section</h2>
+    </div>
+
+    {/* Cards area (middle row) — scrolls inside on small screens instead of overlapping */}
+    <div
+      ref={cliffsCardsFade.ref}
+      className="relative z-0 min-h-0 overflow-auto lg:overflow-visible will-change-[opacity] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      <div className="flex min-h-full items-center justify-center">
+        <div className="w-full max-w-4xl transform-gpu origin-center scale-[0.78] sm:scale-[0.87]">
+          <div className="grid gap-4 md:grid-cols-3">
+            <GlassCard
+              title="Fast"
+              kicker="Performance"
+              delayMs={0}
+              backTitle="How I keep it fast"
+              backKicker="What I focus on"
+              backChildren={
+                <ul className="mt-2 space-y-2">
+                  <li>GPU-friendly transforms (translate3d)</li>
+                  <li>RAF-throttled scroll updates</li>
+                  <li>Minimal re-renders (stable callbacks)</li>
+                  <li>Optimized images &amp; sensible priorities</li>
+                </ul>
+              }
             >
-              <h2 className={`${cinzel.className} text-3xl font-medium md:text-4xl`}>
-                Another Section
-              </h2>
-            </div>
+              Lightweight UI, smooth parallax, and buttery transitions—focused on feel and clarity.
+            </GlassCard>
 
+            <GlassCard
+              title="Modern"
+              kicker="Stack"
+              delayMs={120}
+              backTitle="Core tools"
+              backKicker="What this site uses"
+              backChildren={
+                <ul className="mt-2 space-y-2">
+                  <li>Next.js App Router</li>
+                  <li>TypeScript</li>
+                  <li>Tailwind CSS</li>
+                  <li>Reusable components + clean structure</li>
+                </ul>
+              }
+            >
+              Next.js App Router, Tailwind, and clean component structure designed to scale.
+            </GlassCard>
 
+            <GlassCard
+              title="Polished"
+              kicker="UX"
+              delayMs={240}
+              backTitle="UX details"
+              backKicker="Design choices"
+              backChildren={
+                <ul className="mt-2 space-y-2">
+                  <li>Readable typography + spacing</li>
+                  <li>Subtle motion (no chaos)</li>
+                  <li>High contrast on image sections</li>
+                  <li>Hover/focus parity for accessibility</li>
+                </ul>
+              }
+            >
+              Subtle motion, readable typography, and intentional layout—no clutter, no noise.
+            </GlassCard>
+          </div>
 
-            {/* ✅ Glass cards (fills the previous particle "dead space", fades in/out) */}
-<div
-  ref={cliffsCardsFade.ref}
-  className="absolute inset-0 z-0 flex items-center justify-center px-4 will-change-[opacity]"
->
-<div className="w-full max-w-4xl transform-gpu origin-center scale-[0.87]">
-    <div className="grid gap-4 md:grid-cols-3">
-      <GlassCard
-        title="Fast"
-        kicker="Performance"
-        delayMs={0}
-        backTitle="How I keep it fast"
-        backKicker="What I focus on"
-        backChildren={
-          <ul className="mt-2 space-y-2">
-            <li>GPU-friendly transforms (translate3d)</li>
-            <li>RAF-throttled scroll updates</li>
-            <li>Minimal re-renders (stable callbacks)</li>
-            <li>Optimized images &amp; sensible priorities</li>
-          </ul>
-        }
-      >
-        Lightweight UI, smooth parallax, and buttery transitions—focused on feel and clarity.
-      </GlassCard>
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <GlassCard
+              title="Projects"
+              kicker="Featured"
+              delayMs={360}
+              backTitle="What you'll find"
+              backKicker="Project highlights"
+              backChildren={
+                <ul className="mt-2 space-y-2">
+                  <li>Full-stack builds + UI work</li>
+                  <li>Performance-minded implementations</li>
+                  <li>Clean code + maintainability</li>
+                  <li>Links, demos, and write-ups</li>
+                </ul>
+              }
+            >
+              Highlight key builds here with links, stats, or tech bullets.
+            </GlassCard>
 
-      <GlassCard
-        title="Modern"
-        kicker="Stack"
-        delayMs={120}
-        backTitle="Core tools"
-        backKicker="What this site uses"
-        backChildren={
-          <ul className="mt-2 space-y-2">
-            <li>Next.js App Router</li>
-            <li>TypeScript</li>
-            <li>Tailwind CSS</li>
-            <li>Reusable components + clean structure</li>
-          </ul>
-        }
-      >
-        Next.js App Router, Tailwind, and clean component structure designed to scale.
-      </GlassCard>
-
-      <GlassCard
-        title="Polished"
-        kicker="UX"
-        delayMs={240}
-        backTitle="UX details"
-        backKicker="Design choices"
-        backChildren={
-          <ul className="mt-2 space-y-2">
-            <li>Readable typography + spacing</li>
-            <li>Subtle motion (no chaos)</li>
-            <li>High contrast on image sections</li>
-            <li>Hover/focus parity for accessibility</li>
-          </ul>
-        }
-        >
-          Subtle motion, readable typography, and intentional layout—no clutter, no noise.
-        </GlassCard>
-      </div>
-  
-      <div className="mt-5 grid gap-5 md:grid-cols-2">
-        <GlassCard
-          title="Projects"
-          kicker="Featured"
-          delayMs={360}
-          backTitle="What you'll find"
-          backKicker="Project highlights"
-          backChildren={
-            <ul className="mt-2 space-y-2">
-              <li>Full-stack builds + UI work</li>
-              <li>Performance-minded implementations</li>
-              <li>Clean code + maintainability</li>
-              <li>Links, demos, and write-ups</li>
-            </ul>
-          }
-        >
-          Highlight key builds here with links, stats, or tech bullets.
-        </GlassCard>
-  
-        <GlassCard
-          title="Contact"
-          kicker="Let’s build"
-          delayMs={480}
-          backTitle="Reach out"
-          backKicker="Best ways to connect"
-          backChildren={
-            <ul className="mt-2 space-y-2">
-              <li>Email me with an idea or role</li>
-              <li>Use the contact form for quick notes</li>
-              <li>Check socials for recent updates</li>
-              <li>Happy to talk collaboration</li>
-            </ul>
-          }
-        >
-          Add a CTA, email, or a button to your contact page.
-        </GlassCard>
+            <GlassCard
+              title="Contact"
+              kicker="Let’s build"
+              delayMs={480}
+              backTitle="Reach out"
+              backKicker="Best ways to connect"
+              backChildren={
+                <ul className="mt-2 space-y-2">
+                  <li>Email me with an idea or role</li>
+                  <li>Use the contact form for quick notes</li>
+                  <li>Check socials for recent updates</li>
+                  <li>Happy to talk collaboration</li>
+                </ul>
+              }
+            >
+              Add a CTA, email, or a button to your contact page.
+            </GlassCard>
+          </div>
+        </div>
       </div>
     </div>
+
+    {/* Bottom-right footer */}
+    <div
+      ref={cliffsFooterFade.ref}
+      className="pointer-events-none z-10 text-right will-change-[opacity] justify-self-end"
+    >
+      <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>Footer Label</div>
+      <div className={`${cinzel.className} mt-2 text-2xl font-medium md:text-3xl`}>Bottom Right Text</div>
+    </div>
   </div>
-  
-  
-  
-              {/* Bottom-right footer: fades using cliffsFooterFade, later than the header */}
-              <div
-                ref={cliffsFooterFade.ref}
-                className="pointer-events-none absolute bottom-6 right-0 z-10 text-right will-change-[opacity]"
-              >
-                {/* Accent color: set via style because Tailwind can't do text-#HEX directly */}
-                <div className={`${inter.className} text-xs uppercase tracking-[0.35em]`}>
-                  Footer Label
-                </div>
-  
-                <div className={`${cinzel.className} mt-2 text-2xl font-medium md:text-3xl`}>
-                  Bottom Right Text
-                </div>
-              </div>
-            </div>
-          </div>
+</div>
+
         </section>
   
         {/* ------------------------------------------------------------------ */}

@@ -256,7 +256,7 @@ export default function AboutPage() {
                 Take a peek into my life — hiking, friends, traveling! 
               </p>
 
-              <LifeCarousel images={lifePhotos} accent={ACCENT} className="mt-5" />
+              <LifeCarousel images={lifePhotos} accent={ACCENT} className="mt-4" density="compact" />
             </Card>
           </div>
         </Reveal>
