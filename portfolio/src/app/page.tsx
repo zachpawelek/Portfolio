@@ -453,7 +453,7 @@ export default function Home() {
         <div className="absolute inset-0 z-10 bg-black/35" />
 
         {/* ✅ Subtle particle field over the horses background */}
-        <div className="pointer-events-none absolute inset-0 z-[15]">
+        <div className="pointer-events-none absolute inset-0 z-15">
           <CliffsParticles />
         </div>
 

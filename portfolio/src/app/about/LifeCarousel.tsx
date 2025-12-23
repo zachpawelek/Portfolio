@@ -223,7 +223,7 @@ export default function LifeCarousel({
 
           // ✅ Subtle edge fade (left/right) — now controllable
           ...(edgeFade
-            ? ["[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"]
+            ? ["mask-[linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"]
             : []),
         ].join(" ")}
         role="region"

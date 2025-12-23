@@ -141,7 +141,7 @@ export default function ProjectsPage() {
         </div>
 
         {/* Soft fade into the page below */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-neutral-950" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 
       {/* Page content */}
@@ -241,12 +241,12 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
       </div>
 
       {/* Carousel area */}
-      <div className="mt-5 py-10 min-h-[320px] sm:min-h-[360px]">
+      <div className="mt-5 py-10 min-h-80 sm:min-h-90">
         <LifeCarousel images={project.images ?? []} accent={accent}edgeFade={false} />
       </div>
 
       <p
-        className="mt-4 text-sm leading-6 text-neutral-300 min-h-[72px]"
+        className="mt-4 text-sm leading-6 text-neutral-300 min-h-18"
         style={{
           display: "-webkit-box",
           WebkitLineClamp: 3,
@@ -257,7 +257,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         {project.summary}
       </p>
 
-      <div className="mt-4 min-h-[78px]">
+      <div className="mt-4 min-h-19.5">
         {project.highlights?.length ? (
           <ul className="space-y-1 text-sm text-neutral-400">
             {project.highlights.slice(0, 3).map((h) => (

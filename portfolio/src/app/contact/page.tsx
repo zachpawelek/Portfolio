@@ -17,8 +17,8 @@ function env(name: string, fallback = "") {
 }
 
 export default function ContactPage() {
-  const email = env("NEXT_PUBLIC_CONTACT_EMAIL", "your@email.com");
-  const location = env("NEXT_PUBLIC_LOCATION", "Chicago, IL");
+  const email = env("NEXT_PUBLIC_CONTACT_EMAIL", "zachpawelek@gmail.com");
+  const location = env("NEXT_PUBLIC_LOCATION", "Milwaukee, WI");
   const githubUrl = env("NEXT_PUBLIC_GITHUB_URL", "https://github.com/zachpawelek");
   const linkedinUrl = env(
     "NEXT_PUBLIC_LINKEDIN_URL",
@@ -47,7 +47,7 @@ export default function ContactPage() {
           />
 
           <div className="absolute inset-0 bg-black/35" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
 
           {/* Accent wash (gradient, red pooled on right) */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%)]" />
@@ -63,14 +63,16 @@ export default function ContactPage() {
               </h1>
 
               <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75">
-                Want to work together, have a question, or just want to say hi? Send a message here
-                and I’ll get back to you.
+                Want to reach out, have a question, or just want to say hi? 
+                <br>
+                </br>
+                Send a message here and I’ll get back to you ASAP!
               </p>
             </header>
           </Reveal>
         </div>
 
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-neutral-950" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 
       {/* Page content */}
@@ -87,7 +89,7 @@ export default function ContactPage() {
                       <p className="text-xs uppercase tracking-wide text-neutral-500">Email</p>
                       <p className="mt-1 text-sm text-neutral-200">{email}</p>
                       <p className="mt-2 text-xs text-neutral-500">
-                        Best for: project inquiries, freelance, collabs
+                        Feel free to reach out at any time!
                       </p>
                     </div>
                     <CopyButton text={email} />
@@ -109,7 +111,7 @@ export default function ContactPage() {
               <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">Connect</p>
                 <p className="mt-1 text-sm text-neutral-300">
-                  Prefer socials? These are the fastest ways to reach me.
+                  Other ways to get in contact with me...
                 </p>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -214,7 +216,7 @@ export default function ContactPage() {
 
                 {/* Center the tip text */}
                 <p className="mt-3 text-center text-xs text-neutral-500">
-                  Tip: add your resume link here if you have one.
+                  Looking forward to connecting with you
                 </p>
               </div>
             </Reveal>
@@ -222,8 +224,8 @@ export default function ContactPage() {
 
           {/* Divider + subtle fade spacer */}
           <div className="relative my-14">
-            <div className="pointer-events-none absolute inset-x-0 -top-8 h-16 bg-gradient-to-b from-transparent via-[rgba(124,9,2,0.14)] to-transparent blur-2xl" />
-            <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 -top-8 h-16 bg-linear-to-b from-transparent via-[rgba(124,9,2,0.14)] to-transparent blur-2xl" />
+            <div className="h-0.5 w-full bg-linear-to-r from-transparent via-white/25 to-transparent" />
           </div>
 
           {/* Bottom: Send a message (full width, independent) */}
@@ -231,7 +233,7 @@ export default function ContactPage() {
             <section className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5 transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-950/55 hover:shadow-[0_0_44px_rgba(124,9,2,0.10)]">
               <h2 className="text-lg font-medium text-neutral-100">Send a message</h2>
               <p className="mt-1 text-xs text-neutral-500">
-                This form sends via Resend through a Next.js API route.
+                Questions? Comments? Concerns? 
               </p>
 
               {/* ✅ Center the submit button + "By sending..." line inside ContactForm */}
