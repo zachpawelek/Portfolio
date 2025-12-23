@@ -86,7 +86,9 @@ export default function ProjectsPage() {
         />
       </div>
 
-      <section className="relative overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-center">
+      {/* Hero */}
+      <section className="relative overflow-hidden h-svh md:min-h-[70vh] flex items-center">
+
         <div className="absolute inset-0">
           <Image
             src="/images/rivers.jpg"
@@ -104,19 +106,23 @@ export default function ProjectsPage() {
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
           <Reveal>
-            <header className="max-w-2xl">
+            {/* ✅ Mobile-only centering; desktop unchanged */}
+            <header className="max-w-2xl mx-auto text-center md:mx-0 md:text-left">
               <p className="text-xs uppercase tracking-wide text-white/75">Projects</p>
 
-              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+              {/* ✅ Smaller only on mobile; desktop unchanged (md:text-5xl stays) */}
+              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-5xl">
                 My Work + Contributions
               </h1>
 
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75">
+              <p className="mt-4 max-w-2xl text-xs leading-5 text-white/75 md:text-sm md:leading-6">
                 A mix of completed projects, University-sanctioned projects, and portfolio work — with links to live
                 demos, repos, and (eventually) an abundance of more projects.
               </p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
+              {/* ✅ Mobile-only centering; desktop unchanged */}
+              <div className="mt-12 md:mt-7 flex flex-wrap gap-3 justify-center md:justify-start">
+
                 <Link
                   href="/contact"
                   className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur
@@ -140,15 +146,18 @@ export default function ProjectsPage() {
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 
+      {/* Page content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         {featured.length > 0 ? (
-          <section className="mb-10">
+          // ✅ Mobile-only spacing tweak; desktop unchanged
+          <section className="mb-8 md:mb-10">
             <Reveal delay={40}>
               <h2 className="text-sm font-medium text-neutral-100">Featured</h2>
               <p className="mt-1 text-xs text-neutral-500">A Great Place To Start.</p>
             </Reveal>
 
-            <div className="mt-4 grid items-stretch gap-4 md:grid-cols-2">
+            {/* ✅ Mobile-only tighter gap; desktop unchanged */}
+            <div className="mt-4 grid items-stretch gap-3 md:gap-4 md:grid-cols-2">
               {featured.map((project, idx) => (
                 <Reveal key={project.title} delay={80 + idx * 60} className="min-w-0">
                   <ProjectCard project={project} accent={ACCENT} />
@@ -158,7 +167,8 @@ export default function ProjectsPage() {
           </section>
         ) : null}
 
-        <section className="mt-14">
+        {/* ✅ Mobile-only spacing tweak; desktop unchanged */}
+        <section className="mt-10 md:mt-14">
           <div className="mx-auto max-w-4xl">
             <Reveal delay={40}>
               <div className="text-center">
@@ -167,7 +177,8 @@ export default function ProjectsPage() {
               </div>
             </Reveal>
 
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {/* ✅ Mobile-only tighter gap; desktop unchanged */}
+            <div className="mt-4 grid gap-3 md:gap-4 md:grid-cols-2">
               {more.length > 0 ? (
                 more.map((project, idx) => (
                   <Reveal key={project.title} delay={80 + idx * 60} className="min-w-0">
@@ -199,8 +210,9 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
     <article
       className={[
         "group relative overflow-hidden",
-        "rounded-2xl border border-neutral-800 bg-neutral-950/40",
-        "p-4 sm:p-5", // ✅ smaller on mobile
+        // ✅ Mobile-only radius/padding tweak; desktop unchanged (md+ returns to rounded-2xl; sm+ returns to p-5)
+        "rounded-xl md:rounded-2xl border border-neutral-800 bg-neutral-950/40",
+        "p-2.5 sm:p-5",
         "h-full flex flex-col",
         "transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:border-neutral-700 hover:bg-neutral-950/55",
@@ -213,46 +225,48 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
       ].join(" ")}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h3
-            className="text-sm sm:text-base font-medium text-neutral-100"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {project.title}
-          </h3>
+  <div className="min-w-0 w-full text-center sm:text-left">
+    <h3
+      className="text-sm sm:text-base font-medium text-neutral-100"
+      style={{
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+      }}
+    >
+      {project.title}
+    </h3>
 
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-neutral-500">
-            {project.status ? <Badge accent={accent}>{project.status}</Badge> : null}
-            {project.year ? <span>• {project.year}</span> : null}
-          </div>
-        </div>
-      </div>
+    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-neutral-500 justify-center sm:justify-start">
+      {project.status ? <Badge accent={accent}>{project.status}</Badge> : null}
+      {project.year ? <span>• {project.year}</span> : null}
+    </div>
+  </div>
+</div>
 
-      {/* ✅ Mobile-compact carousel block */}
-      <div className="mt-3 sm:mt-5 py-2 sm:py-8 min-h-[160px] sm:min-h-[320px]">
+
+      {/* ✅ Mobile-compact carousel block (desktop unchanged via sm: overrides) */}
+      <div className="mt-2 sm:mt-5 py-1 sm:py-8 min-h-[80px] sm:min-h-[320px]">
         <LifeCarousel images={project.images ?? []} accent={accent} edgeFade={false} density="compact" />
       </div>
 
-      {/* ✅ Smaller + fewer lines on mobile; no forced min-height on mobile */}
       <p
-        className="mt-3 sm:mt-4 text-[13px] sm:text-sm leading-5 sm:leading-6 text-neutral-300
-                   min-h-0 sm:min-h-[72px]
-                   [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
-                   [-webkit-line-clamp:2] sm:[-webkit-line-clamp:3]"
-      >
-        {project.summary}
-      </p>
+  className="mt-3 sm:mt-4 text-[13px] sm:text-sm leading-5 sm:leading-6 text-neutral-300
+             text-center sm:text-left
+             min-h-0 sm:min-h-[72px]
+             [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
+             [-webkit-line-clamp:3] sm:[-webkit-line-clamp:3]"
+>
+  {project.summary}
+</p>
 
-      {/* ✅ Don’t reserve vertical space on mobile */}
+
+
+
       <div className="mt-3 sm:mt-4 min-h-0 sm:min-h-[78px]">
         {project.highlights?.length ? (
           <>
-            {/* Mobile: show fewer highlights */}
             <ul className="space-y-1 text-[13px] text-neutral-400 sm:hidden">
               {project.highlights.slice(0, 2).map((h) => (
                 <li key={h} className="flex gap-2">
@@ -274,7 +288,6 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
               ))}
             </ul>
 
-            {/* Desktop: show more highlights */}
             <ul className="hidden sm:block space-y-1 text-sm text-neutral-400">
               {project.highlights.slice(0, 3).map((h) => (
                 <li key={h} className="flex gap-2">
@@ -299,7 +312,6 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
         ) : null}
       </div>
 
-      {/* ✅ Fewer pills on mobile */}
       <div className="mt-3 sm:mt-4 flex flex-wrap gap-2">
         {project.tech.slice(0, 4).map((t) => (
           <Pill key={t}>{t}</Pill>
