@@ -23,7 +23,7 @@ export default function Header() {
     >
       <div
         className={[
-          "mx-auto flex max-w-6xl items-center justify-between px-6 py-4 transition-colors duration-300",
+          "mx-auto flex max-w-6xl items-center justify-between px-4 py-2 sm:px-6 sm:py-4 transition-colors duration-300",
           scrolled ? "text-neutral-900" : "text-white",
         ].join(" ")}
       >

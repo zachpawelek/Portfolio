@@ -28,14 +28,14 @@ export default function NavBar({ variant = "dark" }: { variant?: "dark" | "light
 
   return (
     <nav aria-label="Main" className={`rounded-full ${shell}`}>
-      <ul className="flex items-center gap-6 px-4 py-2">
+      <ul className="flex items-center gap-3 px-3 py-0.75 sm:gap-6 sm:px-4 sm:py-2">
         {links.map((l) => {
           const active = pathname === l.href;
           return (
             <li key={l.href}>
               <Link
                 href={l.href}
-                className={`text-sm transition-colors ${active ? linkActive : linkBase}`}
+                className={`text-[13px] sm:text-sm transition-colors ${active ? linkActive : linkBase}`}
                 aria-current={active ? "page" : undefined}
               >
                 {l.label}
