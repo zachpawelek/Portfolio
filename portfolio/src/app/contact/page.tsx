@@ -5,6 +5,8 @@ import ContactForm from "./ContactForm";
 import CopyButton from "./CopyButton";
 import Reveal from "../about/Reveal";
 import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+import ScrollHintArrow from "@/components/ui/ScrollHintArrow";
+
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -71,7 +73,7 @@ export default function ContactPage() {
       </header>
     </Reveal>
   </div>
-
+  <ScrollHintArrow />
   <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
 </section>
 

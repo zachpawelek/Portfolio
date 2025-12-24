@@ -4,6 +4,8 @@ import Image from "next/image";
 import Reveal from "./Reveal";
 import LifeCarousel from "./LifeCarousel";
 import SocialLinks from "@/components/footer/SocialLinks";
+import ScrollHintArrow from "@/components/ui/ScrollHintArrow";
+
 
 export const metadata: Metadata = {
   title: "About",
@@ -141,6 +143,7 @@ export default function AboutPage() {
         </div>
 
         {/* Soft fade into the page below */}
+        <ScrollHintArrow />
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 

@@ -5,6 +5,9 @@ import Image from "next/image";
 import Reveal from "../about/Reveal";
 import SocialLinks from "@/components/footer/SocialLinks";
 import LifeCarousel from "../about/LifeCarousel";
+import ScrollHintArrow from "@/components/ui/ScrollHintArrow";
+
+
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -142,7 +145,8 @@ export default function ProjectsPage() {
             </header>
           </Reveal>
         </div>
-
+        {/* Mobile-only scroll hint (no text) */}
+        <ScrollHintArrow />
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 
