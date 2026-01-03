@@ -24,7 +24,7 @@ type Project = {
   summary: string;
   year?: string;
   featured?: boolean;
-  status?: "Shipped" | "In progress" | "Experiment";
+  status?: "Completed" | "In progress" | "Experiment";
   tech: string[];
   highlights?: string[];
   links: ProjectLink[];
@@ -38,7 +38,7 @@ const projects: Project[] = [
       "A Fully Integrated Newsletter System With Email Confirmation, Unsubscribe flow, Admin send, and Database Tracking. Why not give it a try on the 'Home' Page?",
     year: "2025",
     featured: true,
-    status: "Shipped",
+    status: "Completed",
     tech: ["Next.js", "TypeScript", "Supabase", "Postgres", "Resend", "Vercel"],
     highlights: [
       "Double opt-in Email Confirmation",
@@ -48,8 +48,9 @@ const projects: Project[] = [
     ],
     links: [{ label: "Site", href: "/" }],
     images: [
-      { src: "/images/projects/01.jpeg", alt: "Subscription form on Home page" },
-      { src: "/images/projects/02.jpeg", alt: "Subscription form on Home page" },
+      { src: "/images/projects/news1.png", alt: "Newsletter Template on the Admin Page" },
+      { src: "/images/projects/news2.png", alt: "Subscription form on the Home Page" },
+      { src: "/images/projects/news3.png", alt: "Sample Email for receiving newsletter information." },
     ],
   },
   {
@@ -67,8 +68,9 @@ const projects: Project[] = [
     ],
     links: [{ label: "Live", href: "/" }],
     images: [
-      { src: "/images/projects/01.jpeg", alt: "Subscription form on Home page" },
-      { src: "/images/projects/02.jpeg", alt: "Subscription form on Home page" },
+      { src: "/images/projects/cap1.png", alt: "Student Dashboard" },
+      { src: "/images/projects/cap4.png", alt: "Chat GPT API assisted Equation Extractor" },
+      { src: "/images/projects/cap3.png", alt: "Category Filters" },
     ],
   },
 ];
@@ -94,12 +96,12 @@ export default function ProjectsPage() {
 
         <div className="absolute inset-0">
           <Image
-            src="/images/rivers.jpg"
+            src="/images/birdy.jpg"
             alt="Projects header background"
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[55%_58%]"
+            className="object-cover object-[55%_48%]"
           />
 
           <div className="absolute inset-0 bg-black/35" />
@@ -177,7 +179,7 @@ export default function ProjectsPage() {
             <Reveal delay={40}>
               <div className="text-center">
                 <h2 className="text-sm font-medium text-neutral-100">More</h2>
-                <p className="mt-1 text-xs text-neutral-500">Smaller builds, Works in Progress, and Fun Experiments.</p>
+                <p className="mt-1 text-xs text-neutral-500">Smaller prototypes and works in progress... </p>
               </div>
             </Reveal>
 
@@ -385,12 +387,11 @@ function Pill({ children }: { children: ReactNode }) {
 function EmptyState() {
   return (
     <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5">
-      <h3 className="text-sm sm:text-base font-medium text-neutral-100">No projects yet</h3>
+      <h3 className="text-sm sm:text-base font-medium text-neutral-100">No projects yet... Subscribe to Stay Up To Date</h3>
       <p className="mt-2 text-sm leading-6 text-neutral-400">
-        Add projects to the <code className="text-neutral-300">projects</code> array in{" "}
-        <code className="text-neutral-300">src/app/projects/page.tsx</code>.
+ 
       </p>
-      <p className="mt-2 text-xs text-neutral-500">Link to GitHub repos now and add in-site case studies later.</p>
+      <p className="mt-2 text-xs text-neutral-500">Links and Additional Information to Follow.</p>
     </div>
   );
 }

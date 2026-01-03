@@ -449,7 +449,7 @@ export default function Home() {
         </div>
 
         {/* ✅ Subtle red gradient wash on the background image */}
-        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(124,9,2,0.22),transparent_55%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_45%,rgba(0,0,0,0.60))]" />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(124,9,2,0.22),transparent_75%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_35%,rgba(0,0,0,0.60))]" />
 
         {/* Dark overlay to improve text readability (kept, slightly lighter) */}
         <div className="absolute inset-0 z-10 bg-black/35" />
@@ -603,7 +603,7 @@ export default function Home() {
   <div className="relative mx-auto h-full max-w-6xl grid grid-rows-[auto,1fr,auto] gap-6">
     {/* Top-left header */}
     <div ref={cliffsHeaderFade.ref} className="relative z-10 will-change-[opacity]">
-    <h2 className={`${cinzel.className} text-2xl font-medium md:text-3xl`}>Another Section</h2>
+    <h2 className={`${cinzel.className} text-2xl font-medium md:text-3xl`}>Quick Information</h2>
 
     </div>
 
@@ -616,8 +616,8 @@ export default function Home() {
       <div className="w-full max-w-4xl transform-gpu origin-center scale-[0.78] sm:scale-[0.87] -translate-y-10 sm:-translate-y-4 lg:translate-y-0">
           <div className="grid gap-4 md:grid-cols-3">
             <GlassCard
-              title="Fast"
-              kicker="Performance"
+              title="Card 1"
+              kicker="Title 1"
               delayMs={0}
               backTitle="How I keep it fast"
               backKicker="What I focus on"
@@ -865,19 +865,19 @@ export default function Home() {
                       className="mt-1 h-1.5 w-1.5 rounded-full"
                       style={{ backgroundColor: "#7c0902" }}
                     />
-                    Dev notes &amp; small experiments
+                    Latest Newsletter with tiny coding excercises
                   </li>
                   <li className="flex items-start gap-3">
                     <span
                       className="mt-1 h-1.5 w-1.5 rounded-full"
                       style={{ backgroundColor: "#7c0902" }}
                     />
-                    Occasional links + tools I’m liking
+                    My current Study Habits + Tips!
                   </li>
                 </ul>
   
                 <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-950/50 p-5">
-                  <div className={`${inter.className} text-sm text-white/70`}>Frequency</div>
+                  <div className={`${inter.className} text-sm text-white/70`}>Frequency: </div>
                   <div className={`${inter.className} mt-1 text-sm text-white/50`}>
                     Usually 1–2 emails per month.
                   </div>

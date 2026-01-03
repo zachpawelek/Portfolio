@@ -21,8 +21,8 @@ function env(name: string, fallback = "") {
 
 export default function AboutPage() {
   const displayName = env("NEXT_PUBLIC_NAME", "Zach");
-  const location = env("NEXT_PUBLIC_LOCATION", "Chicago, IL");
-  const role = env("NEXT_PUBLIC_ROLE", "Full-stack developer");
+  const location = env("NEXT_PUBLIC_LOCATION", "Milwaukee, Wisconsin");
+  const role = env("NEXT_PUBLIC_ROLE", "Software Engineering Student");
   const githubUrl = env("NEXT_PUBLIC_GITHUB_URL", "");
   const linkedinUrl = env("NEXT_PUBLIC_LINKEDIN_URL", "");
 
@@ -87,8 +87,12 @@ export default function AboutPage() {
               </h1>
 
               <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75">
-                I’m a {role} based in {location}. I like building polished UIs, thoughtful product
-                experiences, and reliable APIs that hold up in production.
+                I’m a 26 year old {role} living in {location}.
+                <br>
+                </br>
+
+                
+
               </p>
 
               <div className="mt-6 md:mt-7 flex flex-wrap gap-3 justify-center md:justify-start">
@@ -143,7 +147,7 @@ export default function AboutPage() {
         </div>
 
         {/* Soft fade into the page below */}
-        <ScrollHintArrow />
+        <ScrollHintArrow/>
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-linear-to-b from-transparent to-neutral-950" />
       </section>
 
@@ -151,38 +155,142 @@ export default function AboutPage() {
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         {/* ✅ Symmetric 2-column grid, with equal-height cards per row */}
         <div className="grid items-stretch gap-8 md:grid-cols-2">
+
+
+        <Reveal delay={0} className="h-full flex">
+
+  <Card title="Education History" className="flex-1">
+    {/* ✅ MOBILE (unchanged style / layout): simple bullet list */}
+    <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300 md:hidden">
+      <li>
+        <span className="text-neutral-200">Arizona State University</span> — B.S. Computer Science
+        <span className="text-neutral-400"> (2022–2026)</span>
+      </li>
+      <li>
+        <span className="text-neutral-200">Relevant coursework:</span> Data Structures, Algorithms,
+        Databases, Software Engineering
+      </li>
+      <li>
+        <span className="text-neutral-200">Focus:</span> Full-stack development, UI/UX, systems
+      </li>
+    </ul>
+
+    {/* ✅ DESKTOP ONLY: structured timeline / rows */}
+    <div className="hidden md:block">
+      <div className="space-y-5">
+        {/* Entry 1 */}
+        <div className="rounded-xl border border-neutral-800 bg-neutral-950/30 p-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-neutral-100 truncate">
+                Arizona State University
+              </p>
+              <p className="mt-1 text-sm text-neutral-300">
+                B.S. Computer Science{" "}
+                <span className="text-neutral-500">• Tempe, AZ</span>
+              </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <p className="text-xs uppercase tracking-wide text-neutral-500">Years</p>
+              <p className="mt-1 text-sm text-neutral-200">2022 — 2026</p>
+            </div>
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              Data Structures
+            </span>
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              Algorithms
+            </span>
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              Databases
+            </span>
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              Software Engineering
+            </span>
+          </div>
+
+          <div className="mt-3 grid gap-2 text-xs text-neutral-400">
+            <div className="flex gap-2">
+              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[rgba(124,9,2,0.9)]" />
+              <span>Capstone: AI Tutor (React Native / Expo)</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[rgba(124,9,2,0.9)]" />
+              <span>Interests: full-stack systems + polished UI</span>
+            </div>
+          </div>
+        </div>
+
+
+        {/* Entry 2 (optional template — duplicate/edit as needed) */}
+        <div className="rounded-xl border border-neutral-800 bg-neutral-950/30 p-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-neutral-100 truncate">
+                {/* School Name */}
+                William Rainey Harper College
+              </p>
+              <p className="mt-1 text-sm text-neutral-300">
+                {/* Degree */}
+                Prerequesite Coursework{" "}
+                <span className="text-neutral-500">Palatine, IL</span>
+              </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <p className="text-xs uppercase tracking-wide text-neutral-500">Years</p>
+              <p className="mt-1 text-sm text-neutral-200">2019 — 2020</p>
+            </div>
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              General Studies
+            </span>
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              Graphic Design 
+            </span>
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              Web Design
+            </span>
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              Adobe Suite
+            </span>
+          </div>
+
+          <div className="mt-3 grid gap-2 text-xs text-neutral-400">
+            <div className="flex gap-2">
+              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[rgba(124,9,2,0.9)]" />
+              <span>Received Phi Theta Kappa Honor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Card>
+</Reveal>
+
+
+
+
           <Reveal delay={0} className="h-full flex">
-            <Card title="What I care about" className="flex-1">
-              <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300">
-                <li>
-                  <span className="text-neutral-200">Craft:</span> responsive, accessible UI that
-                  feels intentional.
-                </li>
-                <li>
-                  <span className="text-neutral-200">Reliability:</span> clean data flows, sensible
-                  validation, predictable behavior.
-                </li>
-                <li>
-                  <span className="text-neutral-200">Performance:</span> fast pages, smart loading,
-                  and avoiding “unnecessary work.”
-                </li>
-              </ul>
+            <Card title="Get to Know me..." className="flex-1">
+              <p className="text-sm leading-6 text-neutral-300">
+                I am a 26 year old Senior attending Arizona State University, with only 6 credit hours remaining until graduation. 
+              </p>
+              <p className="mt-3 text-sm leading-6 text-neutral-300">
+                With a background in freelance Graphic Design, I stepped into the world of programming to combine my passion for desinging, building, creating.
+              </p>
+              <p className="mt-3 text-sm leading-6 text-neutral-300">
+                Outside of code, I love to travel, hike, and explore all that nature has to offer. 
+              </p>
             </Card>
           </Reveal>
 
-          <Reveal delay={0} className="h-full flex">
-            <Card title="A little more detail" className="flex-1">
-              <p className="text-sm leading-6 text-neutral-300">
-                I enjoy projects where product and engineering overlap — places where the UI needs
-                to feel great, and the backend needs to be dependable. I’m especially interested in
-                building features end-to-end: schema → API → UI → deployment.
-              </p>
-              <p className="mt-3 text-sm leading-6 text-neutral-300">
-                Outside of coding, I like to recharge with whatever keeps me grounded and curious —
-                learning, reading, and exploring new ideas.
-              </p>
-            </Card>
-          </Reveal>
+          
 
           <Reveal delay={80} className="h-full flex">
             <Card title="Tech I reach for" className="flex-1">
