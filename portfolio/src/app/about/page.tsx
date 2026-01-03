@@ -29,11 +29,11 @@ export default function AboutPage() {
   // Drop 6–10 images into: public/images/life/
   // Then update these filenames to match.
   const lifePhotos = [
-    { src: "/images/life/01.jpeg", alt: "Personal photo 1" },
-    { src: "/images/life/02.jpeg", alt: "Personal photo 2" },
-    { src: "/images/life/03.jpeg", alt: "Personal photo 3" },
-    { src: "/images/life/04.jpeg", alt: "Personal photo 4" },
-    { src: "/images/life/05.jpeg", alt: "Personal photo 5" },
+    { src: "/images/life/01.jpeg", alt: "Hiking" },
+    { src: "/images/life/02.jpeg", alt: "Hiking" },
+    { src: "/images/life/03.jpeg", alt: "Pup!" },
+    { src: "/images/life/04.jpeg", alt: "Hiking" },
+    { src: "/images/life/05.jpeg", alt: "Photography" },
   ];
 
   return (
@@ -157,13 +157,13 @@ export default function AboutPage() {
         <div className="grid items-stretch gap-8 md:grid-cols-2">
 
 
-        <Reveal delay={0} className="h-full flex">
+        <Reveal delay={0} className="md:h-full ">
 
   <Card title="Education History" className="flex-1">
     {/* ✅ MOBILE (unchanged style / layout): simple bullet list */}
     <ul className="list-inside list-disc space-y-2 text-sm leading-6 text-neutral-300 md:hidden">
       <li>
-        <span className="text-neutral-200">Arizona State University</span> — B.S. Computer Science
+        <span className="text-neutral-200">Arizona State University</span> — B.S. Software Engineering
         <span className="text-neutral-400"> (2022–2026)</span>
       </li>
       <li>
@@ -219,7 +219,7 @@ export default function AboutPage() {
             </div>
             <div className="flex gap-2">
               <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[rgba(124,9,2,0.9)]" />
-              <span>Interests: full-stack systems + polished UI</span>
+              <span>Set to Graduate in May, 2026</span>
             </div>
           </div>
         </div>
@@ -268,9 +268,52 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+
+
+
+
+        {/* Entry 3 (optional template — duplicate/edit as needed) */}
+        <div className="rounded-xl border border-neutral-800 bg-neutral-950/30 p-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-neutral-100 truncate">
+                {/* School Name */}
+                Harvest Christian Academy 
+              </p>
+              <p className="mt-1 text-sm text-neutral-300">
+                {/* Degree */}
+                High School{" "}
+                <span className="text-neutral-500">Elgin, IL</span>
+              </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <p className="text-xs uppercase tracking-wide text-neutral-500">Years</p>
+              <p className="mt-1 text-sm text-neutral-200">2014 — 2018</p>
+            </div>
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2.5 py-0.5 text-xs text-neutral-200">
+              General Studies
+            </span>
+            
+          </div>
+
+          <div className="mt-3 grid gap-2 text-xs text-neutral-400">
+            <div className="flex gap-2">
+              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[rgba(124,9,2,0.9)]" />
+              <span>Graduated With 3.9 GPA</span>
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </div>
   </Card>
+
+  
 </Reveal>
 
 
@@ -287,13 +330,43 @@ export default function AboutPage() {
               <p className="mt-3 text-sm leading-6 text-neutral-300">
                 Outside of code, I love to travel, hike, and explore all that nature has to offer. 
               </p>
+              
+              {/* Mobile: full-width banner */}
+<div className="mt-4 md:hidden overflow-hidden rounded-xl border border-neutral-800">
+  <div className="relative aspect-4/3 w-full">
+    <Image
+      src="/images/headshot.jpg"
+      alt="Hiking/travel"
+      fill
+      sizes="80vw"
+      className="object-cover"
+    />
+  </div>
+</div>
+
+{/* Desktop: smaller image row */}
+<div className="mt-4 hidden md:block overflow-hidden rounded-xl border border-neutral-800">
+  <div className="relative aspect-4/3 w-full">
+    <Image
+      src="/images/headshot.jpg"
+      alt="Hiking/travel"
+      fill
+      sizes="520px"
+      className="object-cover"
+    />
+  </div>
+</div>
+
+
+
+
             </Card>
           </Reveal>
 
           
 
           <Reveal delay={80} className="h-full flex">
-            <Card title="Tech I reach for" className="flex-1">
+            <Card title="Current tech stack I'm working with" className="flex-1">
               <div className="flex flex-wrap gap-2">
                 <Pill>Next.js</Pill>
                 <Pill>TypeScript</Pill>
@@ -303,36 +376,37 @@ export default function AboutPage() {
                 <Pill>Postgres</Pill>
                 <Pill>Vercel</Pill>
                 <Pill>Resend</Pill>
+                <Pill>Expo</Pill>
               </div>
               <p className="mt-3 text-xs text-neutral-500">
-                (Swap these to match your real stack — keep it honest + specific.)
+                I'm always seeking to learn!
               </p>
             </Card>
           </Reveal>
 
           <Reveal delay={80} className="h-full flex">
-            <Card title="Highlights" className="flex-1">
+            <Card title="Languages" className="flex-1">
               <div className="grid gap-3 sm:grid-cols-2">
-                <MiniStat label="Strength" value="UI polish" />
-                <MiniStat label="Also strong at" value="API design" />
-                <MiniStat label="I like" value="Shipping" />
-                <MiniStat label="I avoid" value="Over-engineering" />
+                <MiniStat label="Strength" value="Java" />
+                <MiniStat label="Also strong at" value="JavaScript/Typescript" />
+                <MiniStat label="Improving my skills with" value="Python" />
+                <MiniStat label="Beginning to Learn" value="C/C++" />
               </div>
             </Card>
           </Reveal>
 
           <Reveal delay={160} className="h-full flex">
-            <Card title="Now" className="flex-1">
+            <Card title="What I'm doing now" className="flex-1">
               <div className="space-y-3">
                 <TimelineItem
                   dotColor={ACCENT}
                   title="Building portfolio features"
-                  body="Polishing pages, adding real-world backend pieces, and shipping quickly."
+                  body="Polishing pages, adding API focused backend pieces."
                 />
                 <TimelineItem
                   dotColor={ACCENT}
                   title="Improving UX details"
-                  body="Loading states, form feedback, accessibility, and responsive layouts."
+                  body="Reducing Latency, Minimizing Site loading times, Improving form feedback."
                 />
                 <TimelineItem
                   dotColor={ACCENT}
@@ -347,8 +421,8 @@ export default function AboutPage() {
             <Card title="What I’m looking for" className="flex-1">
               <ul className="space-y-2 text-sm leading-6 text-neutral-300">
                 <li>• Frontend-leaning full-stack work</li>
-                <li>• Products with real users + feedback loops</li>
-                <li>• Teams that care about quality and iteration</li>
+                <li>• Products with real users + stakeholder feedback</li>
+                <li>• Team-oriented Projects that ensure quality</li>
               </ul>
               <div className="mt-4 flex justify-center md:justify-start">
   <Link
@@ -426,7 +500,7 @@ function Card({
 </h2>
 
       {/* ✅ flex-1 makes the content area take remaining height cleanly */}
-      <div className="mt-3 flex-1">{children}</div>
+      <div className="mt-3 md:flex-1">{children}</div>
     </div>
   );
 }
