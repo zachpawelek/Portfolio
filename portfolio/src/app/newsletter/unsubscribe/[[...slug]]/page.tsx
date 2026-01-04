@@ -79,7 +79,7 @@ export default function UnsubscribePage() {
 
         if (cancelled) return;
 
-        // ✅ New statuses from the API:
+        // New statuses from the API:
         // - canceled: pending request canceled
         // - unsubscribed: active subscriber unsubscribed
         // - already_done: token already used

@@ -51,7 +51,7 @@ function GlassCardImpl({
         // noise overlay from globals.css
         "glass-noise",
 
-        // ✅ used by globals.css to disable blur only while scrolling
+        //  used by globals.css to disable blur only while scrolling
         "glass-surface",
 
         "group relative overflow-hidden rounded-2xl",
@@ -126,7 +126,7 @@ function GlassCardImpl({
             onFlip();
           }}
           className={[
-            // ✅ also gets blur-disabled while scrolling
+            // also gets blur-disabled while scrolling
             "glass-surface",
 
             "absolute right-4 top-4 z-20",
@@ -226,7 +226,7 @@ function GlassCardImpl({
               ) : null}
 
               <h3 className={`${cinzel.className} mt-2 text-xl font-medium text-white md:text-2xl`}>
-                {/* ✅ allow empty string; only fallback when undefined */}
+                {/* allow empty string; only fallback when undefined */}
                 {backTitle !== undefined ? backTitle : title}
               </h3>
 
@@ -235,7 +235,7 @@ function GlassCardImpl({
                 [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
                 [-webkit-line-clamp:4] sm:[-webkit-line-clamp:5] md:[-webkit-line-clamp:unset]`}
               >
-                {/* ✅ show back content (or fallback to children) */}
+                {/* show back content (or fallback to children) */}
                 {backChildren ?? children}
               </div>
             </div>

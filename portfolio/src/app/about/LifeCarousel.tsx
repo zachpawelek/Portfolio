@@ -239,7 +239,7 @@ export default function LifeCarousel({
             onClick={() => openLightbox(i)}
             className={[
               "group relative shrink-0 snap-center",
-              // ✅ compact mode is narrower on mobile
+              // compact mode is narrower on mobile
               compact ? "w-[58vw] sm:w-52 md:w-56 lg:w-60" : "w-[72vw] sm:w-52 md:w-56 lg:w-60",
               "rounded-xl border border-neutral-800 bg-neutral-900/20 overflow-hidden",
               "transition-transform duration-300 hover:-translate-y-0.5 hover:scale-[1.02]",
@@ -248,8 +248,8 @@ export default function LifeCarousel({
             aria-label={`Open photo ${i + 1} of ${total}`}
             style={active === i ? { boxShadow: `0 0 0 1px ${accent}22` } : undefined}
           >
-            {/* ✅ compact mode uses 4:3 instead of square (shorter on mobile) */}
-            <div className={compact ? "relative aspect-[4/3] w-full" : "relative aspect-square w-full"}>
+            {/*  compact mode uses 4:3 instead of square (shorter on mobile) */}
+            <div className={compact ? "relative aspect-4/3 w-full" : "relative aspect-square w-full"}>
               <Image
                 src={img.src}
                 alt={img.alt ?? `Photo ${i + 1}`}
@@ -276,7 +276,7 @@ export default function LifeCarousel({
           ))}
         </div>
 
-        {/* ✅ Hide helper text in compact mode on mobile */}
+        {/* Hide helper text in compact mode on mobile */}
         <p className={compact ? "hidden sm:block text-center text-[11px] text-neutral-500" : "text-center text-[11px] text-neutral-500"}>
           Click to expand photo with information
         </p>

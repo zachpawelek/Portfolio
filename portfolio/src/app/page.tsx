@@ -178,7 +178,7 @@ export default function Home() {
   const aboutFade = useScrollFade<HTMLDivElement>();
   const cliffsHeaderFade = useScrollFade<HTMLDivElement>();
 
-  // ✅ Glass cards layer in cliffs (fills dead space, fades in/out)
+  // Glass cards layer in cliffs (fills dead space, fades in/out)
   const cliffsCardsFade = useScrollFade<HTMLDivElement>({
     enterStartMult: 0.96,
     enterEndMult: 0.76,
@@ -188,15 +188,15 @@ export default function Home() {
 
   // Bottom-right footer: fades in later and fades out later than the cliffs header.
   const cliffsFooterFade = useScrollFade<HTMLDivElement>({
-    enterStartMult: 0.98, // ✅ fade-in starts lower in the viewport (later)
-    enterEndMult: 0.78, // ✅ fade-in reaches full opacity later
-    graceMult: 3.25, // ✅ fade-out starts later (closer to header)
-    fadeDistMult: 3.0, // ✅ fade-out duration tuning
+    enterStartMult: 0.98, // fade-in starts lower in the viewport (later)
+    enterEndMult: 0.78, //  fade-in reaches full opacity later
+    graceMult: 3.25, //  fade-out starts later (closer to header)
+    fadeDistMult: 3.0, //  fade-out duration tuning
   });
 
   // Bottom-of-page section: fade-in only (no fade-out so it doesn't disappear at the end)
   const bottomFade = useScrollFade<HTMLDivElement>({
-    fadeOut: false, // ✅ disables fade-out
+    fadeOut: false, //  disables fade-out
     enterStartMult: 0.92,
     enterEndMult: 0.65,
   });
@@ -297,7 +297,7 @@ export default function Home() {
    */
   useLayoutEffect(() => {
     let raf = 0;
-    let canFadeTitle = false; // ✅ gate hero title fade until fonts settle
+    let canFadeTitle = false; // gate hero title fade until fonts settle
 
     const update = () => {
       if (!hero.ref.current) return;
@@ -464,13 +464,13 @@ if (heroNoticeRef.current) {
           />
         </div>
 
-        {/* ✅ Subtle red gradient wash on the background image */}
+        {/* Subtle red gradient wash on the background image */}
         <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(124,9,2,0.22),transparent_75%),linear-gradient(to_bottom,rgba(124,9,2,0.10),transparent_35%,rgba(0,0,0,0.60))]" />
 
         {/* Dark overlay to improve text readability (kept, slightly lighter) */}
         <div className="absolute inset-0 z-10 bg-black/35" />
 
-        {/* ✅ Subtle particle field over the horses background */}
+        {/* Subtle particle field over the horses background */}
         <div className="pointer-events-none absolute inset-0 z-15">
           <CliffsParticles />
         </div>
@@ -510,7 +510,7 @@ if (heroNoticeRef.current) {
         <div className="pointer-events-none absolute right-3 top-1/2 z-40 -translate-y-1/2 sm:right-6">
           <div 
             ref={heroNoticeRef}
-            className="pointer-events-auto max-w-[200px] scale-[0.88] sm:scale-100 origin-right will-change-[opacity,transform]"
+            className="pointer-events-auto max-w-50 scale-[0.88] sm:scale-100 origin-right will-change-[opacity,transform]"
             >
 
 
@@ -617,7 +617,7 @@ if (heroNoticeRef.current) {
           />
         </div>
 
-        {/* ✅ Subtle red gradient wash on the cliffs background image */}
+        {/* Subtle red gradient wash on the cliffs background image */}
         <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_80%_70%,rgba(124,9,2,0.20),transparent_60%),linear-gradient(to_top,rgba(124,9,2,0.10),transparent_45%)]" />
 
         {/* Dark overlay for legibility (kept) */}

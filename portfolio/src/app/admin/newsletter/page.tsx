@@ -13,11 +13,11 @@ export default function NewsletterAdminPage() {
   const [status, setStatus] = useState<UiStatus>("idle");
   const [msg, setMsg] = useState("");
 
-  // ✅ Active subscriber count UI
+  //  Active subscriber count UI
   const [activeCount, setActiveCount] = useState<number | null>(null);
   const [statsError, setStatsError] = useState("");
 
-  // ✅ Show failure list if any
+  // Show failure list if any
   const [failedList, setFailedList] = useState<Array<{ email: string; error: string }>>([]);
 
   async function loadStats() {
@@ -117,7 +117,7 @@ export default function NewsletterAdminPage() {
 
       setFile(null);
 
-      // ✅ refresh count after send (useful if someone unsubscribed recently, etc.)
+      // refresh count after send (useful if someone unsubscribed recently, etc.)
       loadStats();
     } catch {
       setStatus("error");

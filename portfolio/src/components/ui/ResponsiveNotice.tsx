@@ -7,7 +7,7 @@ type Props = {
   className?: string;
 };
 
-// ✅ In-memory flag: persists during SPA nav, resets on full reload.
+//  In-memory flag: persists during SPA nav, resets on full reload.
 let dismissedThisLoad = false;
 
 export default function ResponsiveNotice({ variant = "dark", className = "" }: Props) {
@@ -52,10 +52,10 @@ export default function ResponsiveNotice({ variant = "dark", className = "" }: P
         "rounded-2xl border backdrop-blur-md",
         "px-3 py-2",
         "shadow-[0_18px_60px_-35px_rgba(0,0,0,0.55)]",
-        // ✅ subtle: slightly transparent by default
+        //  subtle: slightly transparent by default
         "opacity-70 hover:opacity-100 transition-opacity duration-300",
-        // ✅ slide/fade in from right
-       // ✅ slower + smoother entrance (does NOT affect your scroll fade-out)
+        // slide/fade in from right
+       // slower + smoother entrance (does NOT affect your scroll fade-out)
 "transition-[transform,opacity] duration-1400 ease-[cubic-bezier(0.16,1,0.3,1)]",
 entered ? "translate-x-0" : "translate-x-10",
 entered ? "opacity-70" : "opacity-0",

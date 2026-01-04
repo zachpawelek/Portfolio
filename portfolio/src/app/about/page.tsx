@@ -47,7 +47,7 @@ export default function AboutPage() {
       </div>
 
       {/* Hero */}
-      <section className="relative overflow-hidden h-[100svh] md:min-h-[70vh] flex items-center">
+      <section className="relative overflow-hidden h-svh md:min-h-[70vh] flex items-center">
         <div className="absolute inset-0">
           <Image
             src="/images/AZCliffs.jpg"
@@ -140,7 +140,7 @@ export default function AboutPage() {
           {/* Education */}
           <Reveal delay={0} className="md:h-full">
             <Card title="Education History">
-              {/* ✅ MOBILE: includes ALL schools */}
+              {/* MOBILE: includes ALL schools */}
               <ul className="list-disc list-outside pl-5 space-y-3 text-sm leading-6 text-neutral-300 md:hidden">
                 <li>
                   <span className="text-neutral-200">Arizona State University</span> — B.S. Software
@@ -173,7 +173,7 @@ export default function AboutPage() {
                 </li>
               </ul>
 
-              {/* ✅ DESKTOP ONLY: your structured timeline */}
+              {/* DESKTOP ONLY: your structured timeline */}
               <div className="hidden md:block">
                 <div className="space-y-5">
                   {/* Entry 1 */}
@@ -329,7 +329,7 @@ export default function AboutPage() {
 
               {/* Desktop */}
               <div className="mt-4 hidden md:block overflow-hidden rounded-xl border border-neutral-800">
-                <div className="relative aspect-[4/3] w-full">
+                <div className="relative aspect-4/3 w-full">
                   <Image
                     src="/images/headshot.jpg"
                     alt="Hiking/travel"
@@ -445,7 +445,7 @@ function Card({
   return (
     <div
       className={[
-        // ✅ Mobile grows naturally; desktop keeps equal-height behavior + clipped shimmer
+        // Mobile grows naturally; desktop keeps equal-height behavior + clipped shimmer
         "group relative w-full h-auto md:h-full overflow-visible md:overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950/40 p-5",
         "flex flex-col",
         "transition-all duration-300 ease-out",
@@ -468,7 +468,7 @@ function Card({
     >
       <h2 className="text-sm font-medium text-neutral-100 text-center md:text-left">{title}</h2>
 
-      {/* ✅ Important: flex-1 only on desktop */}
+      {/*  Important: flex-1 only on desktop */}
       <div className="mt-3 md:flex-1">{children}</div>
     </div>
   );

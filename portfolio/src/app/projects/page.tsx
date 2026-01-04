@@ -111,11 +111,11 @@ export default function ProjectsPage() {
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
           <Reveal>
-            {/* ✅ Mobile-only centering; desktop unchanged */}
+            {/* Mobile-only centering; desktop unchanged */}
             <header className="max-w-2xl mx-auto text-center md:mx-0 md:text-left">
               <p className="text-xs uppercase tracking-wide text-white/75">Projects</p>
 
-              {/* ✅ Smaller only on mobile; desktop unchanged (md:text-5xl stays) */}
+              {/*  Smaller only on mobile; desktop unchanged (md:text-5xl stays) */}
               <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-5xl">
                 My Work + Contributions
               </h1>
@@ -125,7 +125,7 @@ export default function ProjectsPage() {
                 demos, repos, and (eventually) an abundance of more projects.
               </p>
 
-              {/* ✅ Mobile-only centering; desktop unchanged */}
+              {/* Mobile-only centering; desktop unchanged */}
               <div className="mt-12 md:mt-7 flex flex-wrap gap-3 justify-center md:justify-start">
 
                 <Link
@@ -155,14 +155,14 @@ export default function ProjectsPage() {
       {/* Page content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         {featured.length > 0 ? (
-          // ✅ Mobile-only spacing tweak; desktop unchanged
+          // Mobile-only spacing tweak; desktop unchanged
           <section className="mb-8 md:mb-10">
             <Reveal delay={40}>
               <h2 className="text-sm font-medium text-neutral-100">Featured</h2>
               <p className="mt-1 text-xs text-neutral-500">A Great Place To Start.</p>
             </Reveal>
 
-            {/* ✅ Mobile-only tighter gap; desktop unchanged */}
+            {/* Mobile-only tighter gap; desktop unchanged */}
             <div className="mt-4 grid items-stretch gap-3 md:gap-4 md:grid-cols-2">
               {featured.map((project, idx) => (
                 <Reveal key={project.title} delay={80 + idx * 60} className="min-w-0">
@@ -173,7 +173,7 @@ export default function ProjectsPage() {
           </section>
         ) : null}
 
-        {/* ✅ Mobile-only spacing tweak; desktop unchanged */}
+        {/*  Mobile-only spacing tweak; desktop unchanged */}
         <section className="mt-10 md:mt-14">
           <div className="mx-auto max-w-4xl">
             <Reveal delay={40}>
@@ -183,7 +183,7 @@ export default function ProjectsPage() {
               </div>
             </Reveal>
 
-            {/* ✅ Mobile-only tighter gap; desktop unchanged */}
+            {/* Mobile-only tighter gap; desktop unchanged */}
             <div className="mt-4 grid gap-3 md:gap-4 md:grid-cols-2">
               {more.length > 0 ? (
                 more.map((project, idx) => (
@@ -216,7 +216,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
     <article
       className={[
         "group relative overflow-hidden",
-        // ✅ Mobile-only radius/padding tweak; desktop unchanged (md+ returns to rounded-2xl; sm+ returns to p-5)
+        //  Mobile-only radius/padding tweak; desktop unchanged (md+ returns to rounded-2xl; sm+ returns to p-5)
         "rounded-xl md:rounded-2xl border border-neutral-800 bg-neutral-950/40",
         "p-2.5 sm:p-5",
         "h-full flex flex-col",
@@ -252,15 +252,15 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
 </div>
 
 
-      {/* ✅ Mobile-compact carousel block (desktop unchanged via sm: overrides) */}
-      <div className="mt-2 sm:mt-5 py-1 sm:py-8 min-h-[80px] sm:min-h-[320px]">
+      {/*  Mobile-compact carousel block (desktop unchanged via sm: overrides) */}
+      <div className="mt-2 sm:mt-5 py-1 sm:py-8 min-h-20 sm:min-h-80">
         <LifeCarousel images={project.images ?? []} accent={accent} edgeFade={false} density="compact" />
       </div>
 
       <p
   className="mt-3 sm:mt-4 text-[13px] sm:text-sm leading-5 sm:leading-6 text-neutral-300
              text-center sm:text-left
-             min-h-0 sm:min-h-[72px]
+             min-h-0 sm:min-h-18
              [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
              [-webkit-line-clamp:3] sm:[-webkit-line-clamp:3]"
 >
@@ -270,7 +270,7 @@ function ProjectCard({ project, accent }: { project: Project; accent: string }) 
 
 
 
-      <div className="mt-3 sm:mt-4 min-h-0 sm:min-h-[78px]">
+      <div className="mt-3 sm:mt-4 min-h-0 sm:min-h-19.5">
         {project.highlights?.length ? (
           <>
             <ul className="space-y-1 text-[13px] text-neutral-400 sm:hidden">

@@ -37,7 +37,7 @@ export default function ContactPage() {
       </div>
 
       {/* Cinematic hero header */}
-<section className="relative overflow-hidden min-h-[100svh] md:min-h-[70vh] flex items-center">
+<section className="relative overflow-hidden min-h-svh md:min-h-[70vh] flex items-center">
   <div className="absolute inset-0">
     <Image
       src="/images/rivers.jpg"
@@ -57,7 +57,7 @@ export default function ContactPage() {
 
   <div className="relative mx-auto w-full max-w-6xl px-4 py-12 md:px-6 md:py-16">
     <Reveal>
-      {/* ✅ mobile centered, desktop unchanged */}
+      {/*  mobile centered, desktop unchanged */}
       <header className="max-w-2xl text-center md:text-left mx-auto md:mx-0">
         <p className="text-xs uppercase tracking-wide text-white/75">Contact</p>
 
@@ -81,7 +81,7 @@ export default function ContactPage() {
       {/* Page content */}
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 md:px-6">
         <div className="space-y-18">
-          {/* ✅ Group Row 1 + Row 2 with tighter spacing between them */}
+          {/* Group Row 1 + Row 2 with tighter spacing between them */}
           <div className="space-y-8">
             {/* Row 1: Email + Location */}
             <div className="grid gap-8 md:grid-cols-2">
@@ -241,7 +241,7 @@ export default function ContactPage() {
   Questions? Comments? Concerns?
 </p>
 
-              {/* ✅ Center the submit button + "By sending..." line inside ContactForm */}
+              {/* Center the submit button + "By sending..." line inside ContactForm */}
               <div className="mt-6 [&_button[type='submit']]:mx-auto [&_button[type='submit']]:block [&_p.text-xs]:text-center [&_div.text-xs]:text-center">
                 <ContactForm />
               </div>
