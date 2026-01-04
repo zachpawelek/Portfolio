@@ -68,8 +68,8 @@ entered ? "opacity-70" : "opacity-0",
     >
       <div className="flex items-start gap-3">
         <div className="min-w-0">
-          <p className={`text-xs ${mainText}`}>Built to work beautifully on any screen.</p>
-          <p className={`text-[11px] ${subText}`}>Looks great on mobile too.</p>
+          <p className={`text-xs ${mainText}`}>My Site is Optimized for Desktop & Mobile.</p>
+          <p className={`text-[11px] ${subText}`}>Check it out!.</p>
         </div>
 
         <button
