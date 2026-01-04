@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import NavBar from "@/components/navigation/NavBar";
 
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
@@ -31,7 +32,12 @@ export default function Header() {
           ZP
         </Link>
 
-        <NavBar variant={scrolled ? "light" : "dark"} />
+        {/* Right side: notice + nav */}
+        <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
+
+          
+          <NavBar variant={scrolled ? "light" : "dark"} />
+        </div>
       </div>
     </header>
   );

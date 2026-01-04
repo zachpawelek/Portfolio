@@ -6,6 +6,8 @@ import { cinzel, inter } from "@/lib/fonts"; // Your custom font objects
 import SocialLinks from "@/components/footer/SocialLinks";
 import CliffsParticles from "@/components/home/CliffsParticles";
 import GlassCard from "@/components/home/GlassCard";
+import ResponsiveNotice from "@/components/ui/ResponsiveNotice";
+
 
 /**
  * clamp01:
@@ -214,6 +216,8 @@ export default function Home() {
   const titleWrapRef = useRef<HTMLDivElement | null>(null);
   // Refs used for scroll-driven opacity without triggering React renders
   const scrollHintRef = useRef<HTMLDivElement | null>(null);
+  const heroNoticeRef = useRef<HTMLDivElement | null>(null);
+
 
   // Newsletter form state (drives input, loading state, and success/error messaging)
   const [subEmail, setSubEmail] = useState(""); // User's email input
@@ -314,6 +318,18 @@ export default function Home() {
        * - When heroProgress > 0.2, we fade out the hint.
        */
       const heroProgress = clamp01((-heroRect.top) / heroRect.height);
+      // Responsive notice: fade out + drift right as you scroll down the hero
+const noticeFadeStart = 0.10; // start fading after a little scroll
+const noticeFadeEnd = 0.28;   // fully gone by here (similar to your hint)
+const t = clamp01((heroProgress - noticeFadeStart) / (noticeFadeEnd - noticeFadeStart));
+const noticeOpacity = 1 - t;          // 1 -> 0
+const noticeSlidePx = t * 28;         // 0 -> 28px to the right
+
+if (heroNoticeRef.current) {
+  heroNoticeRef.current.style.opacity = noticeOpacity.toFixed(3);
+  heroNoticeRef.current.style.transform = `translate3d(${noticeSlidePx.toFixed(1)}px, 0, 0)`;
+}
+
       const hideHint = heroProgress > 0.2;
       if (scrollHintRef.current) scrollHintRef.current.style.opacity = hideHint ? "0" : "1";
 
@@ -490,6 +506,27 @@ export default function Home() {
             <div className="mt-2 text-2xl text-white/85 animate-bounce">↓</div>
           </div>
         </div>
+
+        <div className="pointer-events-none absolute right-3 top-1/2 z-40 -translate-y-1/2 sm:right-6">
+          <div 
+            ref={heroNoticeRef}
+            className="pointer-events-auto max-w-[200px] scale-[0.88] sm:scale-100 origin-right will-change-[opacity,transform]"
+            >
+
+
+            
+        
+            <ResponsiveNotice variant="dark" />
+    </div>
+  </div>
+
+
+
+
+
+
+
+
       </section>
 
       {/* ------------------------------------------------------------------ */}
