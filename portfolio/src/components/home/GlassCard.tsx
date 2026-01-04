@@ -200,13 +200,12 @@ function GlassCardImpl({
             </h3>
 
             <div
-  className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70
-  [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
-  [-webkit-line-clamp:4] sm:[-webkit-line-clamp:5] md:[-webkit-line-clamp:unset]`}
->
-  {children}
-</div>
-
+              className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70
+              [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
+              [-webkit-line-clamp:4] sm:[-webkit-line-clamp:5] md:[-webkit-line-clamp:unset]`}
+            >
+              {children}
+            </div>
           </div>
 
           {/* BACK (lazy-mounted) */}
@@ -227,17 +226,18 @@ function GlassCardImpl({
               ) : null}
 
               <h3 className={`${cinzel.className} mt-2 text-xl font-medium text-white md:text-2xl`}>
-                {backTitle ?? title}
+                {/* ✅ allow empty string; only fallback when undefined */}
+                {backTitle !== undefined ? backTitle : title}
               </h3>
 
               <div
-  className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70
-  [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
-  [-webkit-line-clamp:4] sm:[-webkit-line-clamp:5] md:[-webkit-line-clamp:unset]`}
->
-  {children}
-</div>
-
+                className={`${inter.className} mt-3 text-sm leading-relaxed text-white/70
+                [display:-webkit-box] [-webkit-box-orient:vertical] overflow-hidden
+                [-webkit-line-clamp:4] sm:[-webkit-line-clamp:5] md:[-webkit-line-clamp:unset]`}
+              >
+                {/* ✅ show back content (or fallback to children) */}
+                {backChildren ?? children}
+              </div>
             </div>
           ) : null}
         </div>

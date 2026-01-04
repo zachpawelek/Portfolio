@@ -615,96 +615,98 @@ export default function Home() {
       <div className="flex min-h-full items-center justify-center">
       <div className="w-full max-w-4xl transform-gpu origin-center scale-[0.78] sm:scale-[0.87] -translate-y-10 sm:-translate-y-4 lg:translate-y-0">
           <div className="grid gap-4 md:grid-cols-3">
-            <GlassCard
-              title="Card 1"
-              kicker="Title 1"
-              delayMs={0}
-              backTitle="How I keep it fast"
-              backKicker="What I focus on"
-              backChildren={
-                <ul className="mt-2 space-y-2">
-                  <li>GPU-friendly transforms (translate3d)</li>
-                  <li>RAF-throttled scroll updates</li>
-                  <li>Minimal re-renders (stable callbacks)</li>
-                  <li>Optimized images &amp; sensible priorities</li>
-                </ul>
-              }
-            >
-              Lightweight UI, smooth parallax, and buttery transitions—focused on feel and clarity.
-            </GlassCard>
+
+
+          <GlassCard
+  title="Projects"
+  kicker="FAQ 1"
+  delayMs={0}
+  backTitle="Projects"
+  backKicker="FAQ 1"
+  backChildren={
+    <>
+      <p className="mt-2 text-sm text-white/75">
+        UI/GUI focused builds with API integrated components and features
+      </p>
+
+    </>
+  }
+>
+  What kinds of projects will I find here?
+</GlassCard>
+
 
             <GlassCard
-              title="Modern"
-              kicker="Stack"
+              title="Stack"
+              kicker="FAQ 2"
               delayMs={120}
-              backTitle="Core tools"
-              backKicker="What this site uses"
+              backTitle="Stack"
+              backKicker="FAQ 2"
               backChildren={
                 <ul className="mt-2 space-y-2">
-                  <li>Next.js App Router</li>
-                  <li>TypeScript</li>
-                  <li>Tailwind CSS</li>
-                  <li>Reusable components + clean structure</li>
+                  <li>SQLite3</li>
+                  <li>Java</li>
+                  <li>HMTL/CSS/JavaScript</li>
+                  <li>React Components</li>
                 </ul>
               }
             >
-              Next.js App Router, Tailwind, and clean component structure designed to scale.
+              What is in your Tech Stack that you are you proficient in?
             </GlassCard>
 
+
             <GlassCard
-              title="Polished"
-              kicker="UX"
+              title="About"
+              kicker="FAQ 3"
               delayMs={240}
-              backTitle="UX details"
-              backKicker="Design choices"
+              backTitle="About"
+              backKicker="FAQ 3"
               backChildren={
                 <ul className="mt-2 space-y-2">
-                  <li>Readable typography + spacing</li>
-                  <li>Subtle motion (no chaos)</li>
-                  <li>High contrast on image sections</li>
-                  <li>Hover/focus parity for accessibility</li>
+                  <li>Zach Pawelek</li>
+                  <li>Milwaukee, WI</li>
+                  <li>Senior at Arizona State University</li>
                 </ul>
               }
             >
-              Subtle motion, readable typography, and intentional layout—no clutter, no noise.
+              Who are you, and where are you from?
             </GlassCard>
           </div>
 
           <div className="mt-5 grid gap-5 md:grid-cols-2">
-            <GlassCard
-              title="Projects"
-              kicker="Featured"
-              delayMs={360}
-              backTitle="What you'll find"
-              backKicker="Project highlights"
-              backChildren={
-                <ul className="mt-2 space-y-2">
-                  <li>Full-stack builds + UI work</li>
-                  <li>Performance-minded implementations</li>
-                  <li>Clean code + maintainability</li>
-                  <li>Links, demos, and write-ups</li>
-                </ul>
-              }
-            >
-              Highlight key builds here with links, stats, or tech bullets.
-            </GlassCard>
 
             <GlassCard
               title="Contact"
-              kicker="Let’s build"
-              delayMs={480}
-              backTitle="Reach out"
-              backKicker="Best ways to connect"
+              kicker="FAQ 4"
+              delayMs={360}
+              backTitle="Contact"
+              backKicker="FAQ 4"
               backChildren={
                 <ul className="mt-2 space-y-2">
-                  <li>Email me with an idea or role</li>
-                  <li>Use the contact form for quick notes</li>
-                  <li>Check socials for recent updates</li>
-                  <li>Happy to talk collaboration</li>
+                  <li>Contact me via zachpawelek@gmail.com</li>
+                  <li>Subscribe to my Newsletter on this site!</li>
+                  
                 </ul>
               }
             >
-              Add a CTA, email, or a button to your contact page.
+            How can I quickly get in touch with you? 
+            </GlassCard>
+
+            <GlassCard
+              title="Website"
+              kicker="FAQ 5"
+              delayMs={480}
+              backTitle="Website"
+              backKicker="FAQ 5"
+              backChildren={
+                <ul className="mt-2 space-y-2">
+                  <li>A personalized portfolio showcasing all of my work</li>
+                  <li>Get to know me better and network with me!</li>
+                  
+                </ul>
+              }
+            >
+            What is the purpose of this site? 
             </GlassCard>
           </div>
         </div>
@@ -716,8 +718,8 @@ export default function Home() {
       ref={cliffsFooterFade.ref}
       className="pointer-events-none z-10 text-right will-change-[opacity] justify-self-end"
     >
-   <div className={`${inter.className} text-[10px] uppercase tracking-[0.35em]`}>Footer Label</div>
-<div className={`${cinzel.className} mt-2 text-xl font-medium md:text-2xl`}>Bottom Right Text</div>
+   <div className={`${inter.className} text-[10px] uppercase tracking-[0.35em]`}>FAQ's & </div>
+<div className={`${cinzel.className} mt-2 text-xl font-medium md:text-2xl`}>Welcome To My Page</div>
 
     </div>
   </div>
