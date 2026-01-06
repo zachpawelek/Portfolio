@@ -316,13 +316,13 @@ export default function AboutPage() {
 
               {/* Mobile */}
               <div className="mt-4 md:hidden overflow-hidden rounded-xl border border-neutral-800">
-                <div className="relative aspect-video w-full">
+                <div className="relative aspect-[4/3.5] w-full">
                   <Image
-                    src="/images/headshot.jpg"
+                    src="/images/headshotRock.jpg"
                     alt="Hiking/travel"
                     fill
-                    sizes="100vw"
-                    className="object-cover"
+                    sizes="60vw"
+                    className="object-cover object-[40%_37%]"
                   />
                 </div>
               </div>
@@ -331,7 +331,7 @@ export default function AboutPage() {
               <div className="mt-4 hidden md:block overflow-hidden rounded-xl border border-neutral-800">
                 <div className="relative aspect-4/3 w-full">
                   <Image
-                    src="/images/headshot.jpg"
+                    src="/images/headshotRock.jpg"
                     alt="Hiking/travel"
                     fill
                     sizes="520px"
