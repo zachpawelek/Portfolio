@@ -590,7 +590,7 @@ if (heroNoticeRef.current) {
               </div>
 
               <p className={`${inter.className} text-base pt-8 pb-2 leading-relaxed text-white/25 md:text-sm md:py-11`}>
-                Take a Look around and get to know me, and my work, a little bit better!
+                Take a look around and get to know me, and my work, a little bit better!
               </p>
             </div>
           </div>
