@@ -217,6 +217,7 @@ export default function AboutPage() {
                       <div className="flex gap-2">
                         <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[rgba(124,9,2,0.9)]" />
                         <span>Graduated with Bachelor's of Science in Software Engineering - May, 2026</span>
+                        <span>Fall 2025 Dean's List</span>
                       </div>
                     </div>
                   </div>

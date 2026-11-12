@@ -654,23 +654,22 @@ if (heroNoticeRef.current) {
           <div className="grid gap-4 md:grid-cols-3">
 
 
-          <GlassCard
-  title="Projects"
-  kicker="FAQ 1"
-  delayMs={0}
-  backTitle="Projects"
-  backKicker="FAQ 1"
-  backChildren={
-    <>
-      <p className="mt-2 text-sm text-white/75">
-        UI/GUI focused builds with API integrated components and features
-      </p>
-
-    </>
-  }
->
-  What kinds of projects will I find here?
-</GlassCard>
+            <GlassCard
+              title="Projects"
+              kicker="FAQ 1"
+              delayMs={0}
+              backTitle="Projects"
+              backKicker="FAQ 1"
+              backChildren={
+                  <>
+                <p className="mt-2 text-sm text-white/75">
+                  UI/GUI focused builds with API integrated components and features
+                </p>
+                </>
+                }
+              >
+                What kinds of projects will I find here?
+            </GlassCard>
 
 
             <GlassCard
@@ -681,10 +680,11 @@ if (heroNoticeRef.current) {
               backKicker="FAQ 2"
               backChildren={
                 <ul className="mt-2 space-y-2">
-                  <li>SQLite3</li>
                   <li>Java</li>
-                  <li>HMTL/CSS/JavaScript</li>
-                  <li>React Components</li>
+                  <li>JavaScript/TypeScript</li>
+                  <li>HMTL/CSS</li>
+                  <li>React</li>
+                  <li>SQL/PostGres</li>
                 </ul>
               }
             >
@@ -701,8 +701,8 @@ if (heroNoticeRef.current) {
               backChildren={
                 <ul className="mt-2 space-y-2">
                   <li>Zach Pawelek</li>
-                  <li>Milwaukee, WI</li>
-                  <li>Senior at Arizona State University</li>
+                  <li>Madison, WI</li>
+                  <li>Graduate from Arizona State University</li>
                 </ul>
               }
             >
@@ -720,7 +720,7 @@ if (heroNoticeRef.current) {
               backKicker="FAQ 4"
               backChildren={
                 <ul className="mt-2 space-y-2">
-                  <li>Contact me via zachpawelek@gmail.com</li>
+                  <li>Contact me via zachpawelek@proton.me</li>
                   <li>Subscribe to my Newsletter on this site!</li>
                   
                 </ul>
