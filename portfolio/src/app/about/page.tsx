@@ -20,8 +20,8 @@ function env(name: string, fallback = "") {
 
 export default function AboutPage() {
   const displayName = env("NEXT_PUBLIC_NAME", "Zach");
-  const location = env("NEXT_PUBLIC_LOCATION", "Milwaukee, Wisconsin");
-  const role = env("NEXT_PUBLIC_ROLE", "Software Engineering Student");
+  const location = env("NEXT_PUBLIC_LOCATION", "Madison, Wisconsin");
+  const role = env("NEXT_PUBLIC_ROLE", "Software Engineer");
   const githubUrl = env("NEXT_PUBLIC_GITHUB_URL", "");
   const linkedinUrl = env("NEXT_PUBLIC_LINKEDIN_URL", "");
 
@@ -78,7 +78,7 @@ export default function AboutPage() {
               </h1>
 
               <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75">
-                I’m a 26 year old {role} living in {location}.
+                I'm a Software Engineer living in Madison, Wisconsin.
                 <br></br>
               </p>
 
@@ -216,7 +216,7 @@ export default function AboutPage() {
                       </div>
                       <div className="flex gap-2">
                         <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[rgba(124,9,2,0.9)]" />
-                        <span>Set to Graduate in May, 2026</span>
+                        <span>Graduated with Bachelor's of Science in Software Engineering - May, 2026</span>
                       </div>
                     </div>
                   </div>
@@ -303,12 +303,11 @@ export default function AboutPage() {
           <Reveal delay={0} className="md:h-full">
             <Card title="Get to Know me...">
               <p className="text-sm leading-6 text-neutral-300">
-                I am a 26 year old Senior attending Arizona State University, with only 6 credit hours
-                remaining until graduation.
+                Currently living in Madison, Wisconsin
               </p>
               <p className="mt-3 text-sm leading-6 text-neutral-300">
                 With a background in freelance Graphic Design, I stepped into the world of
-                programming to combine my passion for desinging, building, creating.
+                programming to combine my passion for designing, building, creating.
               </p>
               <p className="mt-3 text-sm leading-6 text-neutral-300">
                 Outside of code, I love to travel, hike, and explore all that nature has to offer.
